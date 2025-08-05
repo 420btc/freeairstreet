@@ -30,7 +30,7 @@ export default function AirXChat({ onOpenReservationModal }: AirXChatProps) {
   const [messages, setMessages] = useState<Message[]>([
     {
       id: '1',
-      content: '¡Hola! Soy AirX, tu asistente virtual. ¿En qué puedo ayudarte hoy? Puedo ayudarte con información sobre nuestros vehículos de alquiler, excursiones y servicios en la Costa del Sol.',
+      content: '¡Hola! Soy AirX, tu asistente virtual. ¿En qué puedo ayudarte hoy? Puedo ayudarte con información o a reservar nuestros vehículos de alquiler, excursiones y servicios en Torremolinos.',
       isUser: false,
       timestamp: new Date()
     }
