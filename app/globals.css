@@ -206,6 +206,15 @@
   color: oklch(0.15 0.12 240) !important;
 }
 
+/* Título principal del navbar en modo oscuro */
+.dark .navbar-title {
+  color: oklch(0.2 0.15 240) !important;
+}
+
+.dark .navbar-subtitle {
+  color: oklch(0.25 0.12 240) !important;
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;

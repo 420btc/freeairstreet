@@ -109,8 +109,8 @@ export default function HomePage() {
             <div className="flex items-center leading-3 font-mono italic tracking-tighter space-x-12">
               <Image src="/icon/iconf.png" alt="Free Air Street Logo" width={64} height={64} className="rounded" />
               <div className="hidden sm:block">
-                <h1 className="text-xl font-bold text-blue-900 birthstone-regular">Free Air Street</h1>
-                <p className="text-sm text-blue-800">Rent & Tours</p>
+                <h1 className="text-xl font-bold text-blue-900 navbar-title birthstone-regular">Free Air Street</h1>
+                <p className="text-sm text-blue-800 navbar-subtitle">Rent & Tours</p>
               </div>
             </div>
 

@@ -196,7 +196,7 @@ export default function ToursPage() {
 
             {/* Page Title for Mobile - Centered */}
             <div className="md:hidden flex-1 text-center">
-              <h1 className="text-lg font-bold text-blue-900">Visitas Guiadas</h1>
+              <h1 className="text-lg font-bold text-blue-900 navbar-title">Visitas Guiadas</h1>
             </div>
 
             {/* Desktop Controls */}
