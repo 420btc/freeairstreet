@@ -61,7 +61,7 @@ const translations = {
     'prices.traditionalScooter': 'Patinete Tradicional',
     'prices.traditionalScooterDesc': 'Ligero y divertido para distancias cortas',
     'prices.hour': '1 hora',
-    'prices.allDay': 'Todo el día',
+    'prices.allDay': 'Todo el día (11h)',
     'prices.halfHour': '30 min',
     
     // Featured Tours
@@ -144,7 +144,7 @@ const translations = {
     'prices.traditionalScooter': 'Traditional Scooter',
     'prices.traditionalScooterDesc': 'Light and fun for short distances',
     'prices.hour': '1 hour',
-    'prices.allDay': 'All day',
+    'prices.allDay': 'All day (11h)',
     'prices.halfHour': '30 min',
     
     // Featured Tours

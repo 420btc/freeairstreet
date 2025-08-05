@@ -40,12 +40,12 @@ export default function ContactoPage() {
     // Add custom marker
     const markerElement = document.createElement('div')
     markerElement.innerHTML = '🛴'
-    markerElement.style.fontSize = '20px'
+    markerElement.style.fontSize = '12px'
     markerElement.style.backgroundColor = '#fbbf24'
     markerElement.style.borderRadius = '50%'
-    markerElement.style.padding = '8px'
-    markerElement.style.border = '2px solid #f59e0b'
-    markerElement.style.boxShadow = '0 2px 8px rgba(0,0,0,0.3)'
+    markerElement.style.padding = '4px'
+    markerElement.style.border = '1px solid #f59e0b'
+    markerElement.style.boxShadow = '0 1px 4px rgba(0,0,0,0.3)'
 
     new mapboxgl.Marker(markerElement)
       .setLngLat([-4.489167162077166, 36.63222134109576])
@@ -160,7 +160,7 @@ export default function ContactoPage() {
 
           {/* Mobile Navigation */}
           {isMenuOpen && (
-            <div className="md:hidden py-4 border-t border-yellow-600">
+            <div className="md:hidden py-4 border-t border-yellow-500">
               <nav className="flex flex-col space-y-4">
                 <Link href="/alquiler" className="text-blue-900 hover:text-blue-700 navbar-mobile-text font-medium">
                   Alquiler
@@ -174,7 +174,7 @@ export default function ContactoPage() {
                 <Link href="/contacto" className="text-blue-900 hover:text-blue-700 navbar-mobile-text font-medium border-l-4 border-blue-900 pl-2">
                   Contacto
                 </Link>
-                <div className="flex items-center space-x-4 pt-4 border-t border-yellow-600">
+                <div className="flex items-center space-x-4 pt-4 border-t border-yellow-500">
                   <LanguageToggle />
                   <ThemeToggle />
                 </div>
@@ -184,23 +184,23 @@ export default function ContactoPage() {
         </div>
       </header>
 
-      <div className="container mx-auto px-4 py-8">
+      <div className="container mx-auto px-4 py-6">
         {/* Hero Section */}
-        <div className="text-center mb-12">
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">¡Hablemos!</h2>
-          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+        <div className="text-center mb-8">
+          <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-3">¡Hablemos!</h2>
+          <p className="text-base text-gray-600 max-w-2xl mx-auto">
             ¿Tienes alguna pregunta sobre nuestros servicios? ¿Necesitas ayuda con tu reserva? Estamos aquí para
             ayudarte en tu próxima aventura.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Contact Form */}
-          <Card className="order-2 lg:order-1">
+          <Card className="order-2 lg:order-1 lg:col-span-2">
             <CardHeader>
-              <CardTitle className="text-2xl text-gray-900">Envíanos un mensaje</CardTitle>
+              <CardTitle className="text-xl text-gray-900">Envíanos un mensaje</CardTitle>
               <CardDescription>
-                Completa el formulario y te responderemos lo antes posible. Todos los campos son obligatorios.
+                Completa el formulario y te responderemos lo antes posible.
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -216,10 +216,10 @@ export default function ContactoPage() {
                   </Button>
                 </div>
               ) : (
-                <form onSubmit={handleSubmit} className="space-y-6">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <form onSubmit={handleSubmit} className="space-y-4">
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
                     <div>
-                      <Label htmlFor="name">Nombre completo *</Label>
+                      <Label htmlFor="name" className="text-sm">Nombre *</Label>
                       <Input
                         id="name"
                         name="name"
@@ -227,12 +227,12 @@ export default function ContactoPage() {
                         value={formData.name}
                         onChange={handleInputChange}
                         required
-                        className="mt-1"
+                        className="mt-1 h-9"
                         placeholder="Tu nombre"
                       />
                     </div>
                     <div>
-                      <Label htmlFor="phone">Teléfono *</Label>
+                      <Label htmlFor="phone" className="text-sm">Teléfono *</Label>
                       <Input
                         id="phone"
                         name="phone"
@@ -240,28 +240,27 @@ export default function ContactoPage() {
                         value={formData.phone}
                         onChange={handleInputChange}
                         required
-                        className="mt-1"
+                        className="mt-1 h-9"
                         placeholder="+34 XXX XXX XXX"
+                      />
+                    </div>
+                    <div>
+                      <Label htmlFor="email" className="text-sm">Email *</Label>
+                      <Input
+                        id="email"
+                        name="email"
+                        type="email"
+                        value={formData.email}
+                        onChange={handleInputChange}
+                        required
+                        className="mt-1 h-9"
+                        placeholder="tu@email.com"
                       />
                     </div>
                   </div>
 
                   <div>
-                    <Label htmlFor="email">Email *</Label>
-                    <Input
-                      id="email"
-                      name="email"
-                      type="email"
-                      value={formData.email}
-                      onChange={handleInputChange}
-                      required
-                      className="mt-1"
-                      placeholder="tu@email.com"
-                    />
-                  </div>
-
-                  <div>
-                    <Label htmlFor="subject">Asunto *</Label>
+                    <Label htmlFor="subject" className="text-sm">Asunto *</Label>
                     <Input
                       id="subject"
                       name="subject"
@@ -269,20 +268,20 @@ export default function ContactoPage() {
                       value={formData.subject}
                       onChange={handleInputChange}
                       required
-                      className="mt-1"
+                      className="mt-1 h-9"
                       placeholder="¿En qué podemos ayudarte?"
                     />
                   </div>
 
                   <div>
-                    <Label htmlFor="message">Mensaje *</Label>
+                    <Label htmlFor="message" className="text-sm">Mensaje *</Label>
                     <Textarea
                       id="message"
                       name="message"
                       value={formData.message}
                       onChange={handleInputChange}
                       required
-                      className="mt-1 min-h-[120px]"
+                      className="mt-1 min-h-[80px]"
                       placeholder="Cuéntanos más detalles sobre tu consulta..."
                     />
                   </div>
@@ -310,25 +309,25 @@ export default function ContactoPage() {
           </Card>
 
           {/* Contact Information */}
-          <div className="order-1 lg:order-2 space-y-6">
+          <div className="order-1 lg:order-2 space-y-4">
             {/* Contact Cards */}
-            <div className="grid grid-cols-1 gap-4">
+            <div className="space-y-3">
               {contactInfo.map((contact, index) => (
                 <Card key={index} className="hover:shadow-lg transition-shadow">
-                  <CardContent className="p-6">
-                    <div className="flex items-start space-x-4">
-                      <div className="p-3 bg-yellow-100 rounded-full text-blue-600">{contact.icon}</div>
-                      <div className="flex-1">
-                        <h3 className="font-semibold text-gray-900 mb-1">{contact.title}</h3>
+                  <CardContent className="p-4">
+                    <div className="flex items-center space-x-3">
+                      <div className="p-2 bg-yellow-400 rounded-full text-blue-600">{contact.icon}</div>
+                      <div className="flex-1 min-w-0">
+                        <h3 className="font-semibold text-gray-900 text-sm mb-1">{contact.title}</h3>
                         <a
                           href={contact.href}
-                          className="text-blue-600 hover:text-blue-700 font-medium block mb-1"
+                          className="text-blue-600 hover:text-blue-700 font-medium block mb-1 text-sm truncate"
                           target={contact.href.startsWith("http") ? "_blank" : undefined}
                           rel={contact.href.startsWith("http") ? "noopener noreferrer" : undefined}
                         >
                           {contact.info}
                         </a>
-                        <p className="text-sm text-gray-600">{contact.description}</p>
+                        <p className="text-xs text-gray-600">{contact.description}</p>
                       </div>
                     </div>
                   </CardContent>
@@ -337,74 +336,79 @@ export default function ContactoPage() {
             </div>
 
             {/* Business Hours */}
-            <Card className="bg-yellow-50 border-yellow-200">
-              <CardHeader>
-                <div className="flex items-center space-x-2">
-                  <Clock className="h-5 w-5 text-yellow-600" />
-                  <CardTitle className="text-yellow-900">Horarios de Atención</CardTitle>
-                </div>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-2">
-                  {businessHours.map((schedule, index) => (
-                    <div key={index} className="flex justify-between items-center">
-                      <span className="text-yellow-800 font-medium">{schedule.day}</span>
-                      <span className="text-yellow-700">{schedule.hours}</span>
+            <Card className="hover:shadow-lg transition-shadow">
+              <CardContent className="p-4">
+                <div className="flex items-center space-x-3">
+                  <div className="p-2 bg-yellow-400 rounded-full text-blue-600">
+                    <Clock className="h-6 w-6" />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <h3 className="font-semibold text-gray-900 text-sm mb-1">Horarios</h3>
+                    <div className="space-y-1">
+                      {businessHours.map((schedule, index) => (
+                        <div key={index} className="flex justify-between items-center">
+                          <span className="text-gray-600 text-xs">{schedule.day}</span>
+                          <span className="text-gray-700 text-xs font-medium">{schedule.hours}</span>
+                        </div>
+                      ))}
                     </div>
-                  ))}
+                  </div>
                 </div>
               </CardContent>
             </Card>
 
-            {/* Location Map */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-gray-900">Nuestra Ubicación</CardTitle>
-                <CardDescription>Calle de la Playa, 22 - 29620 Torremolinos</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div id="contact-mapbox-container" className="aspect-video rounded-lg overflow-hidden shadow-lg"></div>
-                <Button
-                  className="w-full mt-4 bg-blue-600 hover:bg-blue-700"
-                  onClick={() => window.open("https://maps.google.com/?q=Calle+de+la+Playa+22+Torremolinos", "_blank")}
-                >
-                  <MapPin className="h-4 w-4 mr-2" />
-                  Ver en Google Maps
-                </Button>
-              </CardContent>
-            </Card>
+
           </div>
         </div>
 
-        {/* FAQ Section */}
-        <Card className="mt-12 bg-blue-50 border-blue-200">
+        {/* Location Map */}
+        <Card className="mt-8">
           <CardHeader>
-            <CardTitle className="text-blue-900">Preguntas Frecuentes</CardTitle>
-            <CardDescription>Respuestas rápidas a las consultas más comunes</CardDescription>
+            <CardTitle className="text-gray-900 text-xl">Nuestra Ubicación</CardTitle>
+            <CardDescription className="text-base">Calle de la Playa, 22 - 29620 Torremolinos</CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div>
-                <h4 className="font-semibold text-blue-900 mb-2">¿Necesito reservar con antelación?</h4>
-                <p className="text-blue-800 text-sm mb-4">
-                  Recomendamos reservar con 24h de antelación, especialmente en temporada alta y fines de semana.
-                </p>
+            <div id="contact-mapbox-container" className="aspect-video rounded-lg overflow-hidden shadow-lg mb-4"></div>
+            <Button
+              className="w-full bg-blue-600 hover:bg-blue-700 text-white py-3"
+              onClick={() => window.open("https://maps.google.com/?q=Calle+de+la+Playa+22+Torremolinos", "_blank")}
+            >
+              <MapPin className="h-5 w-5 mr-2" />
+              Ver en Google Maps
+            </Button>
+          </CardContent>
+        </Card>
 
-                <h4 className="font-semibold text-blue-900 mb-2">¿Qué documentos necesito?</h4>
-                <p className="text-blue-800 text-sm">
-                  Para bicicletas y scooters: DNI o pasaporte. Para coches: carnet de conducir, DNI/pasaporte y tarjeta
-                  de crédito.
+        {/* FAQ Section */}
+        <Card className="mt-8 bg-blue-50 border-blue-200">
+          <CardHeader className="pb-4">
+            <CardTitle className="text-blue-900 text-lg">Preguntas Frecuentes</CardTitle>
+            <CardDescription className="text-sm">Respuestas rápidas a las consultas más comunes</CardDescription>
+          </CardHeader>
+          <CardContent className="pt-0">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+              <div>
+                <h4 className="font-semibold text-blue-900 mb-1 text-sm">¿Necesito reservar con antelación?</h4>
+                <p className="text-blue-800 text-xs mb-3">
+                  Recomendamos reservar con 24h de antelación, especialmente en temporada alta.
                 </p>
               </div>
               <div>
-                <h4 className="font-semibold text-blue-900 mb-2">¿Incluye seguro?</h4>
-                <p className="text-blue-800 text-sm mb-4">
+                <h4 className="font-semibold text-blue-900 mb-1 text-sm">¿Qué documentos necesito?</h4>
+                <p className="text-blue-800 text-xs mb-3">
+                  Para bicicletas: DNI. Para coches: carnet de conducir y tarjeta de crédito.
+                </p>
+              </div>
+              <div>
+                <h4 className="font-semibold text-blue-900 mb-1 text-sm">¿Incluye seguro?</h4>
+                <p className="text-blue-800 text-xs mb-3">
                   Sí, todos nuestros alquileres incluyen seguro básico de responsabilidad civil.
                 </p>
-
-                <h4 className="font-semibold text-blue-900 mb-2">¿Puedo cancelar mi reserva?</h4>
-                <p className="text-blue-800 text-sm">
-                  Sí, puedes cancelar hasta 24h antes sin coste. Consulta nuestras condiciones completas.
+              </div>
+              <div>
+                <h4 className="font-semibold text-blue-900 mb-1 text-sm">¿Puedo cancelar mi reserva?</h4>
+                <p className="text-blue-800 text-xs">
+                  Sí, puedes cancelar hasta 24h antes sin coste. Consulta condiciones.
                 </p>
               </div>
             </div>
@@ -413,7 +417,7 @@ export default function ContactoPage() {
       </div>
 
       {/* Footer */}
-      <footer className="bg-gray-900 text-white py-8">
+      <footer className="bg-gray-900 text-white py-6 mt-6">
         <div className="container mx-auto px-4">
           <div className="flex flex-col md:flex-row justify-between items-center">
             <div className="flex items-center space-x-6 mb-4 md:mb-0">

@@ -317,11 +317,11 @@ export default function HomePage() {
                 <div className="space-y-2">
                   <div className="flex justify-between">
                     <span>{t('prices.hour')}</span>
-                    <Badge variant="secondary">3€</Badge>
+                    <Badge variant="secondary" className="text-lg font-bold">3€</Badge>
                   </div>
                   <div className="flex justify-between">
                     <span>{t('prices.allDay')}</span>
-                    <Badge className="bg-yellow-500 text-blue-900">13€</Badge>
+                    <Badge className="bg-yellow-500 text-blue-900 text-xl font-bold">13€</Badge>
                   </div>
                 </div>
               </CardContent>
@@ -336,11 +336,11 @@ export default function HomePage() {
                 <div className="space-y-2">
                   <div className="flex justify-between">
                     <span>{t('prices.hour')}</span>
-                    <Badge variant="secondary">10€</Badge>
+                    <Badge variant="secondary" className="text-lg font-bold">10€</Badge>
                   </div>
                   <div className="flex justify-between">
                     <span>{t('prices.allDay')}</span>
-                    <Badge className="bg-yellow-500 text-blue-900">35€</Badge>
+                    <Badge className="bg-yellow-500 text-blue-900 text-xl font-bold">35€</Badge>
                   </div>
                 </div>
               </CardContent>
@@ -355,11 +355,11 @@ export default function HomePage() {
                 <div className="space-y-2">
                   <div className="flex justify-between">
                     <span>{t('prices.halfHour')}</span>
-                    <Badge variant="secondary">10€</Badge>
+                    <Badge variant="secondary" className="text-lg font-bold">10€</Badge>
                   </div>
                   <div className="flex justify-between">
                     <span>{t('prices.hour')}</span>
-                    <Badge className="bg-yellow-500 text-blue-900">15€</Badge>
+                    <Badge className="bg-yellow-500 text-blue-900 text-xl font-bold">15€</Badge>
                   </div>
                 </div>
               </CardContent>
@@ -391,7 +391,7 @@ export default function HomePage() {
                   <div className="bg-white/90 backdrop-blur-sm rounded-full p-2 text-2xl">🐬</div>
                 </div>
                 <div className="absolute top-4 right-4">
-                  <Badge className="bg-yellow-500 text-blue-900 font-bold">19€</Badge>
+                  <Badge className="bg-yellow-500 text-blue-900 font-bold text-xl">18€</Badge>
                 </div>
               </div>
               <CardHeader>
@@ -437,7 +437,7 @@ export default function HomePage() {
                   <div className="bg-white/90 backdrop-blur-sm rounded-full p-2 text-2xl">🏰</div>
                 </div>
                 <div className="absolute top-4 right-4">
-                  <Badge className="bg-yellow-500 text-blue-900 font-bold">79€</Badge>
+                  <Badge className="bg-yellow-500 text-blue-900 font-bold text-xl">79€</Badge>
                 </div>
               </div>
               <CardHeader>
@@ -478,7 +478,7 @@ export default function HomePage() {
                   <div className="bg-white/90 backdrop-blur-sm rounded-full p-2 text-2xl">🐎</div>
                 </div>
                 <div className="absolute top-4 right-4">
-                  <Badge className="bg-yellow-500 text-blue-900 font-bold">65€</Badge>
+                  <Badge className="bg-yellow-500 text-blue-900 font-bold text-xl">65€</Badge>
                 </div>
               </div>
               <CardHeader>
