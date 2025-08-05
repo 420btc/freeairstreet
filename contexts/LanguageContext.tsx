@@ -19,7 +19,7 @@ const translations = {
     'header.tours': 'Visitas Guiadas',
     'header.shop': 'Tienda',
     'header.contact': 'Contacto',
-    'header.scanPrices': 'Escanea para precios',
+    'header.scanPrices': 'Rent a Quad',
     
     // Hero Section
     'hero.title': 'Explora con Libertad',
@@ -102,7 +102,7 @@ const translations = {
     'header.tours': 'Guided Tours',
     'header.shop': 'Shop',
     'header.contact': 'Contact',
-    'header.scanPrices': 'Scan for prices',
+    'header.scanPrices': 'Rent a Quad',
     
     // Hero Section
     'hero.title': 'Explore with Freedom',

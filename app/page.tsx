@@ -15,6 +15,7 @@ import { ThemeToggle } from '../components/ThemeToggle'
 
 export default function HomePage() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const [isQrModalOpen, setIsQrModalOpen] = useState(false)
   const { t } = useLanguage()
 
   useEffect(() => {
@@ -132,7 +133,10 @@ export default function HomePage() {
 
             {/* QR Code, Language Toggle and Mobile Menu */}
             <div className="flex items-center space-x-4">
-              <div className="hidden sm:flex items-center space-x-2 bg-white/20 rounded-lg px-3 py-2">
+              <div 
+                className="hidden sm:flex items-center space-x-2 bg-white/20 rounded-lg px-3 py-2 cursor-pointer hover:bg-white/30 transition-colors"
+                onClick={() => setIsQrModalOpen(true)}
+              >
                 <QrCode className="h-5 w-5 text-blue-900" />
                 <span className="text-sm text-blue-900 font-medium">{t('header.scanPrices')}</span>
               </div>
@@ -181,6 +185,14 @@ export default function HomePage() {
                 >
                   <span className="animate-typewriter" style={{ animationDelay: '0.4s' }}>{t('header.contact')}</span>
                 </Link>
+                <button 
+                  onClick={() => setIsQrModalOpen(true)}
+                  className="text-left text-blue-900 hover:text-blue-700 navbar-mobile-text font-medium animate-fadeInUp flex items-center space-x-2"
+                  style={{ animationDelay: '0.5s' }}
+                >
+                  <QrCode className="h-5 w-5" />
+                  <span className="animate-typewriter" style={{ animationDelay: '0.5s' }}>Rent a Quad</span>
+                </button>
               </nav>
             </div>
           )}
@@ -603,6 +615,51 @@ export default function HomePage() {
           </div>
         </div>
       </footer>
+
+      {/* QR Modal */}
+      {isQrModalOpen && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-gradient-to-br from-white via-blue-50 to-yellow-50 rounded-lg p-8 max-w-md w-full mx-4 relative">
+            <button
+              onClick={() => setIsQrModalOpen(false)}
+              className="absolute top-4 right-4 text-gray-500 hover:text-gray-700 text-2xl font-bold"
+            >
+              ×
+            </button>
+            
+            <div className="text-center">
+              <h3 className="text-2xl font-bold text-orange-600 mb-4">Rent a Quad</h3>
+              
+              <div className="mb-6">
+                <Image
+                  src="/rentwuad.png"
+                  alt="Rent Quad Logo"
+                  width={200}
+                  height={80}
+                  className="mx-auto"
+                />
+              </div>
+              
+              <div className="bg-white p-4 rounded-lg shadow-lg mb-6">
+                <Image
+                  src="/rentqr.png"
+                  alt="Rent a Quad QR Code"
+                  width={200}
+                  height={200}
+                  className="mx-auto"
+                />
+              </div>
+              
+              <Button
+                onClick={() => window.open('https://quadaventuracostadelsol.com/actividades-de-aventura', '_blank')}
+                className="w-full bg-orange-600 hover:bg-orange-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors"
+              >
+                Acceder a Quad Aventura
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
