@@ -379,15 +379,27 @@ export default function HomePage() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <Card className="hover:shadow-lg transition-shadow">
+            <Card className="hover:shadow-lg transition-shadow overflow-hidden">
+              <div className="aspect-video relative">
+                <Image
+                  src="/lugares/dolphintrip.jpg"
+                  alt="Dolphin Trip"
+                  fill
+                  className="object-cover"
+                />
+                <div className="absolute top-4 left-4">
+                  <div className="bg-white/90 backdrop-blur-sm rounded-full p-2 text-2xl">🐬</div>
+                </div>
+                <div className="absolute top-4 right-4">
+                  <Badge className="bg-yellow-500 text-blue-900 font-bold">19€</Badge>
+                </div>
+              </div>
               <CardHeader>
                 <div className="flex items-center justify-between mb-2">
-                  <CardTitle className="text-xl text-gray-900 flex items-center">
-                    <span className="text-2xl mr-2">🐬</span>
+                  <CardTitle className="text-xl text-gray-900">
                     {t('tours.dolphinTrip')}
                   </CardTitle>
                   <div className="text-right">
-                    <Badge className="bg-yellow-500 text-blue-900 font-bold">19€</Badge>
                     <p className="text-xs text-gray-500 mt-1">{t('tours.adults')}</p>
                   </div>
                 </div>
@@ -413,14 +425,26 @@ export default function HomePage() {
               </CardContent>
             </Card>
 
-            <Card className="hover:shadow-lg transition-shadow">
+            <Card className="hover:shadow-lg transition-shadow overflow-hidden">
+              <div className="aspect-video relative">
+                <Image
+                  src="/destinos/alhambragranada.png"
+                  alt="Granada Alhambra"
+                  fill
+                  className="object-cover"
+                />
+                <div className="absolute top-4 left-4">
+                  <div className="bg-white/90 backdrop-blur-sm rounded-full p-2 text-2xl">🏰</div>
+                </div>
+                <div className="absolute top-4 right-4">
+                  <Badge className="bg-yellow-500 text-blue-900 font-bold">79€</Badge>
+                </div>
+              </div>
               <CardHeader>
                 <div className="flex items-center justify-between mb-2">
-                  <CardTitle className="text-xl text-gray-900 flex items-center">
-                    <span className="text-2xl mr-2">🏰</span>
+                  <CardTitle className="text-xl text-gray-900">
                     {t('tours.granadaAlhambra')}
                   </CardTitle>
-                  <Badge className="bg-yellow-500 text-blue-900 font-bold">79€</Badge>
                 </div>
                 <div className="flex items-center text-gray-600 mb-2">
                   <Clock className="h-4 w-4 mr-2" />
@@ -442,14 +466,26 @@ export default function HomePage() {
               </CardContent>
             </Card>
 
-            <Card className="hover:shadow-lg transition-shadow">
+            <Card className="hover:shadow-lg transition-shadow overflow-hidden">
+              <div className="aspect-video relative">
+                <Image
+                  src="/lugares/paseocaballo.jpeg"
+                  alt="Paseos a Caballo"
+                  fill
+                  className="object-cover"
+                />
+                <div className="absolute top-4 left-4">
+                  <div className="bg-white/90 backdrop-blur-sm rounded-full p-2 text-2xl">🐎</div>
+                </div>
+                <div className="absolute top-4 right-4">
+                  <Badge className="bg-yellow-500 text-blue-900 font-bold">65€</Badge>
+                </div>
+              </div>
               <CardHeader>
                 <div className="flex items-center justify-between mb-2">
-                  <CardTitle className="text-xl text-gray-900 flex items-center">
-                    <span className="text-2xl mr-2">🐎</span>
+                  <CardTitle className="text-xl text-gray-900">
                     {t('tours.horseRiding')}
                   </CardTitle>
-                  <Badge className="bg-yellow-500 text-blue-900 font-bold">65€</Badge>
                 </div>
                 <div className="flex items-center text-gray-600 mb-2">
                   <Clock className="h-4 w-4 mr-2" />
