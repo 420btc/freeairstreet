@@ -2,8 +2,8 @@
 
 import type React from "react"
 
-import { useState } from "react"
-import { ArrowLeft, Phone, Mail, MapPin, Clock, Send, CheckCircle } from "lucide-react"
+import { useState, useEffect } from "react"
+import { ArrowLeft, Phone, Mail, MapPin, Clock, Send, CheckCircle, Menu, X } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
@@ -11,6 +11,9 @@ import { Textarea } from "@/components/ui/textarea"
 import { Label } from "@/components/ui/label"
 import Image from "next/image"
 import Link from "next/link"
+import mapboxgl from "mapbox-gl"
+import { LanguageToggle } from '../../components/LanguageToggle'
+import { ThemeToggle } from '../../components/ThemeToggle'
 
 export default function ContactoPage() {
   const [formData, setFormData] = useState({
@@ -22,6 +25,34 @@ export default function ContactoPage() {
   })
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [isSubmitted, setIsSubmitted] = useState(false)
+  const [isMenuOpen, setIsMenuOpen] = useState(false)
+
+  useEffect(() => {
+    mapboxgl.accessToken = 'pk.eyJ1IjoiNDIwYnRjIiwiYSI6ImNtOTN3ejBhdzByNjgycHF6dnVmeHl2ZTUifQ.Utq_q5wN6DHwpkn6rcpZdw'
+
+    const map = new mapboxgl.Map({
+      container: 'contact-mapbox-container',
+      style: 'mapbox://styles/mapbox/satellite-streets-v12',
+      center: [-4.489167162077166, 36.63222134109576],
+      zoom: 17
+    })
+
+    // Add custom marker
+    const markerElement = document.createElement('div')
+    markerElement.innerHTML = '🛴'
+    markerElement.style.fontSize = '20px'
+    markerElement.style.backgroundColor = '#fbbf24'
+    markerElement.style.borderRadius = '50%'
+    markerElement.style.padding = '8px'
+    markerElement.style.border = '2px solid #f59e0b'
+    markerElement.style.boxShadow = '0 2px 8px rgba(0,0,0,0.3)'
+
+    new mapboxgl.Marker(markerElement)
+      .setLngLat([-4.489167162077166, 36.63222134109576])
+      .addTo(map)
+
+    return () => map.remove()
+  }, [])
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target
@@ -84,23 +115,72 @@ export default function ContactoPage() {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
-      <header className="bg-gradient-to-r from-yellow-400 to-yellow-500 shadow-lg">
-        <div className="container mx-auto px-4 py-4">
-          <div className="flex items-center space-x-4">
-            <Link href="/">
-              <Button variant="ghost" size="sm" className="text-blue-900 hover:text-blue-700">
-                <ArrowLeft className="h-4 w-4 mr-2" />
-                Volver
-              </Button>
-            </Link>
-            <div className="flex items-center space-x-4">
-              <Image src="/logo.png" alt="Free Air Street Logo" width={50} height={50} className="rounded-full" />
-              <div>
-                <h1 className="text-2xl md:text-3xl font-bold text-blue-900">Contacto</h1>
-                <p className="text-blue-800">Estamos aquí para ayudarte</p>
-              </div>
+      <header className="bg-gradient-to-r from-yellow-400 to-yellow-500 shadow-lg sticky top-0 z-50">
+        <div className="container mx-auto px-4">
+          <div className="flex items-center h-16">
+             {/* Back Arrow */}
+              <Link href="/">
+                <Button variant="ghost" size="lg" className="text-blue-900 hover:text-blue-700 p-4">
+                  <ArrowLeft className="h-12 w-12" />
+                </Button>
+              </Link>
+
+             {/* Desktop Navigation - Centered */}
+             <nav className="hidden md:flex space-x-8 flex-1 justify-center">
+               <Link href="/alquiler" className="text-blue-900 hover:text-blue-700 font-medium transition-colors">
+                 Alquiler
+               </Link>
+               <Link href="/tours" className="text-blue-900 hover:text-blue-700 font-medium transition-colors">
+                 Visitas Guiadas
+               </Link>
+               <a href="/#tienda" className="text-blue-900 hover:text-blue-700 font-medium transition-colors">
+                 Tienda
+               </a>
+               <Link href="/contacto" className="text-blue-900 hover:text-blue-700 font-medium transition-colors border-b-2 border-blue-900">
+                 Contacto
+               </Link>
+             </nav>
+
+             {/* Page Title for Mobile - Centered */}
+             <div className="md:hidden flex-1 text-center">
+               <h1 className="text-lg font-bold text-blue-900">Contacto</h1>
+             </div>
+
+             {/* Desktop Controls */}
+             <div className="hidden md:flex items-center space-x-2">
+               <LanguageToggle />
+               <ThemeToggle />
+             </div>
+
+             {/* Mobile Menu Button */}
+             <button className="md:hidden text-blue-900" onClick={() => setIsMenuOpen(!isMenuOpen)}>
+               {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+             </button>
+           </div>
+
+          {/* Mobile Navigation */}
+          {isMenuOpen && (
+            <div className="md:hidden py-4 border-t border-yellow-600">
+              <nav className="flex flex-col space-y-4">
+                <Link href="/alquiler" className="text-blue-900 hover:text-blue-700 font-medium">
+                  Alquiler
+                </Link>
+                <Link href="/tours" className="text-blue-900 hover:text-blue-700 font-medium">
+                  Visitas Guiadas
+                </Link>
+                <a href="/#tienda" className="text-blue-900 hover:text-blue-700 font-medium">
+                  Tienda
+                </a>
+                <Link href="/contacto" className="text-blue-900 hover:text-blue-700 font-medium border-l-4 border-blue-900 pl-2">
+                  Contacto
+                </Link>
+                <div className="flex items-center space-x-4 pt-4 border-t border-yellow-600">
+                  <LanguageToggle />
+                  <ThemeToggle />
+                </div>
+              </nav>
             </div>
-          </div>
+          )}
         </div>
       </header>
 
@@ -276,20 +356,14 @@ export default function ContactoPage() {
               </CardContent>
             </Card>
 
-            {/* Location Map Placeholder */}
+            {/* Location Map */}
             <Card>
               <CardHeader>
                 <CardTitle className="text-gray-900">Nuestra Ubicación</CardTitle>
                 <CardDescription>Calle de la Playa, 22 - 29620 Torremolinos</CardDescription>
               </CardHeader>
               <CardContent>
-                <div className="aspect-video bg-gray-200 rounded-lg flex items-center justify-center">
-                  <div className="text-center">
-                    <MapPin className="h-12 w-12 text-gray-400 mx-auto mb-2" />
-                    <p className="text-gray-500">Mapa interactivo</p>
-                    <p className="text-sm text-gray-400">Integración con Google Maps</p>
-                  </div>
-                </div>
+                <div id="contact-mapbox-container" className="aspect-video rounded-lg overflow-hidden shadow-lg"></div>
                 <Button
                   className="w-full mt-4 bg-blue-600 hover:bg-blue-700"
                   onClick={() => window.open("https://maps.google.com/?q=Calle+de+la+Playa+22+Torremolinos", "_blank")}

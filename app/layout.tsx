@@ -11,7 +11,12 @@ export const metadata: Metadata = {
   title: "Free Air Street - Alquiler de Bicicletas y Tours",
   description:
     "Alquila bicicletas, motos, coches y únete a nuestras visitas guiadas. La aventura te espera en cada rincón.",
-    generator: 'v0.dev'
+  generator: 'v0.dev',
+  icons: {
+    icon: '/icono.png',
+    shortcut: '/icono.png',
+    apple: '/icono.png',
+  },
 }
 
 export default function RootLayout({
