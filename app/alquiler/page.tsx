@@ -520,7 +520,7 @@ export default function AlquilerPage() {
                 <span>Motos</span>
               </TabsTrigger>
               <TabsTrigger value="scooters" className="flex items-center space-x-2 py-4 px-6 text-lg">
-                <span>🛵</span>
+                <span>🛴</span>
                 <span>Scooters</span>
               </TabsTrigger>
               <TabsTrigger value="accesorios" className="flex items-center space-x-2 py-4 px-6 text-lg">
@@ -547,7 +547,7 @@ export default function AlquilerPage() {
                </TabsList>
                <TabsList className="grid w-full grid-cols-2 bg-gray-100 h-12">
                  <TabsTrigger value="scooters" className="flex items-center justify-center space-x-2 h-full px-3 text-sm">
-                   <span>🛵</span>
+                   <span>🛴</span>
                    <span>Scooters</span>
                  </TabsTrigger>
                  <TabsTrigger value="accesorios" className="flex items-center justify-center space-x-2 h-full px-3 text-sm">
