@@ -10,11 +10,19 @@ import { useSearchParams } from "next/navigation"
 import { useEffect, useState } from "react"
 import { LanguageToggle } from '../../components/LanguageToggle'
 import { ThemeToggle } from '../../components/ThemeToggle'
+import { ReservationModal } from '../../components/ReservationModal'
 
 export default function AlquilerPage() {
   const searchParams = useSearchParams()
   const [activeTab, setActiveTab] = useState("bicicletas")
   const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const [isModalOpen, setIsModalOpen] = useState(false)
+  const [selectedItem, setSelectedItem] = useState<{name: string, price?: string}>({name: ""})
+
+  const handleReservation = (itemName: string, itemPrice?: string) => {
+    setSelectedItem({name: itemName, price: itemPrice})
+    setIsModalOpen(true)
+  }
 
   useEffect(() => {
     const tab = searchParams.get("tab")
@@ -593,7 +601,12 @@ export default function AlquilerPage() {
                       </div>
                     </div>
 
-                    <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white">Reservar Ahora</Button>
+                    <Button 
+                      className="w-full bg-blue-600 hover:bg-blue-700 text-white"
+                      onClick={() => handleReservation(bike.name, bike.prices[0]?.price)}
+                    >
+                      Reservar Ahora
+                    </Button>
                   </CardContent>
                 </Card>
               ))}
@@ -657,7 +670,12 @@ export default function AlquilerPage() {
                       </div>
                     </div>
 
-                    <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white">Reservar Ahora</Button>
+                    <Button 
+                      className="w-full bg-blue-600 hover:bg-blue-700 text-white"
+                      onClick={() => handleReservation(car.name, car.prices[0]?.price)}
+                    >
+                      Reservar Ahora
+                    </Button>
                   </CardContent>
                 </Card>
               ))}
@@ -746,7 +764,12 @@ export default function AlquilerPage() {
                       </div>
                     </div>
 
-                    <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white mt-auto">Reservar Ahora</Button>
+                    <Button 
+                      className="w-full bg-blue-600 hover:bg-blue-700 text-white mt-auto"
+                      onClick={() => handleReservation(moto.name, moto.prices[0]?.price)}
+                    >
+                      Reservar Ahora
+                    </Button>
                   </CardContent>
                 </Card>
               ))}
@@ -833,7 +856,12 @@ export default function AlquilerPage() {
                       </div>
                     </div>
 
-                    <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white">Reservar Ahora</Button>
+                    <Button 
+                      className="w-full bg-blue-600 hover:bg-blue-700 text-white"
+                      onClick={() => handleReservation(scooter.name, scooter.prices[0]?.price)}
+                    >
+                      Reservar Ahora
+                    </Button>
                   </CardContent>
                 </Card>
               ))}
@@ -885,7 +913,12 @@ export default function AlquilerPage() {
                       </Badge>
                     </div>
 
-                    <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white">Añadir al Alquiler</Button>
+                    <Button 
+                      className="w-full bg-blue-600 hover:bg-blue-700 text-white"
+                      onClick={() => handleReservation(accessory.name, accessory.price)}
+                    >
+                      Añadir al Alquiler
+                    </Button>
                   </CardContent>
                 </Card>
               ))}
@@ -951,6 +984,15 @@ export default function AlquilerPage() {
           </Card>
         </div>
       </div>
+
+      {/* Reservation Modal */}
+      <ReservationModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        type="rental"
+        itemName={selectedItem.name}
+        itemPrice={selectedItem.price}
+      />
 
       {/* Footer */}
       <footer className="bg-gray-900 text-white py-8">

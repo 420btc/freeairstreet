@@ -10,10 +10,18 @@ import Image from "next/image"
 import Link from "next/link"
 import { LanguageToggle } from '../../components/LanguageToggle'
 import { ThemeToggle } from '../../components/ThemeToggle'
+import { ReservationModal } from '../../components/ReservationModal'
 
 export default function ToursPage() {
   const [activeTab, setActiveTab] = useState("excursiones")
   const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const [isModalOpen, setIsModalOpen] = useState(false)
+  const [selectedItem, setSelectedItem] = useState<{name: string, price?: string}>({name: ""})
+
+  const handleReservation = (itemName: string, itemPrice?: string) => {
+    setSelectedItem({name: itemName, price: itemPrice})
+    setIsModalOpen(true)
+  }
 
   const horseRiding = [
     {
@@ -345,7 +353,10 @@ export default function ToursPage() {
                       </div>
                     </div>
 
-                    <Button className="w-full bg-blue-600 hover:bg-blue-700">
+                    <Button 
+                      className="w-full bg-blue-600 hover:bg-blue-700"
+                      onClick={() => handleReservation(excursion.name, excursion.price)}
+                    >
                       <Calendar className="h-4 w-4 mr-2" />
                       Reservar Excursión
                     </Button>
@@ -437,7 +448,10 @@ export default function ToursPage() {
                       </ul>
                     </div>
 
-                    <Button className="w-full bg-blue-600 hover:bg-blue-700">
+                    <Button 
+                      className="w-full bg-blue-600 hover:bg-blue-700"
+                      onClick={() => handleReservation(activity.name, activity.priceAdult || activity.price)}
+                    >
                       <Calendar className="h-4 w-4 mr-2" />
                       {activity.price === "Consultar precio" ? "Consultar Disponibilidad" : "Reservar Actividad"}
                     </Button>
@@ -498,7 +512,10 @@ export default function ToursPage() {
                       </ul>
                     </div>
 
-                    <Button className="w-full bg-blue-600 hover:bg-blue-700">
+                    <Button 
+                      className="w-full bg-blue-600 hover:bg-blue-700"
+                      onClick={() => handleReservation(activity.name, activity.price)}
+                    >
                       <Calendar className="h-4 w-4 mr-2" />
                       Reservar Paseo
                     </Button>
@@ -636,6 +653,15 @@ export default function ToursPage() {
           </div>
         </div>
       </footer>
+      
+      {/* Reservation Modal */}
+      <ReservationModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        type="tour"
+        itemName={selectedItem.name}
+        itemPrice={selectedItem.price}
+      />
     </div>
   )
 }
