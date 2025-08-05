@@ -17,10 +17,23 @@ export default function AlquilerPage() {
   const [activeTab, setActiveTab] = useState("bicicletas")
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [isModalOpen, setIsModalOpen] = useState(false)
-  const [selectedItem, setSelectedItem] = useState<{name: string, price?: string}>({name: ""})
+  const [selectedItem, setSelectedItem] = useState<{name: string, price?: string, duration?: string}>({name: ""})
+  const [selectedPrices, setSelectedPrices] = useState<{[key: string]: {duration: string, price: string}}>({})
 
-  const handleReservation = (itemName: string, itemPrice?: string) => {
-    setSelectedItem({name: itemName, price: itemPrice})
+  const handlePriceSelection = (itemName: string, duration: string, price: string) => {
+    setSelectedPrices(prev => ({
+      ...prev,
+      [itemName]: { duration, price }
+    }))
+  }
+
+  const handleReservation = (itemName: string) => {
+    const selectedPrice = selectedPrices[itemName]
+    setSelectedItem({
+      name: itemName, 
+      price: selectedPrice?.price,
+      duration: selectedPrice?.duration
+    })
     setIsModalOpen(true)
   }
 
@@ -613,32 +626,46 @@ export default function AlquilerPage() {
                     <div className="space-y-3 mb-4">
                       <h4 className="font-semibold text-gray-900">Precios:</h4>
                       <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
-                        {bike.prices.map((price, index) => (
-                          <div key={index} className="flex flex-col items-center p-3 bg-gray-50 rounded-lg">
-                            <div className="flex items-center space-x-1 mb-2">
-                              <Clock className="h-4 w-4 text-gray-500" />
-                              <span className="text-sm font-semibold text-gray-700">{price.duration}</span>
-                            </div>
-                            <Badge
-                              variant={price.featured ? "default" : "secondary"}
-                              className={`text-lg font-bold px-3 py-1 ${
-                                price.featured
-                                  ? "bg-yellow-500 text-blue-900 hover:bg-yellow-600"
-                                  : "bg-blue-100 text-blue-800"
+                        {bike.prices.map((price, index) => {
+                          const isSelected = selectedPrices[bike.name]?.duration === price.duration
+                          return (
+                            <button
+                              key={index}
+                              onClick={() => handlePriceSelection(bike.name, price.duration, price.price)}
+                              className={`flex flex-col items-center p-3 rounded-lg transition-all duration-200 border-2 ${
+                                isSelected
+                                  ? "bg-blue-600 border-blue-600 shadow-lg transform scale-105"
+                                  : "bg-gray-50 border-transparent hover:bg-gray-100 hover:border-gray-200"
                               }`}
                             >
-                              {price.price}
-                            </Badge>
-                          </div>
-                        ))}
+                              <div className="flex items-center space-x-1 mb-2">
+                                <Clock className={`h-4 w-4 ${isSelected ? "text-white" : "text-gray-500"}`} />
+                                <span className={`text-sm font-semibold ${isSelected ? "text-white" : "text-gray-700"}`}>{price.duration}</span>
+                              </div>
+                              <Badge
+                                variant={price.featured ? "default" : "secondary"}
+                                className={`text-lg font-bold px-3 py-1 pointer-events-none ${
+                                  isSelected
+                                    ? "bg-white text-blue-600"
+                                    : price.featured
+                                      ? "bg-yellow-500 text-blue-900 hover:bg-yellow-600"
+                                      : "bg-blue-100 text-blue-800"
+                                }`}
+                              >
+                                {price.price}
+                              </Badge>
+                            </button>
+                          )
+                        })}
                       </div>
                     </div>
 
                     <Button 
                       className="w-full bg-blue-600 hover:bg-blue-700 text-white"
-                      onClick={() => handleReservation(bike.name, bike.prices[0]?.price)}
+                      onClick={() => handleReservation(bike.name)}
+                      disabled={!selectedPrices[bike.name]}
                     >
-                      Reservar Ahora
+                      {selectedPrices[bike.name] ? `Reservar ${selectedPrices[bike.name].duration} por ${selectedPrices[bike.name].price}` : "Selecciona un precio"}
                     </Button>
                   </CardContent>
                 </Card>
@@ -682,32 +709,46 @@ export default function AlquilerPage() {
                     <div className="space-y-3 mb-4">
                       <h4 className="font-semibold text-gray-900">Precios:</h4>
                       <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
-                        {car.prices.map((price, index) => (
-                          <div key={index} className="flex flex-col items-center p-3 bg-gray-50 rounded-lg">
-                            <div className="flex items-center space-x-1 mb-2">
-                              <Clock className="h-4 w-4 text-gray-500" />
-                              <span className="text-sm font-semibold text-gray-700">{price.duration}</span>
-                            </div>
-                            <Badge
-                              variant={price.featured ? "default" : "secondary"}
-                              className={`text-lg font-bold px-3 py-1 ${
-                                price.featured
-                                  ? "bg-yellow-500 text-blue-900 hover:bg-yellow-600"
-                                  : "bg-blue-100 text-blue-800"
+                        {car.prices.map((price, index) => {
+                          const isSelected = selectedPrices[car.name]?.duration === price.duration
+                          return (
+                            <button
+                              key={index}
+                              onClick={() => handlePriceSelection(car.name, price.duration, price.price)}
+                              className={`flex flex-col items-center p-3 rounded-lg transition-all duration-200 border-2 ${
+                                isSelected
+                                  ? "bg-blue-600 border-blue-600 shadow-lg transform scale-105"
+                                  : "bg-gray-50 border-transparent hover:bg-gray-100 hover:border-gray-200"
                               }`}
                             >
-                              {price.price}
-                            </Badge>
-                          </div>
-                        ))}
+                              <div className="flex items-center space-x-1 mb-2">
+                                <Clock className={`h-4 w-4 ${isSelected ? "text-white" : "text-gray-500"}`} />
+                                <span className={`text-sm font-semibold ${isSelected ? "text-white" : "text-gray-700"}`}>{price.duration}</span>
+                              </div>
+                              <Badge
+                                variant={price.featured ? "default" : "secondary"}
+                                className={`text-lg font-bold px-3 py-1 pointer-events-none ${
+                                  isSelected
+                                    ? "bg-white text-blue-600"
+                                    : price.featured
+                                      ? "bg-yellow-500 text-blue-900 hover:bg-yellow-600"
+                                      : "bg-blue-100 text-blue-800"
+                                }`}
+                              >
+                                {price.price}
+                              </Badge>
+                            </button>
+                          )
+                        })}
                       </div>
                     </div>
 
                     <Button 
                       className="w-full bg-blue-600 hover:bg-blue-700 text-white"
-                      onClick={() => handleReservation(car.name, car.prices[0]?.price)}
+                      onClick={() => handleReservation(car.name)}
+                      disabled={!selectedPrices[car.name]}
                     >
-                      Reservar Ahora
+                      {selectedPrices[car.name] ? `Reservar ${selectedPrices[car.name].duration} por ${selectedPrices[car.name].price}` : "Selecciona un precio"}
                     </Button>
                   </CardContent>
                 </Card>
@@ -776,32 +817,46 @@ export default function AlquilerPage() {
                     <div className={`space-y-3 mb-4 ${moto.id === 'motorbike' || moto.id === 'quad-rental' ? 'flex-grow' : ''}`}>
                       <h4 className="font-semibold text-gray-900">Precios:</h4>
                       <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
-                        {moto.prices.map((price, index) => (
-                          <div key={index} className="flex flex-col items-center p-3 bg-gray-50 rounded-lg">
-                            <div className="flex items-center space-x-1 mb-2">
-                              <Clock className="h-4 w-4 text-gray-500" />
-                              <span className="text-sm font-semibold text-gray-700">{price.duration}</span>
-                            </div>
-                            <Badge
-                              variant={price.featured ? "default" : "secondary"}
-                              className={`text-lg font-bold px-3 py-1 ${
-                                price.featured
-                                  ? "bg-yellow-500 text-blue-900 hover:bg-yellow-600"
-                                  : "bg-blue-100 text-blue-800"
+                        {moto.prices.map((price, index) => {
+                          const isSelected = selectedPrices[moto.name]?.duration === price.duration
+                          return (
+                            <button
+                              key={index}
+                              onClick={() => handlePriceSelection(moto.name, price.duration, price.price)}
+                              className={`flex flex-col items-center p-3 rounded-lg transition-all duration-200 border-2 ${
+                                isSelected
+                                  ? "bg-blue-600 border-blue-600 shadow-lg transform scale-105"
+                                  : "bg-gray-50 border-transparent hover:bg-gray-100 hover:border-gray-200"
                               }`}
                             >
-                              {price.price}
-                            </Badge>
-                          </div>
-                        ))}
+                              <div className="flex items-center space-x-1 mb-2">
+                                <Clock className={`h-4 w-4 ${isSelected ? "text-white" : "text-gray-500"}`} />
+                                <span className={`text-sm font-semibold ${isSelected ? "text-white" : "text-gray-700"}`}>{price.duration}</span>
+                              </div>
+                              <Badge
+                                variant={price.featured ? "default" : "secondary"}
+                                className={`text-lg font-bold px-3 py-1 pointer-events-none ${
+                                  isSelected
+                                    ? "bg-white text-blue-600"
+                                    : price.featured
+                                      ? "bg-yellow-500 text-blue-900 hover:bg-yellow-600"
+                                      : "bg-blue-100 text-blue-800"
+                                }`}
+                              >
+                                {price.price}
+                              </Badge>
+                            </button>
+                          )
+                        })}
                       </div>
                     </div>
 
                     <Button 
                       className="w-full bg-blue-600 hover:bg-blue-700 text-white mt-auto"
-                      onClick={() => handleReservation(moto.name, moto.prices[0]?.price)}
+                      onClick={() => handleReservation(moto.name)}
+                      disabled={!selectedPrices[moto.name]}
                     >
-                      Reservar Ahora
+                      {selectedPrices[moto.name] ? `Reservar ${selectedPrices[moto.name].duration} por ${selectedPrices[moto.name].price}` : "Selecciona un precio"}
                     </Button>
                   </CardContent>
                 </Card>
@@ -868,32 +923,46 @@ export default function AlquilerPage() {
                     <div className="space-y-3 mb-4">
                       <h4 className="font-semibold text-gray-900">Precios:</h4>
                       <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
-                        {scooter.prices.map((price, index) => (
-                          <div key={index} className="flex flex-col items-center p-3 bg-gray-50 rounded-lg">
-                            <div className="flex items-center space-x-1 mb-2">
-                              <Clock className="h-4 w-4 text-gray-500" />
-                              <span className="text-sm font-semibold text-gray-700">{price.duration}</span>
-                            </div>
-                            <Badge
-                              variant={price.featured ? "default" : "secondary"}
-                              className={`text-lg font-bold px-3 py-1 ${
-                                price.featured
-                                  ? "bg-yellow-500 text-blue-900 hover:bg-yellow-600"
-                                  : "bg-blue-100 text-blue-800"
+                        {scooter.prices.map((price, index) => {
+                          const isSelected = selectedPrices[scooter.name]?.duration === price.duration
+                          return (
+                            <button
+                              key={index}
+                              onClick={() => handlePriceSelection(scooter.name, price.duration, price.price)}
+                              className={`flex flex-col items-center p-3 rounded-lg transition-all duration-200 border-2 ${
+                                isSelected
+                                  ? "bg-blue-600 border-blue-600 shadow-lg transform scale-105"
+                                  : "bg-gray-50 border-transparent hover:bg-gray-100 hover:border-gray-200"
                               }`}
                             >
-                              {price.price}
-                            </Badge>
-                          </div>
-                        ))}
+                              <div className="flex items-center space-x-1 mb-2">
+                                <Clock className={`h-4 w-4 ${isSelected ? "text-white" : "text-gray-500"}`} />
+                                <span className={`text-sm font-semibold ${isSelected ? "text-white" : "text-gray-700"}`}>{price.duration}</span>
+                              </div>
+                              <Badge
+                                variant={price.featured ? "default" : "secondary"}
+                                className={`text-lg font-bold px-3 py-1 pointer-events-none ${
+                                  isSelected
+                                    ? "bg-white text-blue-600"
+                                    : price.featured
+                                      ? "bg-yellow-500 text-blue-900 hover:bg-yellow-600"
+                                      : "bg-blue-100 text-blue-800"
+                                }`}
+                              >
+                                {price.price}
+                              </Badge>
+                            </button>
+                          )
+                        })}
                       </div>
                     </div>
 
                     <Button 
                       className="w-full bg-blue-600 hover:bg-blue-700 text-white"
-                      onClick={() => handleReservation(scooter.name, scooter.prices[0]?.price)}
+                      onClick={() => handleReservation(scooter.name)}
+                      disabled={!selectedPrices[scooter.name]}
                     >
-                      Reservar Ahora
+                      {selectedPrices[scooter.name] ? `Reservar ${selectedPrices[scooter.name].duration} por ${selectedPrices[scooter.name].price}` : "Selecciona un precio"}
                     </Button>
                   </CardContent>
                 </Card>
@@ -948,7 +1017,7 @@ export default function AlquilerPage() {
 
                     <Button 
                       className="w-full bg-blue-600 hover:bg-blue-700 text-white"
-                      onClick={() => handleReservation(accessory.name, accessory.price)}
+                      onClick={() => handleReservation(accessory.name)}
                     >
                       Añadir al Alquiler
                     </Button>
@@ -1025,6 +1094,7 @@ export default function AlquilerPage() {
         type="rental"
         itemName={selectedItem.name}
         itemPrice={selectedItem.price}
+        itemDuration={selectedItem.duration}
       />
 
       {/* Footer */}

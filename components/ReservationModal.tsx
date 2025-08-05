@@ -16,16 +16,17 @@ interface ReservationModalProps {
   type: "rental" | "tour"
   itemName?: string
   itemPrice?: string
+  itemDuration?: string
 }
 
-export function ReservationModal({ isOpen, onClose, type, itemName, itemPrice }: ReservationModalProps) {
+export function ReservationModal({ isOpen, onClose, type, itemName, itemPrice, itemDuration }: ReservationModalProps) {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
     phone: "",
     date: "",
     time: "",
-    duration: "",
+    duration: itemDuration || "",
     participants: "1",
     pickupLocation: "",
     comments: ""
@@ -104,7 +105,9 @@ export function ReservationModal({ isOpen, onClose, type, itemName, itemPrice }:
               {itemName && !isSubmitted && (
                 <div>
                   <p className="text-xl font-semibold text-blue-900">{itemName}</p>
-                   {itemPrice && <p className="text-4xl font-bold text-blue-900 mt-1">{itemPrice}</p>}
+                  {itemDuration && itemPrice && (
+                    <p className="text-lg font-medium text-blue-800 mt-1">{itemDuration} - <span className="text-2xl font-bold">{itemPrice}</span></p>
+                  )}
                 </div>
               )}
             </div>
@@ -234,7 +237,7 @@ export function ReservationModal({ isOpen, onClose, type, itemName, itemPrice }:
                 {isRental && (
                   <div>
                     <Label htmlFor="duration" className="text-gray-700 dark:text-gray-300">Duración *</Label>
-                    <Select onValueChange={(value) => handleInputChange("duration", value)}>
+                    <Select onValueChange={(value) => handleInputChange("duration", value)} value={formData.duration}>
                       <SelectTrigger className="border-gray-300 focus:border-blue-500 dark:border-gray-600 dark:bg-gray-800">
                         <SelectValue placeholder="Selecciona duración" />
                       </SelectTrigger>
