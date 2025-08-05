@@ -42,7 +42,7 @@ const translations = {
     // Location Section
     'location.title': 'Donde Estamos',
     'location.subtitle': 'Nos encontramos en el corazón de Torremolinos, listos para tu próxima aventura',
-    'location.description': 'Visítanos en nuestra ubicación privilegiada en el centro de Torremolinos, donde podrás encontrar todo lo que necesitas para tu aventura.',
+    'location.description': 'Visítanos en nuestra ubicación privilegiada a orillas del mar mediterráneo en Torremolinos donde podrás encontrar todo lo que necesitas para tu aventura.',
     'location.ourLocation': 'Nuestra Ubicación',
     'location.address': 'Calle de la Playa, 22',
     'location.city': '29620 Torremolinos, Málaga',
@@ -126,7 +126,7 @@ const translations = {
     // Location Section
     'location.title': 'Where We Are',
     'location.subtitle': 'We are located in the heart of Torremolinos, ready for your next adventure',
-    'location.description': 'Visit us at our privileged location in the center of Torremolinos, where you can find everything you need for your adventure.',
+    'location.description': 'Visit us at our privileged location on the shores of the Mediterranean Sea in Torremolinos where you can find everything you need for your adventure.',
     'location.ourLocation': 'Our Location',
     'location.address': 'Calle de la Playa, 22',
     'location.city': '29620 Torremolinos, Málaga',
