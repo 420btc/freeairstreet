@@ -50,18 +50,18 @@ export function ReservationModal({ isOpen, onClose, type, itemName, itemPrice }:
   const subtitle = isRental ? "Completa el formulario para alquilar" : "Completa el formulario para tu excursión"
 
   return (
-    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-      <Card className="w-full max-w-lg max-h-[95vh] overflow-y-auto bg-gradient-to-br from-yellow-50 via-white to-blue-50 dark:from-gray-900 dark:via-gray-800 dark:to-blue-900 border-2 border-yellow-400 shadow-2xl">
-        <CardHeader className="bg-gradient-to-r from-yellow-400 to-blue-500 text-white relative">
+    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-start justify-center p-2 sm:p-4 overflow-y-auto">
+      <Card className="w-full max-w-lg my-4 sm:my-8 bg-gradient-to-br from-yellow-50 via-white to-blue-50 dark:from-gray-900 dark:via-gray-800 dark:to-blue-900 border-2 border-yellow-400 shadow-2xl overflow-hidden">
+        <CardHeader className="bg-gradient-to-r from-yellow-400 to-blue-500 text-white relative -m-6 mb-0 p-6 rounded-t-lg">
           <div className="flex justify-between items-start">
-            <div className="flex-1">
-              <CardTitle className="text-xl font-bold mb-2">
+            <div className="flex-1 text-center">
+              <CardTitle className="text-2xl font-bold mb-2">
                 {title}
               </CardTitle>
               {itemName && (
                 <div>
-                  <p className="text-lg font-semibold text-blue-900">{itemName}</p>
-                   {itemPrice && <p className="text-3xl font-bold text-blue-900 mt-1">{itemPrice}</p>}
+                  <p className="text-xl font-semibold text-blue-900">{itemName}</p>
+                   {itemPrice && <p className="text-4xl font-bold text-blue-900 mt-1">{itemPrice}</p>}
                 </div>
               )}
             </div>
@@ -69,14 +69,14 @@ export function ReservationModal({ isOpen, onClose, type, itemName, itemPrice }:
               variant="ghost"
               size="sm"
               onClick={onClose}
-              className="text-white hover:bg-white/20 h-8 w-8 p-0 ml-4 flex-shrink-0"
+              className="text-white hover:bg-white/20 h-8 w-8 p-0 ml-4 flex-shrink-0 absolute top-4 right-4"
             >
               <X className="h-4 w-4" />
             </Button>
           </div>
         </CardHeader>
 
-        <CardContent className="p-4">
+        <CardContent className="p-6 pt-4">
           <form onSubmit={handleSubmit} className="space-y-4">
             {/* Información Personal */}
             <div className="space-y-4">
