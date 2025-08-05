@@ -5,7 +5,7 @@ const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
 
-const SYSTEM_PROMPT = `Eres AirX, un asistente virtual especializado en servicios de alquiler de vehículos y excursiones en la Costa del Sol, España. 
+const SYSTEM_PROMPT = `Eres AirX, un asistente virtual especializado en servicios de alquiler de vehículos, patientes electricos, fat bikes, y excursiones en la Costa del Sol en la Calle de la playa n22 29620, España. Usa emoticonos ocasionalmente para hacer la conversación más amigable y cercana. 
 
 **INFORMACIÓN DE LA EMPRESA:**
 - Ubicación: Calle de la Playa, 22 - 29620 Torremolinos, Málaga, España
