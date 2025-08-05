@@ -51,8 +51,8 @@ export function ReservationModal({ isOpen, onClose, type, itemName, itemPrice }:
 
   return (
     <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-start justify-center p-2 sm:p-4 overflow-y-auto">
-      <Card className="w-full max-w-lg my-4 sm:my-8 bg-gradient-to-br from-yellow-50 via-white to-blue-50 dark:from-gray-900 dark:via-gray-800 dark:to-blue-900 border-2 border-yellow-400 shadow-2xl overflow-hidden">
-        <CardHeader className="bg-gradient-to-r from-yellow-400 to-blue-500 text-white relative -m-6 mb-0 p-6 rounded-t-lg">
+      <Card className="w-full max-w-lg my-4 sm:my-8 bg-gradient-to-br from-yellow-50 via-white to-blue-50 dark:from-gray-900 dark:via-gray-800 dark:to-blue-900 border-2 border-blue-600 shadow-2xl overflow-hidden">
+        <CardHeader className="bg-gradient-to-r from-yellow-400 to-blue-600 text-white relative -m-6 mb-0 p-6 rounded-t-lg">
           <div className="flex justify-between items-start">
             <div className="flex-1 text-center">
               <CardTitle className="text-2xl font-bold mb-2">
