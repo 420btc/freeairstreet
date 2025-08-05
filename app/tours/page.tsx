@@ -248,7 +248,8 @@ export default function ToursPage() {
         </div>
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <TabsList className="grid w-full grid-cols-3 mb-8">
+          {/* Desktop: Una fila */}
+          <TabsList className="hidden sm:grid w-full grid-cols-3 mb-8">
             <TabsTrigger value="excursiones" className="flex items-center space-x-2">
               <span>🏛️</span>
               <span>Excursiones</span>
@@ -262,6 +263,26 @@ export default function ToursPage() {
               <span>Paseos a Caballo</span>
             </TabsTrigger>
           </TabsList>
+          
+          {/* Mobile: Dos filas */}
+          <div className="sm:hidden mb-8">
+            <TabsList className="grid w-full grid-cols-2 mb-4 h-12">
+              <TabsTrigger value="excursiones" className="flex items-center justify-center space-x-2 h-full px-3 text-sm">
+                <span>🏛️</span>
+                <span>Excursiones</span>
+              </TabsTrigger>
+              <TabsTrigger value="actividades-marinas" className="flex items-center justify-center space-x-2 h-full px-3 text-sm">
+                <span>🚢</span>
+                <span>Actividades Marinas</span>
+              </TabsTrigger>
+            </TabsList>
+            <TabsList className="grid w-full grid-cols-1 bg-gray-100 h-12">
+              <TabsTrigger value="caballos" className="flex items-center justify-center space-x-2 h-full px-3 text-sm">
+                <span>🐎</span>
+                <span>Paseos a Caballo</span>
+              </TabsTrigger>
+            </TabsList>
+          </div>
 
           {/* Excursiones Tab */}
           <TabsContent value="excursiones">
