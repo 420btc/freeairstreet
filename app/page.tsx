@@ -191,7 +191,7 @@ export default function HomePage() {
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link href="/alquiler">
-              <Button size="xl" className="bg-blue-600 hover:bg-blue-700 text-white px-10 py-4 md:px-12 md:py-5 md:text-xl">
+              <Button size="xl" className="bg-blue-600 hover:bg-blue-700 text-white px-10 py-6 md:px-12 md:py-7 md:text-xl">
                 {t('hero.viewRentals')}
               </Button>
             </Link>
@@ -199,7 +199,7 @@ export default function HomePage() {
               <Button
                 size="xl"
                 variant="outline"
-                className="border-white text-white hover:bg-white hover:text-blue-600 px-10 py-4 bg-transparent md:bg-white md:text-blue-600 md:border-blue-600 md:hover:bg-blue-50 md:px-12 md:py-5 md:text-xl"
+                className="border-white text-white hover:bg-white hover:text-blue-600 px-10 py-6 bg-transparent md:bg-white md:text-blue-600 md:border-blue-600 md:hover:bg-blue-50 md:px-12 md:py-7 md:text-xl"
               >
                 {t('hero.bookTour')}
               </Button>
