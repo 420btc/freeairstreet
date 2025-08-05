@@ -275,7 +275,7 @@ export default function HomePage() {
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">{t('location.title')}</h2>
             <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-              Visítanos en nuestra ubicación privilegiada a orillas del Mar de Alborán en <Badge className="bg-yellow-400 text-blue-600 hover:bg-yellow-500 text-lg">Torremolinos</Badge> donde podrás encontrar todo lo que necesitas para tu aventura.
+              Visítanos en nuestra ubicación privilegiada a orillas del Mar de Alborán en La Colina <Badge className="bg-yellow-400 text-blue-600 hover:bg-yellow-500 text-lg">Torremolinos</Badge> donde podrás encontrar todo lo que necesitas para tu aventura.
             </p>
           </div>
           
