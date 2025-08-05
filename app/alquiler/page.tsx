@@ -492,6 +492,17 @@ export default function AlquilerPage() {
       </header>
 
       <div className="container mx-auto px-4 py-8">
+        {/* Título y Subtítulo */}
+        <div className="text-center mb-12">
+          <h1 className="text-4xl md:text-5xl font-bold text-black mb-4">
+            Alquiler de Vehículos
+          </h1>
+          <p className="text-lg md:text-xl text-gray-700 max-w-3xl mx-auto">
+            Descubre la libertad de moverte por Torremolinos con nuestras bicicletas, coches, motos y scooters. 
+            ¡Elige tu vehículo ideal y vive una experiencia única!
+          </p>
+        </div>
+
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
           <div className="mb-8">
             {/* Desktop: Una sola fila con 5 elementos */}

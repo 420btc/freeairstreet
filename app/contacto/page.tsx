@@ -185,18 +185,20 @@ export default function ContactoPage() {
       </header>
 
       <div className="container mx-auto px-4 py-6">
-        {/* Hero Section */}
-        <div className="text-center mb-8">
-          <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-3">¡Hablemos!</h2>
-          <p className="text-base text-gray-600 max-w-2xl mx-auto">
-            ¿Tienes alguna pregunta sobre nuestros servicios? ¿Necesitas ayuda con tu reserva? Estamos aquí para
-            ayudarte en tu próxima aventura.
+        {/* Título y Subtítulo */}
+        <div className="text-center mb-12">
+          <h1 className="text-4xl md:text-5xl font-bold text-black mb-4">
+            Contacto
+          </h1>
+          <p className="text-lg md:text-xl text-gray-700 max-w-3xl mx-auto">
+            ¿Tienes alguna pregunta sobre nuestros servicios? ¿Necesitas ayuda con tu reserva? 
+            Estamos aquí para ayudarte en tu próxima aventura.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 xl:grid-cols-4 lg:grid-cols-3 gap-6">
           {/* Contact Form */}
-          <Card className="order-2 lg:order-1 lg:col-span-2">
+          <Card className="order-2 lg:order-1 xl:col-span-3 lg:col-span-2">
             <CardHeader>
               <CardTitle className="text-xl text-gray-900">Envíanos un mensaje</CardTitle>
               <CardDescription>
@@ -216,10 +218,10 @@ export default function ContactoPage() {
                   </Button>
                 </div>
               ) : (
-                <form onSubmit={handleSubmit} className="space-y-4">
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                <form onSubmit={handleSubmit} className="space-y-6">
+                  <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
                     <div>
-                      <Label htmlFor="name" className="text-sm">Nombre *</Label>
+                      <Label htmlFor="name" className="text-base font-medium">Nombre *</Label>
                       <Input
                         id="name"
                         name="name"
@@ -227,12 +229,12 @@ export default function ContactoPage() {
                         value={formData.name}
                         onChange={handleInputChange}
                         required
-                        className="mt-1 h-9"
+                        className="mt-1 h-11"
                         placeholder="Tu nombre"
                       />
                     </div>
                     <div>
-                      <Label htmlFor="phone" className="text-sm">Teléfono *</Label>
+                      <Label htmlFor="phone" className="text-base font-medium">Teléfono *</Label>
                       <Input
                         id="phone"
                         name="phone"
@@ -240,12 +242,12 @@ export default function ContactoPage() {
                         value={formData.phone}
                         onChange={handleInputChange}
                         required
-                        className="mt-1 h-9"
+                        className="mt-1 h-11"
                         placeholder="+34 XXX XXX XXX"
                       />
                     </div>
                     <div>
-                      <Label htmlFor="email" className="text-sm">Email *</Label>
+                      <Label htmlFor="email" className="text-base font-medium">Email *</Label>
                       <Input
                         id="email"
                         name="email"
@@ -253,14 +255,14 @@ export default function ContactoPage() {
                         value={formData.email}
                         onChange={handleInputChange}
                         required
-                        className="mt-1 h-9"
+                        className="mt-1 h-11"
                         placeholder="tu@email.com"
                       />
                     </div>
                   </div>
 
                   <div>
-                    <Label htmlFor="subject" className="text-sm">Asunto *</Label>
+                    <Label htmlFor="subject" className="text-base font-medium">Asunto *</Label>
                     <Input
                       id="subject"
                       name="subject"
@@ -268,20 +270,20 @@ export default function ContactoPage() {
                       value={formData.subject}
                       onChange={handleInputChange}
                       required
-                      className="mt-1 h-9"
+                      className="mt-1 h-11"
                       placeholder="¿En qué podemos ayudarte?"
                     />
                   </div>
 
                   <div>
-                    <Label htmlFor="message" className="text-sm">Mensaje *</Label>
+                    <Label htmlFor="message" className="text-base font-medium">Mensaje *</Label>
                     <Textarea
                       id="message"
                       name="message"
                       value={formData.message}
                       onChange={handleInputChange}
                       required
-                      className="mt-1 min-h-[80px]"
+                      className="mt-1 min-h-[120px] text-base"
                       placeholder="Cuéntanos más detalles sobre tu consulta..."
                     />
                   </div>
@@ -289,7 +291,7 @@ export default function ContactoPage() {
                   <Button
                     type="submit"
                     disabled={isSubmitting}
-                    className="w-full bg-blue-600 hover:bg-blue-700 text-white"
+                    className="w-full bg-blue-600 hover:bg-blue-700 text-white h-12 text-base font-semibold"
                   >
                     {isSubmitting ? (
                       <>

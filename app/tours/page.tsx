@@ -246,12 +246,14 @@ export default function ToursPage() {
       </header>
 
       <div className="container mx-auto px-4 py-8">
-        {/* Hero Section */}
+        {/* Título y Subtítulo */}
         <div className="text-center mb-12">
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Descubre Lugares Increíbles</h2>
-          <p className="text-lg text-gray-600 max-w-3xl mx-auto">
-            Desde paseos a caballo hasta excursiones culturales, tenemos la experiencia perfecta para ti. Guías expertos
-            y aventuras inolvidables te esperan.
+          <h1 className="text-4xl md:text-5xl font-bold text-black mb-4">
+            Visitas Guiadas
+          </h1>
+          <p className="text-lg md:text-xl text-gray-700 max-w-3xl mx-auto">
+            Descubre los destinos más fascinantes con nuestras excursiones, actividades marinas y paseos a caballo. 
+            ¡Vive experiencias únicas e inolvidables!
           </p>
         </div>
 
