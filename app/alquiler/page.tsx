@@ -358,7 +358,7 @@ export default function AlquilerPage() {
       id: "quad-rental",
       name: "RENT A QUAD",
       description: "Quad para una persona, perfecto para excursiones y diversión",
-      image: "/quad-rental.png",
+      image: "/quad.jpeg",
       cc: "Quad",
       prices: [
         { duration: "1 hora", price: "30€", featured: true },
