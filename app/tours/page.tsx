@@ -269,9 +269,12 @@ export default function ToursPage() {
                 <span>🚢</span>
                 <span>Actividades Marinas</span>
               </TabsTrigger>
-              <TabsTrigger value="caballos" className="flex items-center space-x-2 py-4 px-6 text-lg">
+              <TabsTrigger value="caballos" className="flex items-center space-x-2 py-4 px-6 text-lg relative">
                 <span>🐎</span>
                 <span>Paseos a Caballo</span>
+                <div className="absolute -top-2 -right-2 bg-yellow-400 text-red-600 font-bold text-xs px-2 py-1 rounded-full border-2 border-yellow-500 shadow-lg transform rotate-12">
+                  HOT!
+                </div>
               </TabsTrigger>
             </TabsList>
             
@@ -288,9 +291,12 @@ export default function ToursPage() {
                 </TabsTrigger>
               </TabsList>
               <TabsList className="grid w-full grid-cols-1 bg-gray-100 h-12">
-                <TabsTrigger value="caballos" className="flex items-center justify-center space-x-2 h-full px-3 text-sm">
+                <TabsTrigger value="caballos" className="flex items-center justify-center space-x-2 h-full px-3 text-sm relative">
                   <span>🐎</span>
                   <span>Paseos a Caballo</span>
+                  <div className="absolute -top-1 -right-1 bg-yellow-400 text-red-600 font-bold text-xs px-1.5 py-0.5 rounded-full border-2 border-yellow-500 shadow-lg transform rotate-12">
+                    HOT!
+                  </div>
                 </TabsTrigger>
               </TabsList>
             </div>
