@@ -300,6 +300,19 @@ export default function HomePage() {
                     </span>
                   </p>
                 </div>
+                <div className="mt-6">
+                  <a 
+                    href="https://www.google.com/local/place/fid/0xd72fbe7f18b7617:0x749a1052ecf23196/photosphere?iu=https://streetviewpixels-pa.googleapis.com/v1/thumbnail?panoid%3Dya1f82-P9e7HTdzyoS5egg%26cb_client%3Dsearch.gws-prod.gps%26yaw%3D348.13068%26pitch%3D0%26thumbfov%3D100%26w%3D0%26h%3D0&ik=CAISFnlhMWY4Mi1QOWU3SFRkenlvUzVlZ2c%3D&sa=X&ved=2ahUKEwitnuPJ1PSOAxVaS_EDHX-WKOQQpx96BAggEBA"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm font-medium"
+                  >
+                    <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                    </svg>
+                    {t('location.streetView')}
+                  </a>
+                </div>
               </div>
 
               {/* Contact Info */}

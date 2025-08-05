@@ -50,6 +50,7 @@ const translations = {
     'location.phone': '+34 655 707 412',
     'location.email': 'info@freeairstreet-rentbike.com',
     'location.hours': 'Lunes a Domingo: 9:00 - 20:00',
+    'location.streetView': 'Ver en Street View',
     
     // Prices Section
     'prices.title': 'Precios Destacados',
@@ -133,6 +134,7 @@ const translations = {
     'location.phone': '+34 655 707 412',
     'location.email': 'info@freeairstreet-rentbike.com',
     'location.hours': 'Monday to Sunday: 9:00 - 20:00',
+    'location.streetView': 'View in Street View',
     
     // Prices Section
     'prices.title': 'Featured Prices',
