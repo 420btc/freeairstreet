@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { X, Calendar, User, Mail, Phone, MapPin, Clock, Users, CheckCircle } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
@@ -31,6 +31,13 @@ export function ReservationModal({ isOpen, onClose, type, itemName, itemPrice, i
     pickupLocation: "",
     comments: ""
   })
+
+  // Update duration when itemDuration changes
+  useEffect(() => {
+    if (itemDuration) {
+      setFormData(prev => ({ ...prev, duration: itemDuration }))
+    }
+  }, [itemDuration])
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [isSubmitted, setIsSubmitted] = useState(false)
   const [submitError, setSubmitError] = useState<string | null>(null)
