@@ -94,7 +94,7 @@ const translations = {
     'contact.location': 'Ubicación',
     
     // Footer
-    'footer.rights': '© 2024 Free Air Street. Todos los derechos reservados.',
+    'footer.rights': '© 2025 Free Air Street. Todos los derechos reservados.',
   },
   en: {
     // Header
@@ -177,7 +177,7 @@ const translations = {
     'contact.location': 'Location',
     
     // Footer
-    'footer.rights': '© 2024 Free Air Street. All rights reserved.',
+    'footer.rights': '© 2025 Free Air Street. All rights reserved.',
   },
 }
 
