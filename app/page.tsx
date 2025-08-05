@@ -612,6 +612,17 @@ export default function HomePage() {
 
             <div className="text-center md:text-right">
               <p className="text-gray-400">{t('footer.rights')}</p>
+              <div className="flex items-center justify-center md:justify-end space-x-2 mt-2">
+                <span className="text-gray-400 text-sm">Web made by:</span>
+                <a 
+                  href="https://carlosfr.es" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="bg-yellow-500 text-blue-900 px-3 py-1 rounded-full text-sm font-semibold hover:bg-yellow-400 transition-colors cursor-pointer"
+                >
+                  Carlosfr.es
+                </a>
+              </div>
             </div>
           </div>
         </div>
