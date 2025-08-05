@@ -4,6 +4,7 @@ import { Inter } from "next/font/google"
 import "./globals.css"
 import { LanguageProvider } from "../contexts/LanguageContext"
 import { ThemeProvider } from "../contexts/ThemeContext"
+import AirXChat from "../components/AirXChat"
 
 const inter = Inter({ subsets: ["latin"] })
 
@@ -30,6 +31,7 @@ export default function RootLayout({
         <ThemeProvider>
           <LanguageProvider>
             {children}
+            <AirXChat />
           </LanguageProvider>
         </ThemeProvider>
       </body>

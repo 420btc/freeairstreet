@@ -13,6 +13,7 @@ import { useLanguage } from '../contexts/LanguageContext'
 import { LanguageToggle } from '../components/LanguageToggle'
 import { ThemeToggle } from '../components/ThemeToggle'
 
+
 export default function HomePage() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [isQrModalOpen, setIsQrModalOpen] = useState(false)
@@ -660,6 +661,8 @@ export default function HomePage() {
           </div>
         </div>
       )}
+      
+
     </div>
   )
 }
