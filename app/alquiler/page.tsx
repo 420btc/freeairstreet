@@ -255,7 +255,7 @@ export default function AlquilerPage() {
       id: "motorbike",
       name: "MOTORBIKE MOTO ELÉCTRICA",
       description: "Moto eléctrica para recorridos más largos con comodidad y estilo",
-      image: "/electric-motorbike-motorcycle.png",
+      image: "/motos/motobike.jpeg",
       icon: <Zap className="h-6 w-6" />,
       cc: "Eléctrica",
       prices: [
