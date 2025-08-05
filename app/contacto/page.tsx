@@ -14,6 +14,7 @@ import Link from "next/link"
 import mapboxgl from "mapbox-gl"
 import { LanguageToggle } from '../../components/LanguageToggle'
 import { ThemeToggle } from '../../components/ThemeToggle'
+import { sendContactEmail, type ContactFormData } from '@/lib/emailjs'
 
 export default function ContactoPage() {
   const [formData, setFormData] = useState({
@@ -26,6 +27,7 @@ export default function ContactoPage() {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [isSubmitted, setIsSubmitted] = useState(false)
   const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const [submitError, setSubmitError] = useState<string | null>(null)
 
   useEffect(() => {
     mapboxgl.accessToken = 'pk.eyJ1IjoiNDIwYnRjIiwiYSI6ImNtOTN3ejBhdzByNjgycHF6dnVmeHl2ZTUifQ.Utq_q5wN6DHwpkn6rcpZdw'
@@ -65,22 +67,39 @@ export default function ContactoPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsSubmitting(true)
+    setSubmitError(null)
 
-    // Aquí integrarías EmailJS
-    // emailjs.send('YOUR_SERVICE_ID', 'YOUR_TEMPLATE_ID', formData, 'YOUR_PUBLIC_KEY')
+    try {
+      const contactData: ContactFormData = {
+        name: formData.name,
+        email: formData.email,
+        phone: formData.phone,
+        subject: formData.subject,
+        message: formData.message
+      }
 
-    // Simulación de envío
-    setTimeout(() => {
+      const result = await sendContactEmail(contactData)
+      
+      if (result.success) {
+         setIsSubmitted(true)
+         setFormData({
+           name: "",
+           email: "",
+           phone: "",
+           subject: "",
+           message: "",
+         })
+       } else {
+         const errorMsg = result.error || 'Error al enviar el mensaje. Por favor, inténtalo de nuevo.'
+         setSubmitError(errorMsg)
+         console.error('Detalles del error:', result.details)
+       }
+    } catch (error) {
+      console.error('Error submitting contact form:', error)
+      setSubmitError('Error al enviar el mensaje. Por favor, inténtalo de nuevo.')
+    } finally {
       setIsSubmitting(false)
-      setIsSubmitted(true)
-      setFormData({
-        name: "",
-        email: "",
-        phone: "",
-        subject: "",
-        message: "",
-      })
-    }, 2000)
+    }
   }
 
   const contactInfo = [
@@ -213,12 +232,21 @@ export default function ContactoPage() {
                   <p className="text-gray-600 mb-4">
                     Gracias por contactarnos. Te responderemos en las próximas 24 horas.
                   </p>
-                  <Button onClick={() => setIsSubmitted(false)} className="bg-blue-600 hover:bg-blue-700">
+                  <Button onClick={() => {
+                    setIsSubmitted(false)
+                    setSubmitError(null)
+                  }} className="bg-blue-600 hover:bg-blue-700">
                     Enviar otro mensaje
                   </Button>
                 </div>
               ) : (
-                <form onSubmit={handleSubmit} className="space-y-6">
+                <>
+                  {submitError && (
+                    <div className="mb-4 p-4 bg-red-50 rounded-lg border border-red-200">
+                      <p className="text-red-700">{submitError}</p>
+                    </div>
+                  )}
+                  <form onSubmit={handleSubmit} className="space-y-6">
                   <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
                     <div>
                       <Label htmlFor="name" className="text-base font-medium">Nombre *</Label>
@@ -306,6 +334,7 @@ export default function ContactoPage() {
                     )}
                   </Button>
                 </form>
+                </>
               )}
             </CardContent>
           </Card>
