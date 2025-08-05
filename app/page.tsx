@@ -191,15 +191,15 @@ export default function HomePage() {
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link href="/alquiler">
-              <Button size="lg" className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 md:px-10 md:py-4 md:text-lg">
+              <Button size="xl" className="bg-blue-600 hover:bg-blue-700 text-white px-10 py-4 md:px-12 md:py-5 md:text-xl">
                 {t('hero.viewRentals')}
               </Button>
             </Link>
             <Link href="/tours">
               <Button
-                size="lg"
+                size="xl"
                 variant="outline"
-                className="border-white text-white hover:bg-white hover:text-blue-600 px-8 py-3 bg-transparent md:bg-white md:text-blue-600 md:border-blue-600 md:hover:bg-blue-50 md:px-10 md:py-4 md:text-lg"
+                className="border-white text-white hover:bg-white hover:text-blue-600 px-10 py-4 bg-transparent md:bg-white md:text-blue-600 md:border-blue-600 md:hover:bg-blue-50 md:px-12 md:py-5 md:text-xl"
               >
                 {t('hero.bookTour')}
               </Button>
@@ -212,10 +212,12 @@ export default function HomePage() {
       <section id="servicios" className="py-16 bg-gray-50">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">{t('services.title')}</h2>
-            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-              {t('services.subtitle')}
-            </p>
+            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
+                {t('services.title')}
+              </h2>
+              <p className="text-lg md:text-xl text-gray-600 max-w-2xl mx-auto">
+                {t('services.subtitle')}
+              </p>
           </div>
 
           <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -372,8 +374,8 @@ export default function HomePage() {
       <section id="tours-destacados" className="py-16 bg-white">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">{t('tours.title')}</h2>
-            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">{t('tours.title')}</h2>
+            <p className="text-lg md:text-xl text-gray-600 max-w-2xl mx-auto">
               {t('tours.subtitle')}
             </p>
           </div>
@@ -511,7 +513,7 @@ export default function HomePage() {
 
           <div className="text-center mt-8">
             <Link href="/tours">
-              <Button size="lg" className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3">
+              <Button size="xl" className="bg-blue-600 hover:bg-blue-700 text-white px-12 py-4 text-lg">
                 {t('tours.viewAllTours')}
               </Button>
             </Link>
