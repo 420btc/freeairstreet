@@ -392,7 +392,7 @@ export default function AlquilerPage() {
       id: "electric-scooter",
       name: "SCOOTER / PATINETE",
       description: "Scooter eléctrico para movilidad urbana sostenible y eficiente",
-      image: "/electric-scooter-modern-urban.png",
+      image: "/patinelectrico.jpg",
       icon: <Zap className="h-6 w-6" />,
       prices: [
         { duration: "30 min", price: "10€" },
@@ -404,7 +404,7 @@ export default function AlquilerPage() {
       id: "electric-scooter-disabled",
       name: "ELECTRIC SCOOTER",
       description: "Scooter eléctrico especial para personas con movilidad reducida",
-      image: "/electric-scooter-disabled.png",
+      image: "/Scooterelectrico.jpg",
       icon: <Zap className="h-6 w-6" />,
       prices: [
         { duration: "Consultar", price: "Precio a consultar", featured: true },
@@ -419,6 +419,7 @@ export default function AlquilerPage() {
       name: "Sillón",
       price: "3€",
       description: "Asiento adicional para niños, seguro y cómodo",
+      image: "/Carrobici.png",
       features: ["Hasta 22kg", "Cinturón seguridad", "Respaldo alto", "Fácil instalación"],
     },
     {
@@ -426,6 +427,7 @@ export default function AlquilerPage() {
       name: "Carro",
       price: "6€",
       description: "Remolque para transporte de equipaje o niños",
+      image: "/Carrobici.jpg",
       features: ["Capacidad 40kg", "Ruedas grandes", "Lona impermeable", "Enganche universal"],
     },
   ]
@@ -810,7 +812,7 @@ export default function AlquilerPage() {
               {scooters.map((scooter) => (
                 <Card key={scooter.id} className="overflow-hidden hover:shadow-lg transition-shadow">
                   <div className="aspect-video relative">
-                    <Image src={scooter.image || "/placeholder.svg"} alt={scooter.name} fill className="object-cover" />
+                    <Image src={scooter.image || "/placeholder.svg"} alt={scooter.name} fill className="object-contain" />
                     <div className="absolute top-4 left-4">
                       <div className="bg-white/90 backdrop-blur-sm rounded-full p-2">{scooter.icon}</div>
                     </div>
@@ -873,9 +875,20 @@ export default function AlquilerPage() {
               {accessories.map((accessory) => (
                 <Card key={accessory.id} className="hover:shadow-lg transition-shadow">
                   <CardHeader className="text-center">
-                    <div className="mx-auto mb-4 p-4 bg-yellow-100 rounded-full w-16 h-16 flex items-center justify-center">
-                      <Euro className="h-8 w-8 text-blue-600" />
-                    </div>
+                    {accessory.image ? (
+                       <div className="mx-auto mb-4 w-48 h-48 relative">
+                         <Image
+                           src={accessory.image}
+                           alt={accessory.name}
+                           fill
+                           className="object-contain rounded-lg"
+                         />
+                       </div>
+                    ) : (
+                      <div className="mx-auto mb-4 p-4 bg-yellow-100 rounded-full w-16 h-16 flex items-center justify-center">
+                        <Euro className="h-8 w-8 text-blue-600" />
+                      </div>
+                    )}
                     <CardTitle className="text-xl text-gray-900">{accessory.name}</CardTitle>
                     <CardDescription className="text-gray-600">{accessory.description}</CardDescription>
                   </CardHeader>
