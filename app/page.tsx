@@ -191,7 +191,7 @@ export default function HomePage() {
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link href="/alquiler">
-              <Button size="lg" className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3">
+              <Button size="lg" className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 md:px-10 md:py-4 md:text-lg">
                 {t('hero.viewRentals')}
               </Button>
             </Link>
@@ -199,7 +199,7 @@ export default function HomePage() {
               <Button
                 size="lg"
                 variant="outline"
-                className="border-white text-white hover:bg-white hover:text-blue-600 px-8 py-3 bg-transparent"
+                className="border-white text-white hover:bg-white hover:text-blue-600 px-8 py-3 bg-transparent md:bg-white md:text-blue-600 md:border-blue-600 md:hover:bg-blue-50 md:px-10 md:py-4 md:text-lg"
               >
                 {t('hero.bookTour')}
               </Button>
@@ -223,7 +223,7 @@ export default function HomePage() {
               <Link key={index} href={service.href}>
                 <Card className="hover:shadow-lg transition-shadow cursor-pointer group h-full">
                   <CardHeader className="text-center">
-                    <div className="mx-auto mb-4 p-3 bg-yellow-100 rounded-full text-blue-600 group-hover:bg-yellow-200 transition-colors">
+                    <div className="mx-auto mb-4 p-3 bg-yellow-400 rounded-full text-blue-600 group-hover:bg-yellow-500 transition-colors">
                       {service.icon}
                     </div>
                     <CardTitle className="text-xl text-gray-900">{service.title}</CardTitle>
