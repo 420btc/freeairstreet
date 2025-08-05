@@ -1,5 +1,5 @@
 "use client"
-import { ArrowLeft, Clock, Euro, Info, Bike, Zap, Car, Menu, X } from "lucide-react"
+import { ArrowLeft, Clock, Info, Menu, X } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
@@ -29,7 +29,6 @@ export default function AlquilerPage() {
       name: "BICI PASEO / CITY BIKE",
       description: "Perfecta para paseos urbanos y recorridos tranquilos por la ciudad",
       image: "/urban-bicycle.png",
-      icon: <Bike className="h-6 w-6" />,
       prices: [
         { duration: "1h", price: "3€" },
         { duration: "2h", price: "5€" },
@@ -44,7 +43,6 @@ export default function AlquilerPage() {
       name: "MOUNTAIN BIKE / BICI CARRETERA",
       description: "Para aventuras en montaña y carretera, diseñada para terrenos exigentes",
       image: "/mountain-bike-trail.png",
-      icon: <Bike className="h-6 w-6" />,
       prices: [
         { duration: "1h", price: "6€" },
         { duration: "2h", price: "7€" },
@@ -58,7 +56,6 @@ export default function AlquilerPage() {
       name: "BIKE ELECT (Bicicleta eléctrica)",
       description: "Sin esfuerzo, máxima diversión y alcance. Perfecta para distancias largas",
       image: "/modern-electric-bike.png",
-      icon: <Zap className="h-6 w-6" />,
       prices: [
         { duration: "1h", price: "10€" },
         { duration: "2h", price: "18€" },
@@ -73,7 +70,6 @@ export default function AlquilerPage() {
       name: "FAT BIKE ELECTRIC",
       description: "Bicicleta eléctrica con ruedas anchas para todo tipo de terreno",
       image: "/fat-bike-electric-wide-tires.png",
-      icon: <Zap className="h-6 w-6" />,
       prices: [
         { duration: "1h", price: "10€" },
         { duration: "2h", price: "18€" },
@@ -92,7 +88,7 @@ export default function AlquilerPage() {
       group: "GRUPO A",
       description: "Coche compacto ideal para la ciudad, económico y fácil de aparcar",
       image: "/coches/toyotaaygo.png",
-      icon: <Car className="h-6 w-6" />,
+
       prices: [
         { duration: "1 Día", price: "54€" },
         { duration: "2D", price: "94€" },
@@ -110,7 +106,6 @@ export default function AlquilerPage() {
       group: "GRUPO A",
       description: "Coche compacto ideal para la ciudad, económico y fácil de aparcar",
       image: "/coches/citroenc1.jpg",
-      icon: <Car className="h-6 w-6" />,
       prices: [
         { duration: "1 Día", price: "58€" },
         { duration: "2D", price: "109€" },
@@ -128,7 +123,6 @@ export default function AlquilerPage() {
       group: "GRUPO B",
       description: "Vehículo versátil con más espacio y comodidad para viajes largos",
       image: "/coches/seatibiza.jpg",
-      icon: <Car className="h-6 w-6" />,
       prices: [
         { duration: "1D", price: "65€" },
         { duration: "2D", price: "115€" },
@@ -146,7 +140,6 @@ export default function AlquilerPage() {
       group: "GRUPO B",
       description: "SUV compacto versátil con más espacio y comodidad para viajes largos",
       image: "/coches/seatarona.png",
-      icon: <Car className="h-6 w-6" />,
       prices: [
         { duration: "1D", price: "75€" },
         { duration: "2D", price: "136€" },
@@ -164,7 +157,6 @@ export default function AlquilerPage() {
       group: "GRUPO B",
       description: "SUV familiar versátil con más espacio y comodidad para viajes largos",
       image: "/coches/seatateca.png",
-      icon: <Car className="h-6 w-6" />,
       prices: [
         { duration: "1D", price: "80€" },
         { duration: "2D", price: "150€" },
@@ -182,7 +174,6 @@ export default function AlquilerPage() {
       group: "GRUPO B",
       description: "Vehículo deportivo versátil con más espacio y comodidad para viajes largos",
       image: "/coches/seatleon.png",
-      icon: <Car className="h-6 w-6" />,
       prices: [
         { duration: "1D", price: "99€" },
         { duration: "2D", price: "195€" },
@@ -200,7 +191,6 @@ export default function AlquilerPage() {
       group: "GRUPO C",
       description: "Monovolumen familiar con capacidad para 7 personas y gran maletero",
       image: "/coches/volktouran.png",
-      icon: <Car className="h-6 w-6" />,
       prices: [
         { duration: "1D", price: "119€" },
         { duration: "2D", price: "230€" },
@@ -218,7 +208,6 @@ export default function AlquilerPage() {
       group: "GRUPO D",
       description: "Minibús para grupos grandes, perfecto para excursiones y eventos",
       image: "/coches/Boxer-9-seat.png",
-      icon: <Car className="h-6 w-6" />,
       prices: [
         { duration: "1D", price: "145€" },
         { duration: "2D", price: "280€" },
@@ -236,7 +225,6 @@ export default function AlquilerPage() {
       group: "GRUPO E",
       description: "Coche automático cómodo y fácil de conducir para cualquier ocasión",
       image: "/coches/renaultclio.jpeg",
-      icon: <Car className="h-6 w-6" />,
       prices: [
         { duration: "1D", price: "65€" },
         { duration: "2D", price: "126€" },
@@ -256,7 +244,7 @@ export default function AlquilerPage() {
       name: "MOTORBIKE MOTO ELÉCTRICA",
       description: "Moto eléctrica para recorridos más largos con comodidad y estilo",
       image: "/motos/motobike.jpeg",
-      icon: <Zap className="h-6 w-6" />,
+
       cc: "Eléctrica",
       prices: [
         { duration: "1h", price: "15€" },
@@ -269,7 +257,6 @@ export default function AlquilerPage() {
       name: "YAMAHA NEO'S 50CC",
       description: "Scooter urbano de 50cc, perfecto para la ciudad. No requiere carnet A",
       image: "/motos/yamahaneos50cc.png",
-      icon: <Zap className="h-6 w-6" />,
       cc: "50cc",
       prices: [
         { duration: "1D", price: "40€" },
@@ -287,7 +274,6 @@ export default function AlquilerPage() {
       name: "PIAGGIO LIBERTY 125CC",
       description: "Scooter clásico de 125cc con estilo italiano y gran comodidad",
       image: "/motos/piaggoliberty125cc.png",
-      icon: <Zap className="h-6 w-6" />,
       cc: "125cc",
       prices: [
         { duration: "1D", price: "45€" },
@@ -305,7 +291,6 @@ export default function AlquilerPage() {
       name: "YAMAHA XENTER 125CC",
       description: "Scooter deportivo de 125cc con tecnología avanzada y gran rendimiento",
       image: "/motos/yamahaxenter125cc.jpg",
-      icon: <Zap className="h-6 w-6" />,
       cc: "125cc",
       prices: [
         { duration: "1D", price: "55€" },
@@ -323,7 +308,6 @@ export default function AlquilerPage() {
       name: "BMW 310R",
       description: "Moto naked de alta gama con motor de 313cc y tecnología BMW",
       image: "/motos/bmw310r.jpg",
-      icon: <Zap className="h-6 w-6" />,
       cc: "313cc",
       prices: [
         { duration: "1D", price: "60€" },
@@ -341,7 +325,6 @@ export default function AlquilerPage() {
       name: "KYMCO SUPERDINK 350",
       description: "Maxiscooter de 350cc ideal para viajes largos y carretera",
       image: "/motos/kymcosuperdink350cc.png",
-      icon: <Zap className="h-6 w-6" />,
       cc: "350cc",
       prices: [
         { duration: "1D", price: "60€" },
@@ -359,7 +342,6 @@ export default function AlquilerPage() {
       name: "CFMOTO 650 MT",
       description: "Moto trail de 650cc para aventuras on-road y off-road",
       image: "/motos/cfmoto650mt.png",
-      icon: <Zap className="h-6 w-6" />,
       cc: "650cc",
       prices: [
         { duration: "1D", price: "80€" },
@@ -377,7 +359,6 @@ export default function AlquilerPage() {
       name: "RENT A QUAD",
       description: "Quad para una persona, perfecto para excursiones y diversión",
       image: "/quad-rental.png",
-      icon: <Car className="h-6 w-6" />,
       cc: "Quad",
       prices: [
         { duration: "1 hora", price: "30€", featured: true },
@@ -393,7 +374,6 @@ export default function AlquilerPage() {
       name: "SCOOTER / PATINETE",
       description: "Scooter eléctrico para movilidad urbana sostenible y eficiente",
       image: "/patinelectrico.jpg",
-      icon: <Zap className="h-6 w-6" />,
       prices: [
         { duration: "30 min", price: "10€" },
         { duration: "1h", price: "15€", featured: true },
@@ -405,7 +385,6 @@ export default function AlquilerPage() {
       name: "ELECTRIC SCOOTER",
       description: "Scooter eléctrico especial para personas con movilidad reducida",
       image: "/Scooterelectrico.jpg",
-      icon: <Zap className="h-6 w-6" />,
       prices: [
         { duration: "Consultar", price: "Precio a consultar", featured: true },
       ],
@@ -510,23 +489,23 @@ export default function AlquilerPage() {
             {/* Desktop: Una sola fila con 5 elementos */}
             <TabsList className="hidden sm:grid w-full grid-cols-5 h-16">
               <TabsTrigger value="bicicletas" className="flex items-center space-x-2 py-4 px-6 text-lg">
-                <Bike className="h-5 w-5" />
+                <span>🚴</span>
                 <span>Bicicletas</span>
               </TabsTrigger>
               <TabsTrigger value="coches" className="flex items-center space-x-2 py-4 px-6 text-lg">
-                <Car className="h-5 w-5" />
+                <span>🚗</span>
                 <span>Coches</span>
               </TabsTrigger>
               <TabsTrigger value="motos" className="flex items-center space-x-2 py-4 px-6 text-lg">
-                <Zap className="h-5 w-5" />
+                <span>🏍️</span>
                 <span>Motos</span>
               </TabsTrigger>
               <TabsTrigger value="scooters" className="flex items-center space-x-2 py-4 px-6 text-lg">
-                <Zap className="h-5 w-5" />
+                <span>🛵</span>
                 <span>Scooters</span>
               </TabsTrigger>
               <TabsTrigger value="accesorios" className="flex items-center space-x-2 py-4 px-6 text-lg">
-                <Euro className="h-5 w-5" />
+                <span>🛍️</span>
                 <span>Accesorios</span>
               </TabsTrigger>
             </TabsList>
@@ -535,25 +514,25 @@ export default function AlquilerPage() {
              <div className="sm:hidden">
                <TabsList className="grid w-full grid-cols-3 mb-4 h-12">
                  <TabsTrigger value="bicicletas" className="flex items-center justify-center space-x-2 h-full px-3 text-sm">
-                   <Bike className="h-4 w-4" />
+                   <span>🚴</span>
                    <span>Bicicletas</span>
                  </TabsTrigger>
                  <TabsTrigger value="coches" className="flex items-center justify-center space-x-2 h-full px-3 text-sm">
-                   <Car className="h-4 w-4" />
+                   <span>🚗</span>
                    <span>Coches</span>
                  </TabsTrigger>
                  <TabsTrigger value="motos" className="flex items-center justify-center space-x-2 h-full px-3 text-sm">
-                   <Zap className="h-4 w-4" />
+                   <span>🏍️</span>
                    <span>Motos</span>
                  </TabsTrigger>
                </TabsList>
                <TabsList className="grid w-full grid-cols-2 bg-gray-100 h-12">
                  <TabsTrigger value="scooters" className="flex items-center justify-center space-x-2 h-full px-3 text-sm">
-                   <Zap className="h-4 w-4" />
+                   <span>🛵</span>
                    <span>Scooters</span>
                  </TabsTrigger>
                  <TabsTrigger value="accesorios" className="flex items-center justify-center space-x-2 h-full px-3 text-sm">
-                   <Euro className="h-4 w-4" />
+                   <span>🛍️</span>
                    <span>Accesorios</span>
                  </TabsTrigger>
                </TabsList>
@@ -567,9 +546,7 @@ export default function AlquilerPage() {
                 <Card key={bike.id} className="overflow-hidden hover:shadow-lg transition-shadow">
                   <div className="aspect-video relative">
                     <Image src={bike.image || "/placeholder.svg"} alt={bike.name} fill className="object-cover" />
-                    <div className="absolute top-4 left-4">
-                      <div className="bg-white/90 backdrop-blur-sm rounded-full p-2">{bike.icon}</div>
-                    </div>
+
                   </div>
 
                   <CardHeader>
@@ -630,9 +607,7 @@ export default function AlquilerPage() {
                 <Card key={car.id} className="overflow-hidden hover:shadow-lg transition-shadow">
                   <div className="aspect-video relative">
                     <Image src={car.image || "/placeholder.svg"} alt={car.name} fill className="object-cover" />
-                    <div className="absolute top-4 left-4">
-                      <div className="bg-white/90 backdrop-blur-sm rounded-full p-2">{car.icon}</div>
-                    </div>
+
                     <div className="absolute top-4 right-4">
                       <Badge className="bg-yellow-500 text-blue-900 font-bold">{car.group}</Badge>
                     </div>
@@ -692,7 +667,7 @@ export default function AlquilerPage() {
             <Card className="mt-8 bg-yellow-50 border-yellow-200">
               <CardHeader>
                 <div className="flex items-center space-x-2">
-                  <Car className="h-5 w-5 text-yellow-600" />
+                  <span className="text-yellow-600">🚗</span>
                   <CardTitle className="text-yellow-900">Requisitos para Alquiler de Coches</CardTitle>
                 </div>
               </CardHeader>
@@ -721,9 +696,7 @@ export default function AlquilerPage() {
                 <Card key={moto.id} className="overflow-hidden hover:shadow-lg transition-shadow">
                   <div className="aspect-video relative">
                     <Image src={moto.image || "/placeholder.svg"} alt={moto.name} fill className="object-cover" />
-                    <div className="absolute top-4 left-4">
-                      <div className="bg-white/90 backdrop-blur-sm rounded-full p-2">{moto.icon}</div>
-                    </div>
+
                     <div className="absolute top-4 right-4">
                       <Badge className="bg-yellow-500 text-blue-900 font-bold">{moto.cc}</Badge>
                     </div>
@@ -783,7 +756,7 @@ export default function AlquilerPage() {
             <Card className="mt-8 bg-red-50 border-red-200">
               <CardHeader>
                 <div className="flex items-center space-x-2">
-                  <Zap className="h-5 w-5 text-red-600" />
+                  <span className="text-red-600">⚡</span>
                   <CardTitle className="text-red-900">Requisitos para Alquiler de Motos</CardTitle>
                 </div>
               </CardHeader>
@@ -813,9 +786,7 @@ export default function AlquilerPage() {
                 <Card key={scooter.id} className="overflow-hidden hover:shadow-lg transition-shadow">
                   <div className="aspect-video relative">
                     <Image src={scooter.image || "/placeholder.svg"} alt={scooter.name} fill className="object-contain" />
-                    <div className="absolute top-4 left-4">
-                      <div className="bg-white/90 backdrop-blur-sm rounded-full p-2">{scooter.icon}</div>
-                    </div>
+
                   </div>
 
                   <CardHeader>
@@ -886,7 +857,7 @@ export default function AlquilerPage() {
                        </div>
                     ) : (
                       <div className="mx-auto mb-4 p-4 bg-yellow-100 rounded-full w-16 h-16 flex items-center justify-center">
-                        <Euro className="h-8 w-8 text-blue-600" />
+                        <span className="text-blue-600 text-2xl">💰</span>
                       </div>
                     )}
                     <CardTitle className="text-xl text-gray-900">{accessory.name}</CardTitle>
