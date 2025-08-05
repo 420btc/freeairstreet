@@ -221,21 +221,37 @@ export default function ToursPage() {
 
           {/* Mobile Navigation */}
           {isMenuOpen && (
-            <div className="md:hidden py-4 border-t border-yellow-600">
+            <div className="md:hidden py-4 border-t border-yellow-600 animate-slideDown">
               <nav className="flex flex-col space-y-4">
-                <Link href="/alquiler" className="text-blue-900 hover:text-blue-700 navbar-mobile-text font-medium">
-                  Alquiler
+                <Link 
+                  href="/alquiler" 
+                  className="text-blue-900 hover:text-blue-700 navbar-mobile-text font-medium animate-fadeInUp"
+                  style={{ animationDelay: '0.1s' }}
+                >
+                  <span className="animate-typewriter">Alquiler</span>
                 </Link>
-                <Link href="/tours" className="text-blue-900 hover:text-blue-700 navbar-mobile-text font-medium border-l-4 border-blue-900 pl-2">
-                  Visitas Guiadas
+                <Link 
+                  href="/tours" 
+                  className="text-blue-900 hover:text-blue-700 navbar-mobile-text font-medium border-l-4 border-blue-900 pl-2 animate-fadeInUp"
+                  style={{ animationDelay: '0.2s' }}
+                >
+                  <span className="animate-typewriter" style={{ animationDelay: '0.2s' }}>Visitas Guiadas</span>
                 </Link>
-                <a href="/#tienda" className="text-blue-900 hover:text-blue-700 navbar-mobile-text font-medium">
-                  Tienda
+                <a 
+                  href="/#tienda" 
+                  className="text-blue-900 hover:text-blue-700 navbar-mobile-text font-medium animate-fadeInUp"
+                  style={{ animationDelay: '0.3s' }}
+                >
+                  <span className="animate-typewriter" style={{ animationDelay: '0.3s' }}>Tienda</span>
                 </a>
-                <Link href="/contacto" className="text-blue-900 hover:text-blue-700 navbar-mobile-text font-medium">
-                  Contacto
+                <Link 
+                  href="/contacto" 
+                  className="text-blue-900 hover:text-blue-700 navbar-mobile-text font-medium animate-fadeInUp"
+                  style={{ animationDelay: '0.4s' }}
+                >
+                  <span className="animate-typewriter" style={{ animationDelay: '0.4s' }}>Contacto</span>
                 </Link>
-                <div className="flex items-center space-x-4 pt-4 border-t border-yellow-600">
+                <div className="flex items-center space-x-4 pt-4 border-t border-yellow-600 animate-fadeInUp" style={{ animationDelay: '0.5s' }}>
                   <LanguageToggle />
                   <ThemeToggle />
                 </div>

@@ -151,19 +151,35 @@ export default function HomePage() {
 
           {/* Mobile Navigation */}
           {isMenuOpen && (
-            <div className="md:hidden py-4 border-t border-yellow-600">
+            <div className="md:hidden py-4 border-t border-yellow-600 animate-slideDown">
               <nav className="flex flex-col space-y-4">
-                <Link href="/alquiler" className="text-blue-900 hover:text-blue-700 navbar-mobile-text font-medium">
-                  {t('header.rental')}
+                <Link 
+                  href="/alquiler" 
+                  className="text-blue-900 hover:text-blue-700 navbar-mobile-text font-medium animate-fadeInUp"
+                  style={{ animationDelay: '0.1s' }}
+                >
+                  <span className="animate-typewriter">{t('header.rental')}</span>
                 </Link>
-                <Link href="/tours" className="text-blue-900 hover:text-blue-700 navbar-mobile-text font-medium">
-                  {t('header.tours')}
+                <Link 
+                  href="/tours" 
+                  className="text-blue-900 hover:text-blue-700 navbar-mobile-text font-medium animate-fadeInUp"
+                  style={{ animationDelay: '0.2s' }}
+                >
+                  <span className="animate-typewriter" style={{ animationDelay: '0.2s' }}>{t('header.tours')}</span>
                 </Link>
-                <a href="#tienda" className="text-blue-900 hover:text-blue-700 navbar-mobile-text font-medium">
-                  {t('header.shop')}
+                <a 
+                  href="#tienda" 
+                  className="text-blue-900 hover:text-blue-700 navbar-mobile-text font-medium animate-fadeInUp"
+                  style={{ animationDelay: '0.3s' }}
+                >
+                  <span className="animate-typewriter" style={{ animationDelay: '0.3s' }}>{t('header.shop')}</span>
                 </a>
-                <Link href="/contacto" className="text-blue-900 hover:text-blue-700 navbar-mobile-text font-medium">
-                  {t('header.contact')}
+                <Link 
+                  href="/contacto" 
+                  className="text-blue-900 hover:text-blue-700 navbar-mobile-text font-medium animate-fadeInUp"
+                  style={{ animationDelay: '0.4s' }}
+                >
+                  <span className="animate-typewriter" style={{ animationDelay: '0.4s' }}>{t('header.contact')}</span>
                 </Link>
               </nav>
             </div>
