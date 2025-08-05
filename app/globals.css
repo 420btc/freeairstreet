@@ -189,6 +189,23 @@
   background-color: oklch(0.12 0.05 240) !important;
 }
 
+/* Estilos específicos para navbar en modo oscuro móvil */
+.dark .navbar-mobile-icon {
+  color: oklch(0.2 0.15 240) !important;
+}
+
+.dark .navbar-mobile-text {
+  color: oklch(0.2 0.15 240) !important;
+}
+
+.dark .navbar-mobile-button {
+  color: oklch(0.2 0.15 240) !important;
+}
+
+.dark .navbar-mobile-button:hover {
+  color: oklch(0.15 0.12 240) !important;
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;

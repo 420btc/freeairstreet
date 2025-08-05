@@ -143,8 +143,8 @@ export default function HomePage() {
                 <ThemeToggle />
               </div>
 
-              <button className="md:hidden text-blue-900 dark:text-blue-100" onClick={() => setIsMenuOpen(!isMenuOpen)}>
-                {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+              <button className="md:hidden text-blue-900 navbar-mobile-button" onClick={() => setIsMenuOpen(!isMenuOpen)}>
+                {isMenuOpen ? <X className="h-6 w-6 navbar-mobile-icon" /> : <Menu className="h-6 w-6 navbar-mobile-icon" />}
               </button>
             </div>
           </div>
@@ -153,16 +153,16 @@ export default function HomePage() {
           {isMenuOpen && (
             <div className="md:hidden py-4 border-t border-yellow-600">
               <nav className="flex flex-col space-y-4">
-                <Link href="/alquiler" className="text-blue-900 hover:text-blue-700 font-medium">
+                <Link href="/alquiler" className="text-blue-900 hover:text-blue-700 navbar-mobile-text font-medium">
                   {t('header.rental')}
                 </Link>
-                <Link href="/tours" className="text-blue-900 hover:text-blue-700 font-medium">
+                <Link href="/tours" className="text-blue-900 hover:text-blue-700 navbar-mobile-text font-medium">
                   {t('header.tours')}
                 </Link>
-                <a href="#tienda" className="text-blue-900 hover:text-blue-700 font-medium">
+                <a href="#tienda" className="text-blue-900 hover:text-blue-700 navbar-mobile-text font-medium">
                   {t('header.shop')}
                 </a>
-                <Link href="/contacto" className="text-blue-900 hover:text-blue-700 font-medium">
+                <Link href="/contacto" className="text-blue-900 hover:text-blue-700 navbar-mobile-text font-medium">
                   {t('header.contact')}
                 </Link>
               </nav>
