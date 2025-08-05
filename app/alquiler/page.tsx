@@ -534,7 +534,7 @@ export default function AlquilerPage() {
             
             {/* Mobile: Dos filas separadas */}
              <div className="sm:hidden">
-               <TabsList className="grid w-full grid-cols-3 mb-4 h-12">
+               <TabsList className="grid w-full grid-cols-3 mb-4 h-16">
                  <TabsTrigger value="bicicletas" className="flex items-center justify-center space-x-2 h-full px-3 text-sm">
                    <span>🚴</span>
                    <span>Bicicletas</span>
@@ -548,7 +548,7 @@ export default function AlquilerPage() {
                    <span>Motos</span>
                  </TabsTrigger>
                </TabsList>
-               <TabsList className="grid w-full grid-cols-2 bg-gray-100 h-12">
+               <TabsList className="grid w-full grid-cols-2 bg-gray-100 h-16">
                  <TabsTrigger value="scooters" className="flex items-center justify-center space-x-2 h-full px-3 text-sm relative">
                    <span>🛴</span>
                    <span>Scooters</span>
