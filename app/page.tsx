@@ -116,16 +116,16 @@ export default function HomePage() {
 
             {/* Desktop Navigation */}
             <nav className="hidden md:flex space-x-8">
-              <Link href="/alquiler" className="text-blue-900 hover:text-blue-700 font-medium transition-colors">
+              <Link href="/alquiler" className="text-blue-900 hover:text-blue-700 navbar-desktop-link font-medium transition-colors">
                 {t('header.rental')}
               </Link>
-              <Link href="/tours" className="text-blue-900 hover:text-blue-700 font-medium transition-colors">
+              <Link href="/tours" className="text-blue-900 hover:text-blue-700 navbar-desktop-link font-medium transition-colors">
                 {t('header.tours')}
               </Link>
-              <a href="#tienda" className="text-blue-900 hover:text-blue-700 font-medium transition-colors">
+              <a href="#tienda" className="text-blue-900 hover:text-blue-700 navbar-desktop-link font-medium transition-colors">
                 {t('header.shop')}
               </a>
-              <Link href="/contacto" className="text-blue-900 hover:text-blue-700 font-medium transition-colors">
+              <Link href="/contacto" className="text-blue-900 hover:text-blue-700 navbar-desktop-link font-medium transition-colors">
                 {t('header.contact')}
               </Link>
             </nav>

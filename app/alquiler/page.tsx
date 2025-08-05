@@ -440,23 +440,23 @@ export default function AlquilerPage() {
           <div className="flex items-center h-16">
              {/* Back Arrow */}
               <Link href="/">
-                <Button variant="ghost" size="lg" className="text-blue-900 hover:text-blue-700 p-4">
+                <Button variant="ghost" size="lg" className="text-blue-900 hover:text-blue-700 navbar-back-button p-4">
                   <ArrowLeft className="h-12 w-12" />
                 </Button>
               </Link>
 
              {/* Desktop Navigation - Centered */}
              <nav className="hidden md:flex space-x-8 flex-1 justify-center">
-               <Link href="/alquiler" className="text-blue-900 hover:text-blue-700 font-medium transition-colors border-b-2 border-blue-900">
+               <Link href="/alquiler" className="text-blue-900 hover:text-blue-700 navbar-desktop-link font-medium transition-colors border-b-2 border-blue-900">
                  Alquiler
                </Link>
-               <Link href="/tours" className="text-blue-900 hover:text-blue-700 font-medium transition-colors">
+               <Link href="/tours" className="text-blue-900 hover:text-blue-700 navbar-desktop-link font-medium transition-colors">
                  Visitas Guiadas
                </Link>
-               <a href="/#tienda" className="text-blue-900 hover:text-blue-700 font-medium transition-colors">
+               <a href="/#tienda" className="text-blue-900 hover:text-blue-700 navbar-desktop-link font-medium transition-colors">
                  Tienda
                </a>
-               <Link href="/contacto" className="text-blue-900 hover:text-blue-700 font-medium transition-colors">
+               <Link href="/contacto" className="text-blue-900 hover:text-blue-700 navbar-desktop-link font-medium transition-colors">
                  Contacto
                </Link>
              </nav>

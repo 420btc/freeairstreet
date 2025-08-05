@@ -215,6 +215,23 @@
   color: oklch(0.25 0.12 240) !important;
 }
 
+/* Estilos específicos para navbar desktop en modo oscuro */
+.dark .navbar-desktop-link {
+  color: oklch(0.2 0.15 240) !important;
+}
+
+.dark .navbar-desktop-link:hover {
+  color: oklch(0.15 0.12 240) !important;
+}
+
+.dark .navbar-back-button {
+  color: oklch(0.2 0.15 240) !important;
+}
+
+.dark .navbar-back-button:hover {
+  color: oklch(0.15 0.12 240) !important;
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;
