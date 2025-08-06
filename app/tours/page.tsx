@@ -670,7 +670,7 @@ export default function ToursPage() {
           <div className="flex flex-col md:flex-row justify-between items-center">
             <div className="flex items-center space-x-3 mb-4 md:mb-0">
                <div className="flex items-center space-x-3">
-                 <Image src="/icon/iconf.png" alt="Free Air Street Logo" width={40} height={40} className="rounded" />
+                 <Image src="/icon/iconf.png" alt="Free Air Street Logo" width={60} height={60} className="rounded" />
                  <div>
                    <h3 className="font-bold birthstone-regular">Free Air Street</h3>
                    <p className="text-sm text-gray-400">Rent & Tours</p>
