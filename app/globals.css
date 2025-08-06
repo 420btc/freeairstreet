@@ -338,3 +338,9 @@
     opacity: 1;
   }
 }
+
+/* Clase para hacer el texto más grueso */
+.text-extra-bold {
+  -webkit-text-stroke: 1px currentColor;
+  text-stroke: 1px currentColor;
+}

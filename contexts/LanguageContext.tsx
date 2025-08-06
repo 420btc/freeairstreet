@@ -37,7 +37,7 @@ const translations = {
     'services.carRental': 'Alquiler de Coches',
     'services.carDescription': 'Desde compactos hasta minibuses de 9 plazas',
     'services.motosScooters': 'Motos y Scooters',
-    'services.motosDescription': 'Motos eléctricas, scooters y quads',
+    'services.motosDescription': 'Motos, patinetes - scooters eléctricos y quads',
     
     // Location Section
     'location.title': 'Donde Estamos',
@@ -121,7 +121,7 @@ const translations = {
     'services.carRental': 'Car Rental',
     'services.carDescription': 'From compact cars to 9-seater minibuses',
     'services.motosScooters': 'Motorcycles & Scooters',
-    'services.motosDescription': 'Electric motorcycles, scooters and quads',
+    'services.motosDescription': 'Motorcycles, electric scooters and quads',
     
     // Location Section
     'location.title': 'Where We Are',

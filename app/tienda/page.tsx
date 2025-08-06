@@ -142,7 +142,7 @@ export default function TiendaPage() {
             <div className="flex items-center justify-center sm:justify-start leading-3 font-mono italic tracking-tighter space-x-4 sm:space-x-12">
               <Image src="/icon/iconf.png" alt="Free Air Street Logo" width={64} height={64} className="rounded" />
               <div className="hidden md:block text-center sm:text-left">
-                <h1 className="text-2xl sm:text-4xl font-bold text-blue-900 navbar-title birthstone-regular leading-tight">Free Air Street</h1>
+                <h1 className="text-2xl sm:text-4xl font-black text-blue-900 navbar-title birthstone-regular leading-tight">Free Air Street</h1>
                 <p className="hidden sm:block text-2xl text-blue-800 navbar-subtitle birthstone-regular -mt-3">Rent & Tours</p>
               </div>
             </div>

@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { Menu, X, Phone, Mail, MapPin, QrCode, Clock, Users, Car, Bike, Zap } from "lucide-react"
+import { Menu, X, Phone, Mail, MapPin, QrCode, Clock, Users, Car, Bike, Zap, Wrench, ChevronDown } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
@@ -78,25 +78,25 @@ export default function HomePage() {
     {
       title: t('services.bikeRental'),
       description: t('services.bikeDescription'),
-      icon: <Bike className="h-8 w-8" />,
+      icon: <Bike className="h-10 w-10" />,
       href: "/alquiler?tab=bicicletas",
     },
     {
       title: t('services.guidedTours'),
       description: t('services.toursDescription'),
-      icon: <Users className="h-8 w-8" />,
+      icon: <Users className="h-10 w-10" />,
       href: "/tours",
     },
     {
       title: t('services.carRental'),
       description: t('services.carDescription'),
-      icon: <Car className="h-8 w-8" />,
+      icon: <Car className="h-10 w-10" />,
       href: "/alquiler?tab=coches",
     },
     {
       title: t('services.motosScooters'),
       description: t('services.motosDescription'),
-      icon: <Zap className="h-8 w-8" />,
+      icon: <Zap className="h-10 w-10" />,
       href: "/alquiler?tab=scooters",
     },
   ]
@@ -111,7 +111,7 @@ export default function HomePage() {
             <div className="flex items-center justify-center sm:justify-start leading-3 font-mono italic tracking-tighter space-x-4 sm:space-x-12">
               <Image src="/icon/iconf.png" alt="Free Air Street Logo" width={64} height={64} className="rounded" />
               <div className="text-center sm:text-left">
-                <h1 className="text-2xl sm:text-4xl font-bold text-blue-900 navbar-title birthstone-regular leading-tight">Free Air Street</h1>
+                <h1 className="text-2xl sm:text-4xl font-black text-blue-900 navbar-title birthstone-regular leading-tight">Free Air Street</h1>
                 <p className="hidden sm:block text-2xl text-blue-800 navbar-subtitle birthstone-regular -mt-3">Rent & Tours</p>
               </div>
             </div>
@@ -254,13 +254,15 @@ export default function HomePage() {
               <Link key={index} href={service.href}>
                 <Card className="hover:shadow-lg hover:scale-105 transition-all duration-200 cursor-pointer group h-full border-2 border-transparent hover:border-yellow-400">
                   <CardHeader className="text-center">
-                    <div className="mx-auto mb-4 p-3 bg-yellow-400 rounded-full text-blue-600 group-hover:bg-yellow-500 transition-colors">
-                      {service.icon}
+                    <div className="mx-auto mb-4 p-4 bg-yellow-400 rounded-full text-blue-600 group-hover:bg-yellow-500 transition-colors">
+                      <div className="h-10 w-10 flex items-center justify-center">
+                        {service.icon}
+                      </div>
                     </div>
-                    <CardTitle className="text-xl text-gray-900 group-hover:text-blue-600 transition-colors">{service.title}</CardTitle>
+                    <CardTitle className="text-2xl text-gray-900 group-hover:text-blue-600 transition-colors">{service.title}</CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <CardDescription className="text-center text-gray-600 group-hover:text-gray-800 transition-colors">{service.description}</CardDescription>
+                    <CardDescription className="text-center text-lg text-gray-600 group-hover:text-gray-800 transition-colors">{service.description}</CardDescription>
                     <div className="text-center mt-3">
                       <span className="text-sm text-blue-600 group-hover:text-blue-800 font-medium opacity-0 group-hover:opacity-100 transition-opacity duration-200">
                         Ver más →
@@ -270,6 +272,23 @@ export default function HomePage() {
                 </Card>
               </Link>
             ))}
+          </div>
+
+          {/* Repair Service Button */}
+          <div className="flex justify-center mt-8">
+            <Card className="hover:shadow-lg hover:scale-105 transition-all duration-200 cursor-pointer group border-2 border-transparent hover:border-yellow-400 w-full max-w-2xl">
+              <CardContent className="p-6">
+                <div className="flex items-center justify-center space-x-6">
+                  <div className="p-4 bg-yellow-400 rounded-full text-blue-600 group-hover:bg-yellow-500 transition-colors">
+                    <Wrench className="h-10 w-10" />
+                  </div>
+                  <div className="text-center">
+                    <h3 className="text-2xl font-semibold text-gray-900 group-hover:text-blue-600 transition-colors mb-2">Servicio Reparación</h3>
+                    <p className="text-lg text-gray-600 group-hover:text-gray-800 transition-colors">Reparación y mantenimiento especializado</p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
           </div>
         </div>
       </section>
