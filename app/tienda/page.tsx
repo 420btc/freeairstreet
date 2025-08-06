@@ -141,7 +141,7 @@ export default function TiendaPage() {
             {/* Logo */}
             <div className="flex items-center justify-center sm:justify-start leading-3 font-mono italic tracking-tighter space-x-4 sm:space-x-12">
               <Image src="/icon/iconf.png" alt="Free Air Street Logo" width={64} height={64} className="rounded" />
-              <div className="text-center sm:text-left">
+              <div className="hidden md:block text-center sm:text-left">
                 <h1 className="text-2xl sm:text-4xl font-bold text-blue-900 navbar-title birthstone-regular leading-tight">Free Air Street</h1>
                 <p className="hidden sm:block text-2xl text-blue-800 navbar-subtitle birthstone-regular -mt-3">Rent & Tours</p>
               </div>
@@ -162,6 +162,11 @@ export default function TiendaPage() {
                 {t('header.contact')}
               </Link>
             </nav>
+
+            {/* Page Title for Mobile - Centered */}
+            <div className="md:hidden flex-1 text-center">
+              <h1 className="text-lg font-bold text-blue-900 navbar-title">Tienda</h1>
+            </div>
 
             {/* QR Code, Language Toggle and Mobile Menu */}
             <div className="flex items-center space-x-4">

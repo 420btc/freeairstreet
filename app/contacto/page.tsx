@@ -3,7 +3,7 @@
 import type React from "react"
 
 import { useState, useEffect } from "react"
-import { ArrowLeft, Phone, Mail, MapPin, Clock, Send, CheckCircle, Menu, X } from "lucide-react"
+import { ArrowLeft, Phone, Mail, MapPin, Clock, Send, CheckCircle, Menu, X, QrCode } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
@@ -27,6 +27,7 @@ export default function ContactoPage() {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [isSubmitted, setIsSubmitted] = useState(false)
   const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const [isQrModalOpen, setIsQrModalOpen] = useState(false)
   const [submitError, setSubmitError] = useState<string | null>(null)
 
   useEffect(() => {
@@ -144,6 +145,15 @@ export default function ContactoPage() {
                 </Button>
               </Link>
 
+            {/* Logo */}
+            <div className="flex items-center justify-center sm:justify-start leading-3 font-mono italic tracking-tighter space-x-4 sm:space-x-12">
+              <Image src="/icon/iconf.png" alt="Free Air Street Logo" width={64} height={64} className="rounded" />
+              <div className="hidden md:block text-center sm:text-left">
+                <h1 className="text-2xl sm:text-4xl font-bold text-blue-900 navbar-title birthstone-regular leading-tight">Free Air Street</h1>
+                <p className="hidden sm:block text-2xl text-blue-800 navbar-subtitle birthstone-regular -mt-3">Rent & Tours</p>
+              </div>
+            </div>
+
              {/* Desktop Navigation - Centered */}
              <nav className="hidden md:flex space-x-8 flex-1 justify-center">
                <Link href="/alquiler" className="text-blue-900 hover:text-blue-700 navbar-desktop-link font-medium transition-colors">
@@ -152,9 +162,9 @@ export default function ContactoPage() {
                <Link href="/tours" className="text-blue-900 hover:text-blue-700 navbar-desktop-link font-medium transition-colors">
                  Visitas Guiadas
                </Link>
-               <a href="/#tienda" className="text-blue-900 hover:text-blue-700 navbar-desktop-link font-medium transition-colors">
+               <Link href="/tienda" className="text-blue-900 hover:text-blue-700 navbar-desktop-link font-medium transition-colors">
                  Tienda
-               </a>
+               </Link>
                <Link href="/contacto" className="text-blue-900 hover:text-blue-700 navbar-desktop-link font-medium transition-colors border-b-2 border-blue-900">
                  Contacto
                </Link>
@@ -165,16 +175,26 @@ export default function ContactoPage() {
                <h1 className="text-lg font-bold text-blue-900 navbar-title">Contacto</h1>
              </div>
 
-             {/* Desktop Controls */}
-             <div className="hidden md:flex items-center space-x-2">
-               <LanguageToggle />
-               <ThemeToggle />
-             </div>
+             {/* QR Code, Language Toggle and Mobile Menu */}
+             <div className="flex items-center space-x-4">
+               <div 
+                 className="hidden sm:flex items-center space-x-2 bg-white/20 rounded-lg px-3 py-2 cursor-pointer hover:bg-white/30 transition-colors"
+                 onClick={() => setIsQrModalOpen(true)}
+               >
+                 <QrCode className="h-5 w-5 text-blue-900" />
+                 <span className="text-sm text-blue-900 font-medium">Rent a Quad</span>
+               </div>
 
-             {/* Mobile Menu Button */}
-             <button className="md:hidden text-blue-900 navbar-mobile-button" onClick={() => setIsMenuOpen(!isMenuOpen)}>
-               {isMenuOpen ? <X className="h-6 w-6 navbar-mobile-icon" /> : <Menu className="h-6 w-6 navbar-mobile-icon" />}
-             </button>
+               {/* Language Toggle and Theme Toggle */}
+               <div className="flex items-center space-x-2">
+                 <LanguageToggle />
+                 <ThemeToggle />
+               </div>
+
+               <button className="md:hidden text-blue-900 navbar-mobile-button" onClick={() => setIsMenuOpen(!isMenuOpen)}>
+                 {isMenuOpen ? <X className="h-6 w-6 navbar-mobile-icon" /> : <Menu className="h-6 w-6 navbar-mobile-icon" />}
+               </button>
+             </div>
            </div>
 
           {/* Mobile Navigation */}
@@ -195,13 +215,13 @@ export default function ContactoPage() {
                 >
                   <span className="animate-typewriter" style={{ animationDelay: '0.2s' }}>Visitas Guiadas</span>
                 </Link>
-                <a 
-                  href="/#tienda" 
+                <Link 
+                  href="/tienda" 
                   className="text-blue-900 hover:text-blue-700 navbar-mobile-text font-medium animate-fadeInUp"
                   style={{ animationDelay: '0.3s' }}
                 >
                   <span className="animate-typewriter" style={{ animationDelay: '0.3s' }}>Tienda</span>
-                </a>
+                </Link>
                 <Link 
                   href="/contacto" 
                   className="text-blue-900 hover:text-blue-700 navbar-mobile-text font-medium border-l-4 border-blue-900 pl-2 animate-fadeInUp"
