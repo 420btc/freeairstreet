@@ -430,7 +430,25 @@ export default function HomePage() {
           {/* Sol Hires Animated Image */}
           <div className="flex justify-center -mt-6 md:-mt-8" style={{marginBottom: '0px'}}>
             <div className="relative w-full max-w-xs md:max-w-sm">
-              <div className="relative w-full h-auto sol-hires-container overflow-hidden">
+              <div 
+                className="relative w-full h-auto sol-hires-container overflow-hidden"
+                ref={(el) => {
+                  if (el) {
+                    const observer = new IntersectionObserver(
+                      (entries) => {
+                        entries.forEach((entry) => {
+                          if (entry.isIntersecting) {
+                            entry.target.classList.add('animate');
+                            observer.unobserve(entry.target);
+                          }
+                        });
+                      },
+                      { threshold: 0.5 }
+                    );
+                    observer.observe(el);
+                  }
+                }}
+              >
                 <Image
                   src="/solhires.png"
                   alt="Sol Hires 1"

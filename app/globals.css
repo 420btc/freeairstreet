@@ -306,12 +306,19 @@
 /* Sol Hires Animation */
 .sol-hires-front {
   animation: fadeInOut 18s infinite;
+  animation-play-state: paused;
   transition: opacity 0.5s ease-in-out;
 }
 
 .sol-hires-back {
   animation: fadeOutIn 18s infinite;
+  animation-play-state: paused;
   transition: opacity 0.5s ease-in-out;
+}
+
+.sol-hires-container.animate .sol-hires-front,
+.sol-hires-container.animate .sol-hires-back {
+  animation-play-state: running;
 }
 
 @keyframes fadeInOut {
