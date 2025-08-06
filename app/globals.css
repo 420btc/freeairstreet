@@ -302,3 +302,32 @@
     animation: typewriter 0.8s ease-out forwards;
   }
 }
+
+/* Sol Hires Animation */
+.sol-hires-front {
+  animation: fadeInOut 18s infinite;
+  transition: opacity 0.5s ease-in-out;
+}
+
+.sol-hires-back {
+  animation: fadeOutIn 18s infinite;
+  transition: opacity 0.5s ease-in-out;
+}
+
+@keyframes fadeInOut {
+  0%, 55.56% {
+    opacity: 1;
+  }
+  55.57%, 100% {
+    opacity: 0;
+  }
+}
+
+@keyframes fadeOutIn {
+  0%, 55.56% {
+    opacity: 0;
+  }
+  55.57%, 100% {
+    opacity: 1;
+  }
+}

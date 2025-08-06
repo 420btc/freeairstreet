@@ -420,11 +420,35 @@ export default function HomePage() {
       {/* Featured Tours Section */}
       <section id="tours-destacados" className="py-16 bg-white">
         <div className="container mx-auto px-4">
-          <div className="text-center mb-12">
+          <div className="text-center mb-6 md:mb-3">
             <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">{t('tours.title')}</h2>
             <p className="text-lg md:text-xl text-gray-600 max-w-2xl mx-auto">
               {t('tours.subtitle')}
             </p>
+          </div>
+
+          {/* Sol Hires Animated Image */}
+          <div className="flex justify-center -mt-6 md:-mt-8" style={{marginBottom: '0px'}}>
+            <div className="relative w-full max-w-xs md:max-w-sm">
+              <div className="relative w-full h-auto sol-hires-container overflow-hidden">
+                <Image
+                  src="/solhires.png"
+                  alt="Sol Hires 1"
+                  width={400}
+                  height={300}
+                  className="w-full h-auto object-cover object-top sol-hires-front"
+                  style={{objectPosition: '50% 20%'}}
+                />
+                <Image
+                  src="/solhires2.png"
+                  alt="Sol Hires 2"
+                  width={400}
+                  height={300}
+                  className="w-full h-auto object-cover object-top sol-hires-back absolute top-0 left-0 opacity-0"
+                  style={{objectPosition: '50% 20%'}}
+                />
+              </div>
+            </div>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
