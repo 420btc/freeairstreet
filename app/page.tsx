@@ -276,19 +276,26 @@ export default function HomePage() {
 
           {/* Repair Service Button */}
           <div className="flex justify-center mt-8">
-            <Card className="hover:shadow-lg hover:scale-105 transition-all duration-200 cursor-pointer group border-2 border-transparent hover:border-yellow-400 w-full max-w-2xl">
-              <CardContent className="p-6">
-                <div className="flex items-center justify-center space-x-6">
-                  <div className="p-4 bg-yellow-400 rounded-full text-blue-600 group-hover:bg-yellow-500 transition-colors">
-                    <Wrench className="h-10 w-10" />
+            <Link href="/tienda">
+              <Card className="hover:shadow-lg hover:scale-105 transition-all duration-200 cursor-pointer group border-2 border-transparent hover:border-yellow-400 w-full max-w-2xl">
+                <CardContent className="p-6">
+                  <div className="flex items-center justify-center space-x-6">
+                    <div className="p-4 bg-yellow-400 rounded-full text-blue-600 group-hover:bg-yellow-500 transition-colors">
+                      <Wrench className="h-10 w-10" />
+                    </div>
+                    <div className="text-center">
+                      <h3 className="text-2xl font-semibold text-gray-900 group-hover:text-blue-600 transition-colors mb-2">Servicio Reparación</h3>
+                      <p className="text-lg text-gray-600 group-hover:text-gray-800 transition-colors">Reparación y mantenimiento especializado</p>
+                      <div className="text-center mt-3">
+                        <span className="text-sm text-blue-600 group-hover:text-blue-800 font-medium opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                          Ver más →
+                        </span>
+                      </div>
+                    </div>
                   </div>
-                  <div className="text-center">
-                    <h3 className="text-2xl font-semibold text-gray-900 group-hover:text-blue-600 transition-colors mb-2">Servicio Reparación</h3>
-                    <p className="text-lg text-gray-600 group-hover:text-gray-800 transition-colors">Reparación y mantenimiento especializado</p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
+                </CardContent>
+              </Card>
+            </Link>
           </div>
         </div>
       </section>
