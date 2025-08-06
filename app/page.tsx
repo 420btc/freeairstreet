@@ -252,15 +252,20 @@ export default function HomePage() {
           <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {services.map((service, index) => (
               <Link key={index} href={service.href}>
-                <Card className="hover:shadow-lg transition-shadow cursor-pointer group h-full">
+                <Card className="hover:shadow-lg hover:scale-105 transition-all duration-200 cursor-pointer group h-full border-2 border-transparent hover:border-yellow-400">
                   <CardHeader className="text-center">
                     <div className="mx-auto mb-4 p-3 bg-yellow-400 rounded-full text-blue-600 group-hover:bg-yellow-500 transition-colors">
                       {service.icon}
                     </div>
-                    <CardTitle className="text-xl text-gray-900">{service.title}</CardTitle>
+                    <CardTitle className="text-xl text-gray-900 group-hover:text-blue-600 transition-colors">{service.title}</CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <CardDescription className="text-center text-gray-600">{service.description}</CardDescription>
+                    <CardDescription className="text-center text-gray-600 group-hover:text-gray-800 transition-colors">{service.description}</CardDescription>
+                    <div className="text-center mt-3">
+                      <span className="text-sm text-blue-600 group-hover:text-blue-800 font-medium opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                        Ver más →
+                      </span>
+                    </div>
                   </CardContent>
                 </Card>
               </Link>
