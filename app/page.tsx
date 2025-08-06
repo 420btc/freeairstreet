@@ -124,9 +124,9 @@ export default function HomePage() {
               <Link href="/tours" className="text-blue-900 hover:text-blue-700 navbar-desktop-link font-medium transition-colors">
                 {t('header.tours')}
               </Link>
-              <a href="#tienda" className="text-blue-900 hover:text-blue-700 navbar-desktop-link font-medium transition-colors">
+              <Link href="/tienda" className="text-blue-900 hover:text-blue-700 navbar-desktop-link font-medium transition-colors">
                 {t('header.shop')}
-              </a>
+              </Link>
               <Link href="/contacto" className="text-blue-900 hover:text-blue-700 navbar-desktop-link font-medium transition-colors">
                 {t('header.contact')}
               </Link>
@@ -172,13 +172,13 @@ export default function HomePage() {
                 >
                   <span className="animate-typewriter" style={{ animationDelay: '0.2s' }}>{t('header.tours')}</span>
                 </Link>
-                <a 
-                  href="#tienda" 
+                <Link 
+                  href="/tienda" 
                   className="text-blue-900 hover:text-blue-700 navbar-mobile-text font-medium animate-fadeInUp"
                   style={{ animationDelay: '0.3s' }}
                 >
                   <span className="animate-typewriter" style={{ animationDelay: '0.3s' }}>{t('header.shop')}</span>
-                </a>
+                </Link>
                 <Link 
                   href="/contacto" 
                   className="text-blue-900 hover:text-blue-700 navbar-mobile-text font-medium animate-fadeInUp"
