@@ -103,7 +103,7 @@ export default function TiendaPage() {
       id: 'scooters',
       icon: <Zap className="w-8 h-8" />,
       data: currentTranslations.repair.scooters,
-      image: '/Scooterelectrico.jpg'
+      image: '/reparacion.jpg'
     },
     {
       id: 'bicycles',
