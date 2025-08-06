@@ -39,7 +39,7 @@ export default function AlquilerPage() {
 
   useEffect(() => {
     const tab = searchParams.get("tab")
-    if (tab && ["bicicletas", "coches", "motos", "scooters", "accesorios"].includes(tab)) {
+    if (tab && ["bicicletas", "coches", "motos", "quads", "scooters", "accesorios"].includes(tab)) {
       setActiveTab(tab)
     }
   }, [searchParams])
@@ -375,6 +375,9 @@ export default function AlquilerPage() {
       ],
       features: ["Moto trail", "Todo terreno", "Motor potente", "Aventura total"],
     },
+  ]
+
+  const quads = [
     {
       id: "quad-rental",
       name: "RENT A QUAD",
@@ -534,8 +537,8 @@ export default function AlquilerPage() {
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
           <div className="mb-8">
-            {/* Desktop: Una sola fila con 5 elementos */}
-            <TabsList className="hidden sm:grid w-full grid-cols-5 h-16">
+            {/* Desktop: Una sola fila con 6 elementos */}
+            <TabsList className="hidden sm:grid w-full grid-cols-6 h-16">
               <TabsTrigger value="bicicletas" className="flex items-center space-x-2 py-4 px-6 text-lg">
                 <span>🚴</span>
                 <span>Bicicletas</span>
@@ -547,6 +550,10 @@ export default function AlquilerPage() {
               <TabsTrigger value="motos" className="flex items-center space-x-2 py-4 px-6 text-lg">
                 <span>🏍️</span>
                 <span>Motos</span>
+              </TabsTrigger>
+              <TabsTrigger value="quads" className="flex items-center space-x-2 py-4 px-6 text-lg">
+                <span>🏎️</span>
+                <span>Quads</span>
               </TabsTrigger>
               <TabsTrigger value="scooters" className="flex items-center space-x-2 py-4 px-6 text-lg relative">
                 <span>🛴</span>
@@ -577,7 +584,11 @@ export default function AlquilerPage() {
                    <span>Motos</span>
                  </TabsTrigger>
                </TabsList>
-               <TabsList className="grid w-full grid-cols-2 bg-gray-100 h-16">
+               <TabsList className="grid w-full grid-cols-3 bg-gray-100 h-16">
+                 <TabsTrigger value="quads" className="flex items-center justify-center space-x-2 h-full px-3 text-sm">
+                   <span>🏎️</span>
+                   <span>Quads</span>
+                 </TabsTrigger>
                  <TabsTrigger value="scooters" className="flex items-center justify-center space-x-2 h-full px-3 text-sm relative">
                    <span>🛴</span>
                    <span>Scooters</span>
@@ -885,6 +896,116 @@ export default function AlquilerPage() {
                   <li>• Edad mínima: 16 años (50cc), 18 años (125cc), 20 años (+300cc)</li>
                   <li>• Depósito de seguridad requerido</li>
                   <li>• Casco homologado incluido</li>
+                </ul>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          {/* Quads Tab */}
+          <TabsContent value="quads" className="sm:data-[state=active]:animate-none data-[state=active]:animate-in data-[state=active]:slide-in-from-right-4 data-[state=active]:duration-300">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              {quads.map((quad) => (
+                <Card key={quad.id} className="overflow-hidden hover:shadow-lg transition-shadow">
+                  <div className="aspect-video relative">
+                    <Image src={quad.image || "/placeholder.svg"} alt={quad.name} fill className="object-cover" />
+
+                    <div className="absolute top-4 right-4">
+                      <Badge className="bg-yellow-500 text-blue-900 font-bold">{quad.cc}</Badge>
+                    </div>
+                  </div>
+
+                  <CardHeader>
+                    <CardTitle className="text-xl text-gray-900">{quad.name}</CardTitle>
+                    <CardDescription className="text-gray-600">{quad.description}</CardDescription>
+                  </CardHeader>
+
+                  <CardContent>
+                    {/* Features */}
+                    <div className="mb-4">
+                      <h4 className="font-semibold text-gray-900 mb-2">Características:</h4>
+                      <div className="grid grid-cols-2 gap-1">
+                        {quad.features.map((feature, index) => (
+                          <div key={index} className="flex items-center text-sm text-gray-600">
+                            <span className="w-1.5 h-1.5 bg-yellow-500 rounded-full mr-2"></span>
+                            {feature}
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Prices */}
+                    <div className="space-y-3 mb-4">
+                      <h4 className="font-semibold text-gray-900">Precios:</h4>
+                      <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+                        {quad.prices.map((price, index) => {
+                          const isSelected = selectedPrices[quad.name]?.duration === price.duration
+                          return (
+                            <button
+                              key={index}
+                              onClick={() => handlePriceSelection(quad.name, price.duration, price.price)}
+                              className={`flex flex-col items-center p-3 rounded-lg transition-all duration-200 border-2 ${
+                                isSelected
+                                  ? "bg-blue-600 border-blue-600 shadow-lg transform scale-105"
+                                  : "bg-gray-50 border-transparent hover:bg-gray-100 hover:border-gray-200"
+                              }`}
+                            >
+                              <div className="flex items-center space-x-1 mb-2">
+                                <Clock className={`h-4 w-4 ${isSelected ? "text-white" : "text-gray-500"}`} />
+                                <span className={`text-sm font-semibold ${isSelected ? "text-white" : "text-gray-700"}`}>{price.duration}</span>
+                              </div>
+                              <Badge
+                                variant={price.featured ? "default" : "secondary"}
+                                className={`text-lg font-bold px-3 py-1 pointer-events-none ${
+                                  isSelected
+                                    ? "bg-white text-blue-600"
+                                    : price.featured
+                                      ? "bg-yellow-500 text-blue-900 hover:bg-yellow-600"
+                                      : "bg-blue-100 text-blue-800"
+                                }`}
+                              >
+                                {price.price}
+                              </Badge>
+                            </button>
+                          )
+                        })}
+                      </div>
+                    </div>
+
+                    <Button 
+                      className="w-full bg-blue-600 hover:bg-blue-700 text-white"
+                      onClick={() => handleReservation(quad.name)}
+                      disabled={!selectedPrices[quad.name]}
+                    >
+                      {selectedPrices[quad.name] ? `Reservar ${selectedPrices[quad.name].duration} por ${selectedPrices[quad.name].price}` : "Selecciona un precio"}
+                    </Button>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+
+            {/* Quad Requirements */}
+            <Card className="mt-8 bg-orange-50 border-orange-200">
+              <CardHeader>
+                <div className="flex items-center space-x-2">
+                  <span className="text-orange-600">🏎️</span>
+                  <CardTitle className="text-orange-900">Requisitos para Alquiler de Quads</CardTitle>
+                </div>
+              </CardHeader>
+              <CardContent>
+                <ul className="space-y-2 text-orange-800">
+                  <li>
+                    • <strong>Carnet de conducir</strong> válido y vigente (B o superior)
+                  </li>
+                  <li>
+                    • <strong>Reserva obligatoria</strong> con antelación
+                  </li>
+                  <li>
+                    • <strong>Documento de identidad</strong> (DNI o pasaporte)
+                  </li>
+                  <li>• Edad mínima: 18 años</li>
+                  <li>• Depósito de seguridad requerido</li>
+                  <li>• Casco homologado incluido</li>
+                  <li>• Briefing de seguridad obligatorio</li>
                 </ul>
               </CardContent>
             </Card>

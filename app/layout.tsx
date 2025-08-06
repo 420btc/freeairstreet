@@ -11,7 +11,7 @@ const inter = Inter({ subsets: ["latin"] })
 export const metadata: Metadata = {
   title: "Free Air Street - Alquiler de Bicicletas y Tours",
   description:
-    "Alquila bicicletas, motos, coches y únete a nuestras visitas guiadas. La aventura te espera en cada rincón.",
+    "Alquila bicicletas, patinetes eléctricos, motos, coches y únete a nuestras visitas guiadas. La aventura te espera en cada rincón.",
   generator: 'v0.dev',
   icons: {
     icon: '/icono.png',
