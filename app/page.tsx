@@ -718,7 +718,7 @@ export default function HomePage() {
                   href="https://carlosfr.es" 
                   target="_blank" 
                   rel="noopener noreferrer"
-                  className="bg-yellow-500 text-blue-900 px-3 py-1 rounded-full text-sm font-semibold hover:bg-yellow-400 transition-colors cursor-pointer"
+                  className="bg-blue-500 text-white px-3 py-1 rounded-full text-sm font-semibold hover:bg-blue-400 transition-colors cursor-pointer"
                 >
                   Carlosfr.es
                 </a>
