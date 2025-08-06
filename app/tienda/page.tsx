@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
-import { Menu, X, Phone, Mail, MapPin, QrCode, Clock, Users, Car, Bike, Zap } from 'lucide-react'
+import { Menu, X, Phone, Mail, MapPin, QrCode, Clock, Users, Car, Bike, Zap, ArrowLeft } from 'lucide-react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
@@ -130,7 +130,14 @@ export default function TiendaPage() {
       {/* Header */}
       <header className="bg-gradient-to-r from-yellow-400 to-yellow-500 shadow-lg sticky top-0 z-50">
         <div className="container mx-auto px-4">
-          <div className="flex items-center justify-between h-16">
+          <div className="flex items-center h-16">
+            {/* Back Arrow */}
+            <Link href="/">
+              <Button variant="ghost" size="lg" className="text-blue-900 hover:text-blue-700 navbar-back-button p-4">
+                <ArrowLeft className="h-12 w-12" />
+              </Button>
+            </Link>
+
             {/* Logo */}
             <div className="flex items-center justify-center sm:justify-start leading-3 font-mono italic tracking-tighter space-x-4 sm:space-x-12">
               <Image src="/icon/iconf.png" alt="Free Air Street Logo" width={64} height={64} className="rounded" />
@@ -140,15 +147,15 @@ export default function TiendaPage() {
               </div>
             </div>
 
-            {/* Desktop Navigation */}
-            <nav className="hidden md:flex space-x-8">
+            {/* Desktop Navigation - Centered */}
+            <nav className="hidden md:flex space-x-8 flex-1 justify-center">
               <Link href="/alquiler" className="text-blue-900 hover:text-blue-700 navbar-desktop-link font-medium transition-colors">
                 {t('header.rental')}
               </Link>
               <Link href="/tours" className="text-blue-900 hover:text-blue-700 navbar-desktop-link font-medium transition-colors">
                 {t('header.tours')}
               </Link>
-              <Link href="/tienda" className="text-blue-900 hover:text-blue-700 navbar-desktop-link font-medium transition-colors">
+              <Link href="/tienda" className="text-blue-900 hover:text-blue-700 navbar-desktop-link font-medium transition-colors border-b-2 border-blue-900">
                 {t('header.shop')}
               </Link>
               <Link href="/contacto" className="text-blue-900 hover:text-blue-700 navbar-desktop-link font-medium transition-colors">
@@ -273,15 +280,15 @@ export default function TiendaPage() {
                 <p className="text-xl text-gray-600 mb-8">
                   {currentTranslations.store.subtitle}
                 </p>
-                <Card className="p-12 bg-gradient-to-br from-blue-100 to-yellow-100">
+                <Card className="p-12 bg-gradient-to-br from-yellow-400 to-yellow-500">
                   <CardContent className="text-center">
                     <div className="w-24 h-24 mx-auto mb-6 bg-blue-600 rounded-full flex items-center justify-center">
                       <span className="text-4xl text-white">🏪</span>
                     </div>
-                    <h3 className="text-2xl font-bold text-gray-900 mb-4">
+                    <h3 className="text-2xl font-bold text-blue-900 mb-4">
                       {currentTranslations.store.comingSoon}
                     </h3>
-                    <p className="text-gray-600">
+                    <p className="text-blue-800">
                       Estamos preparando una selección especial de productos y accesorios para ti.
                     </p>
                   </CardContent>
@@ -293,7 +300,7 @@ export default function TiendaPage() {
           {activeTab === 'repair' && (
             <div>
               <div className="text-center mb-12">
-                <h2 className="text-4xl font-bold text-gray-900 mb-6">
+                <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-6">
                   {currentTranslations.repair.title}
                 </h2>
                 <p className="text-xl text-gray-600 max-w-3xl mx-auto">
