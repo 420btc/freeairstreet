@@ -278,18 +278,18 @@ export default function HomePage() {
           <div className="flex justify-center mt-8">
             <Link href="/tienda">
               <Card className="hover:shadow-lg hover:scale-105 transition-all duration-200 cursor-pointer group border-2 border-transparent hover:border-yellow-400 w-full max-w-sm md:max-w-md mx-auto">
-                 <div className="flex items-center p-4 space-x-6">
+                 <div className="flex items-center p-4 space-x-3">
                    <div className="flex-shrink-0">
                      <div className="p-3 bg-yellow-400 rounded-full text-blue-600 group-hover:bg-yellow-500 transition-colors">
                        <Wrench className="h-10 w-10" />
                      </div>
                    </div>
-                   <div className="flex-grow flex flex-col justify-center text-center">
-                      <CardTitle className="text-2xl text-gray-900 group-hover:text-blue-600 transition-colors mb-1 whitespace-nowrap">Servicio Reparación</CardTitle>
+                   <div className="flex-grow flex flex-col justify-center text-left ml-9">
+                      <CardTitle className="text-2xl text-gray-900 group-hover:text-blue-600 transition-colors mb-3 whitespace-nowrap">Servicio Reparación</CardTitle>
                       <CardDescription className="text-lg text-gray-600 group-hover:text-gray-800 transition-colors">Reparación y mantenimiento</CardDescription>
                     </div>
                    <div className="flex-shrink-0">
-                     <span className="text-sm text-blue-600 group-hover:text-blue-800 font-medium opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                     <span className="text-sm text-blue-600 group-hover:text-blue-800 -ml-9 font-medium opacity-0 group-hover:opacity-100 transition-opacity duration-200">
                        Ver más →
                      </span>
                    </div>
