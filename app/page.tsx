@@ -653,7 +653,7 @@ export default function HomePage() {
       </section>
 
       {/* Footer */}
-      <footer className="bg-gray-900 text-white py-8">
+      <footer className="bg-gradient-to-r from-yellow-400 to-yellow-500 text-black py-8">
         <div className="container mx-auto px-4">
           <div className="flex flex-col md:flex-row justify-between items-center">
             <div className="flex items-center space-x-3 mb-4 md:mb-0">
@@ -661,7 +661,7 @@ export default function HomePage() {
                 <Image src="/icon/iconf.png" alt="Free Air Street Logo" width={60} height={60} className="rounded" />
                 <div>
                   <h3 className="font-bold birthstone-regular">Free Air Street</h3>
-                  <p className="text-sm text-gray-400">Rent & Tours</p>
+                  <p className="text-sm text-gray-700">Rent & Tours</p>
                 </div>
               </div>
               
@@ -692,9 +692,9 @@ export default function HomePage() {
             </div>
 
             <div className="text-center md:text-right">
-              <p className="text-gray-400">{t('footer.rights')}</p>
+              <p className="text-gray-700">{t('footer.rights')}</p>
               <div className="flex items-center justify-center md:justify-end space-x-2 mt-2">
-                <span className="text-gray-400 text-sm">Web made by:</span>
+                <span className="text-gray-700 text-sm">Web made by:</span>
                 <a 
                   href="https://carlosfr.es" 
                   target="_blank" 

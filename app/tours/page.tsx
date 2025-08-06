@@ -665,7 +665,7 @@ export default function ToursPage() {
       </div>
 
       {/* Footer */}
-      <footer className="bg-gray-900 text-white py-8">
+      <footer className="bg-gradient-to-r from-yellow-400 to-yellow-500 text-black py-8">
         <div className="container mx-auto px-4">
           <div className="flex flex-col md:flex-row justify-between items-center">
             <div className="flex items-center space-x-3 mb-4 md:mb-0">
@@ -673,7 +673,7 @@ export default function ToursPage() {
                  <Image src="/icon/iconf.png" alt="Free Air Street Logo" width={60} height={60} className="rounded" />
                  <div>
                    <h3 className="font-bold birthstone-regular">Free Air Street</h3>
-                   <p className="text-sm text-gray-400">Rent & Tours</p>
+                   <p className="text-sm text-gray-700">Rent & Tours</p>
                  </div>
                </div>
                
@@ -704,7 +704,7 @@ export default function ToursPage() {
              </div>
 
             <div className="text-center md:text-right">
-              <p className="text-gray-400">© 2025 Free Air Street. Todos los derechos reservados.</p>
+              <p className="text-gray-700">© 2025 Free Air Street. Todos los derechos reservados.</p>
             </div>
           </div>
         </div>
