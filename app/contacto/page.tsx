@@ -114,9 +114,9 @@ export default function ContactoPage() {
     {
       icon: <Mail className="h-6 w-6" />,
       title: "Email",
-      info: "info@freeairstreet-rentbike.com",
+      info: "rentairstreet@gmail.com",
       description: "Respuesta en 24h",
-      href: "mailto:info@freeairstreet-rentbike.com",
+      href: "mailto:rentairstreet@gmail.com",
     },
     {
       icon: <MapPin className="h-6 w-6" />,
