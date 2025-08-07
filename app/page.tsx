@@ -664,7 +664,7 @@ export default function HomePage() {
             <div className="text-white">
               <Mail className="h-8 w-8 mx-auto mb-4" />
               <h3 className="text-xl font-semibold mb-2">{t('contact.email')}</h3>
-              <p className="text-blue-100">info@freeairstreet-rentbike.com</p>
+              <p className="text-blue-100">rentairstreet@gmail.com</p>
               <p className="text-blue-200 text-sm mt-1">{t('contact.emailResponse')}</p>
             </div>
 

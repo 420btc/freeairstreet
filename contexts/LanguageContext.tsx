@@ -48,7 +48,7 @@ const translations = {
     'location.city': '29620 Torremolinos, Málaga',
     'location.country': 'España',
     'location.phone': '+34 655 707 412',
-    'location.email': 'info@freeairstreet-rentbike.com',
+    'location.email': 'rentairstreet@gmail.com',
     'location.hours': 'Lunes a Domingo: 9:00 - 20:00',
     'location.streetView': 'Ver en Street View',
     
@@ -132,7 +132,7 @@ const translations = {
     'location.city': '29620 Torremolinos, Málaga',
     'location.country': 'Spain',
     'location.phone': '+34 655 707 412',
-    'location.email': 'info@freeairstreet-rentbike.com',
+    'location.email': 'rentairstreet@gmail.com',
     'location.hours': 'Monday to Sunday: 9:00 - 20:00',
     'location.streetView': 'View in Street View',
     
