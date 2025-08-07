@@ -46,7 +46,7 @@ export default function HomePage() {
        setTimeout(() => {
          map.flyTo({
            center: [-4.489167162077166, 36.63222134109576], // Exact coordinates
-           zoom: 19,
+           zoom: 17,
            duration: 3000,
            essential: true
          })
