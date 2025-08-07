@@ -2,20 +2,28 @@
 
 import React, { createContext, useContext, useState, ReactNode } from 'react'
 
+interface ReservationModalData {
+  type: 'rental' | 'tour' | 'appointment'
+  itemName?: string
+  itemPrice?: string
+  itemDuration?: string
+  // Campos pre-rellenados desde la conversación con IA
+  prefillData?: {
+    name?: string
+    email?: string
+    phone?: string
+    date?: string
+    time?: string
+    participants?: string
+    pickupLocation?: string
+    comments?: string
+  }
+}
+
 interface ModalContextType {
   isReservationModalOpen: boolean
-  reservationModalData: {
-    type: 'rental' | 'tour' | 'appointment'
-    itemName?: string
-    itemPrice?: string
-    itemDuration?: string
-  }
-  openReservationModal: (data: {
-    type: 'rental' | 'tour' | 'appointment'
-    itemName?: string
-    itemPrice?: string
-    itemDuration?: string
-  }) => void
+  reservationModalData: ReservationModalData
+  openReservationModal: (data: ReservationModalData) => void
   closeReservationModal: () => void
 }
 
@@ -23,19 +31,9 @@ const ModalContext = createContext<ModalContextType | undefined>(undefined)
 
 export function ModalProvider({ children }: { children: ReactNode }) {
   const [isReservationModalOpen, setIsReservationModalOpen] = useState(false)
-  const [reservationModalData, setReservationModalData] = useState<{
-    type: 'rental' | 'tour' | 'appointment'
-    itemName?: string
-    itemPrice?: string
-    itemDuration?: string
-  }>({ type: 'rental' })
+  const [reservationModalData, setReservationModalData] = useState<ReservationModalData>({ type: 'rental' })
 
-  const openReservationModal = (data: {
-    type: 'rental' | 'tour' | 'appointment'
-    itemName?: string
-    itemPrice?: string
-    itemDuration?: string
-  }) => {
+  const openReservationModal = (data: ReservationModalData) => {
     setReservationModalData(data)
     setIsReservationModalOpen(true)
   }

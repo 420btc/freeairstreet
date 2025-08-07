@@ -14,6 +14,7 @@ export function GlobalModals() {
       itemName={reservationModalData.itemName}
       itemPrice={reservationModalData.itemPrice}
       itemDuration={reservationModalData.itemDuration}
+      prefillData={reservationModalData.prefillData}
     />
   )
 }

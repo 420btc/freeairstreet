@@ -114,13 +114,27 @@ export default function AirXChat() {
 
   // Function to extract reservation context from conversation
   const extractReservationContext = () => {
-    const lastMessages = messages.slice(-3); // Get last 3 messages for context
+    const lastMessages = messages.slice(-5); // Get last 5 messages for more context
     let itemName = '';
     let itemPrice = '';
     let itemDuration = '';
+    
+    // Initialize prefill data
+    const prefillData: {
+      name?: string;
+      email?: string;
+      phone?: string;
+      date?: string;
+      time?: string;
+      participants?: string;
+      pickupLocation?: string;
+      comments?: string;
+    } = {};
 
     // Extract information from recent messages
     for (const message of lastMessages) {
+      const content = message.content.toLowerCase();
+      
       if (!message.isUser) {
         // Look for price patterns in AI responses
         const priceMatch = message.content.match(/(\d+)€/g);
@@ -133,6 +147,80 @@ export default function AirXChat() {
         if (durationMatch && !itemDuration) {
           itemDuration = durationMatch[0];
         }
+      } else {
+        // Extract user preferences from user messages
+        
+        // Extract dates
+        const datePatterns = [
+          /(\d{1,2}[\/\-]\d{1,2}[\/\-]\d{2,4})/,
+          /(mañana|pasado mañana|hoy)/i,
+          /(lunes|martes|miércoles|jueves|viernes|sábado|domingo)/i,
+          /(\d{1,2}\s+de\s+(enero|febrero|marzo|abril|mayo|junio|julio|agosto|septiembre|octubre|noviembre|diciembre))/i
+        ];
+        
+        for (const pattern of datePatterns) {
+          const dateMatch = content.match(pattern);
+          if (dateMatch && !prefillData.date) {
+            let dateValue = dateMatch[0];
+            
+            // Convert relative dates to actual dates
+            if (dateValue.toLowerCase() === 'mañana') {
+              const tomorrow = new Date();
+              tomorrow.setDate(tomorrow.getDate() + 1);
+              dateValue = tomorrow.toISOString().split('T')[0]; // YYYY-MM-DD format
+            } else if (dateValue.toLowerCase() === 'hoy') {
+              const today = new Date();
+              dateValue = today.toISOString().split('T')[0]; // YYYY-MM-DD format
+            } else if (dateValue.toLowerCase() === 'pasado mañana') {
+              const dayAfterTomorrow = new Date();
+              dayAfterTomorrow.setDate(dayAfterTomorrow.getDate() + 2);
+              dateValue = dayAfterTomorrow.toISOString().split('T')[0]; // YYYY-MM-DD format
+            }
+            
+            prefillData.date = dateValue;
+            break;
+          }
+        }
+        
+        // Extract times
+        const timePatterns = [
+          /(\d{1,2}:\d{2})/,
+          /(\d{1,2}\s*(am|pm|h))/i,
+          /(mañana|tarde|noche)/i,
+          /(por la mañana|por la tarde|por la noche)/i
+        ];
+        
+        for (const pattern of timePatterns) {
+          const timeMatch = content.match(pattern);
+          if (timeMatch && !prefillData.time) {
+            prefillData.time = timeMatch[0];
+            break;
+          }
+        }
+        
+        // Extract pickup locations
+        const locationPatterns = [
+          /(hotel\s+[\w\s]+)/i,
+          /(aeropuerto|estación|centro|plaza\s+[\w\s]*)/i,
+          /(calle\s+[\w\s]+)/i,
+          /(recoger\s+en\s+[\w\s]+)/i
+        ];
+        
+        for (const pattern of locationPatterns) {
+          const locationMatch = content.match(pattern);
+          if (locationMatch && !prefillData.pickupLocation) {
+            prefillData.pickupLocation = locationMatch[0];
+            break;
+          }
+        }
+        
+        // Extract special requests or comments - capture the full user message if it contains relevant keywords
+         const commentKeywords = /(necesito|prefiero|tengo|quiero|me gustaría|quisiera|solicito|requiero|importante|especial)/i;
+         
+         if (commentKeywords.test(content) && !prefillData.comments) {
+           // Use the original message content (not lowercased) for better readability
+           prefillData.comments = message.content;
+         }
       }
     }
 
@@ -145,11 +233,26 @@ export default function AirXChat() {
     if (conversationContext.duration && !itemDuration) {
       itemDuration = conversationContext.duration;
     }
+    
+    // Use conversation context for participants
+    if (conversationContext.participants && !prefillData.participants) {
+      // Extract number from participants string
+      const participantsMatch = conversationContext.participants.match(/\d+/);
+      if (participantsMatch) {
+        prefillData.participants = participantsMatch[0];
+      }
+    }
+    
+    // Use conversation context for date if not found
+    if (conversationContext.date && !prefillData.date) {
+      prefillData.date = conversationContext.date;
+    }
 
     return {
       itemName,
       itemPrice,
-      itemDuration
+      itemDuration,
+      prefillData
     };
   };
 
@@ -228,7 +331,8 @@ export default function AirXChat() {
       type: reservationType,
       itemName: context.itemName,
       itemPrice: context.itemPrice,
-      itemDuration: context.itemDuration
+      itemDuration: context.itemDuration,
+      prefillData: context.prefillData
     })
   }
 

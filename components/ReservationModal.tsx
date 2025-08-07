@@ -17,27 +17,45 @@ interface ReservationModalProps {
   itemName?: string
   itemPrice?: string
   itemDuration?: string
+  prefillData?: {
+    name?: string
+    email?: string
+    phone?: string
+    date?: string
+    time?: string
+    participants?: string
+    pickupLocation?: string
+    comments?: string
+  }
 }
 
-export function ReservationModal({ isOpen, onClose, type, itemName, itemPrice, itemDuration }: ReservationModalProps) {
+export function ReservationModal({ isOpen, onClose, type, itemName, itemPrice, itemDuration, prefillData }: ReservationModalProps) {
   const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    phone: "",
-    date: "",
-    time: "",
+    name: prefillData?.name || "",
+    email: prefillData?.email || "",
+    phone: prefillData?.phone || "",
+    date: prefillData?.date || "",
+    time: prefillData?.time || "",
     duration: itemDuration || "",
-    participants: "1",
-    pickupLocation: "",
-    comments: ""
+    participants: prefillData?.participants || "1",
+    pickupLocation: prefillData?.pickupLocation || "",
+    comments: prefillData?.comments || ""
   })
 
-  // Update duration when itemDuration changes
+  // Update form data when props change
   useEffect(() => {
-    if (itemDuration) {
-      setFormData(prev => ({ ...prev, duration: itemDuration }))
-    }
-  }, [itemDuration])
+    setFormData({
+      name: prefillData?.name || "",
+      email: prefillData?.email || "",
+      phone: prefillData?.phone || "",
+      date: prefillData?.date || "",
+      time: prefillData?.time || "",
+      duration: itemDuration || "",
+      participants: prefillData?.participants || "1",
+      pickupLocation: prefillData?.pickupLocation || "",
+      comments: prefillData?.comments || ""
+    })
+  }, [itemDuration, prefillData])
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [isSubmitted, setIsSubmitted] = useState(false)
   const [submitError, setSubmitError] = useState<string | null>(null)
@@ -220,7 +238,7 @@ export function ReservationModal({ isOpen, onClose, type, itemName, itemPrice, i
                 
                 <div>
                   <Label htmlFor="time" className="text-gray-700 dark:text-gray-300">Hora preferida (Opcional)</Label>
-                  <Select onValueChange={(value) => handleInputChange("time", value)}>
+                  <Select onValueChange={(value) => handleInputChange("time", value)} value={formData.time}>
                     <SelectTrigger className="border-gray-300 focus:border-blue-500 dark:border-gray-600 dark:bg-gray-800">
                       <SelectValue placeholder="Selecciona hora" />
                     </SelectTrigger>
@@ -283,7 +301,7 @@ export function ReservationModal({ isOpen, onClose, type, itemName, itemPrice, i
               {isRental && (
                 <div>
                   <Label htmlFor="pickupLocation" className="text-gray-700 dark:text-gray-300">Lugar de recogida preferido</Label>
-                  <Select onValueChange={(value) => handleInputChange("pickupLocation", value)}>
+                  <Select onValueChange={(value) => handleInputChange("pickupLocation", value)} value={formData.pickupLocation}>
                     <SelectTrigger className="border-gray-300 focus:border-blue-500 dark:border-gray-600 dark:bg-gray-800">
                       <SelectValue placeholder="Selecciona ubicación" />
                     </SelectTrigger>
