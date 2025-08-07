@@ -4,7 +4,9 @@ import { Inter } from "next/font/google"
 import "./globals.css"
 import { LanguageProvider } from "../contexts/LanguageContext"
 import { ThemeProvider } from "../contexts/ThemeContext"
+import { ModalProvider } from "../contexts/ModalContext"
 import AirXChat from "../components/AirXChat"
+import { GlobalModals } from "../components/GlobalModals"
 import { Analytics } from "@vercel/analytics/react"
 
 const inter = Inter({ subsets: ["latin"] })
@@ -30,9 +32,12 @@ export default function RootLayout({
       <body className={inter.className}>
         <ThemeProvider>
           <LanguageProvider>
-            {children}
-            <AirXChat />
-            <Analytics />
+            <ModalProvider>
+              {children}
+              <AirXChat />
+              <GlobalModals />
+              <Analytics />
+            </ModalProvider>
           </LanguageProvider>
         </ThemeProvider>
       </body>

@@ -3,6 +3,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { MessageCircle, X, Send } from 'lucide-react';
 import { Button } from './ui/button';
+import { useModal } from '../contexts/ModalContext';
 
 interface Message {
   id: string;
@@ -21,11 +22,8 @@ interface ConversationContext {
   vehicleType?: string;
 }
 
-interface AirXChatProps {
-  onOpenReservationModal?: () => void;
-}
-
-export default function AirXChat({ onOpenReservationModal }: AirXChatProps) {
+export default function AirXChat() {
+  const { openReservationModal } = useModal();
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>([
     {
@@ -102,7 +100,7 @@ export default function AirXChat({ onOpenReservationModal }: AirXChatProps) {
   };
 
   // Function to determine reservation type
-  const getReservationType = (context: ConversationContext): 'rental' | 'tour' | 'appointment' => {
+  const getReservationType = (context: ConversationContext = conversationContext): 'rental' | 'tour' | 'appointment' => {
     if (context.serviceType) {
       if (/tour|excursión|visita|alhambra|córdoba|sevilla|gibraltar/i.test(context.serviceType)) {
         return 'tour';
@@ -112,6 +110,47 @@ export default function AirXChat({ onOpenReservationModal }: AirXChatProps) {
       }
     }
     return 'appointment';
+  };
+
+  // Function to extract reservation context from conversation
+  const extractReservationContext = () => {
+    const lastMessages = messages.slice(-3); // Get last 3 messages for context
+    let itemName = '';
+    let itemPrice = '';
+    let itemDuration = '';
+
+    // Extract information from recent messages
+    for (const message of lastMessages) {
+      if (!message.isUser) {
+        // Look for price patterns in AI responses
+        const priceMatch = message.content.match(/(\d+)€/g);
+        if (priceMatch && !itemPrice) {
+          itemPrice = priceMatch[0];
+        }
+        
+        // Look for duration patterns
+        const durationMatch = message.content.match(/(\d+\s*(hora|día|semana|mes)s?|todo el día|media jornada)/i);
+        if (durationMatch && !itemDuration) {
+          itemDuration = durationMatch[0];
+        }
+      }
+    }
+
+    // Use conversation context for item name
+    if (conversationContext.serviceType) {
+      itemName = conversationContext.serviceType;
+    }
+
+    // Use conversation context for duration if not found in messages
+    if (conversationContext.duration && !itemDuration) {
+      itemDuration = conversationContext.duration;
+    }
+
+    return {
+      itemName,
+      itemPrice,
+      itemDuration
+    };
   };
 
   const sendMessage = async () => {
@@ -181,17 +220,17 @@ export default function AirXChat({ onOpenReservationModal }: AirXChatProps) {
     }
   };
 
-  const handleReservationClick = (type: 'rental' | 'tour' | 'appointment') => {
-    if (onOpenReservationModal) {
-      onOpenReservationModal();
-    } else {
-      // Fallback: scroll to reservation section or open modal
-      const reservationSection = document.querySelector('#reservation-section');
-      if (reservationSection) {
-        reservationSection.scrollIntoView({ behavior: 'smooth' });
-      }
-    }
-  };
+  const handleReservationClick = () => {
+    const reservationType = getReservationType(conversationContext)
+    const context = extractReservationContext()
+    
+    openReservationModal({
+      type: reservationType,
+      itemName: context.itemName,
+      itemPrice: context.itemPrice,
+      itemDuration: context.itemDuration
+    })
+  }
 
   const getReservationButtonText = (type: 'rental' | 'tour' | 'appointment') => {
     switch (type) {
@@ -258,7 +297,7 @@ export default function AirXChat({ onOpenReservationModal }: AirXChatProps) {
                 {!message.isUser && message.showReservationButton && message.reservationType && (
                   <div className="mt-2">
                     <Button
-                      onClick={() => handleReservationClick(message.reservationType!)}
+                      onClick={handleReservationClick}
                       className="bg-orange-600 hover:bg-orange-700 text-white text-xs px-3 py-1 h-auto"
                       size="sm"
                     >
