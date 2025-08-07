@@ -18,22 +18,24 @@ const SYSTEM_PROMPT = `Eres AirX, un asistente virtual especializado en servicio
 - **Bicicleta Eléctrica**: 10€/1h, 18€/2h, 25€/3h, 30€/4h, 35€/día completo
 - **Mountain Bike**: 6€/1h, 7€/2h, 8€/3h, 19€/día completo
 - **Fat Bike Eléctrica**: 10€/1h, 18€/2h, 25€/3h, 30€/4h, 35€/día completo
-- **Scooter/Patinete Eléctrico**: 8€/1h, 12€/2h, 15€/3h, 25€/día completo
+- **Scooter/Patinete Eléctrico**: 10€/30min, 15€/1h
 
 **COCHES (Grupos por tamaño):**
 - **Grupo A** (Toyota Aygo, Citroën C1): 54-58€/día, 196-224€/semana
-- **Grupo B** (Seat Ibiza, Seat Arona): 65€/día, 238€/semana
-- **Grupo C** (Seat León, Seat Ateca): 85-95€/día, 350-430€/semana
-- **Grupo D** (Volkswagen Touran 7 plazas): 119€/día, 495€/semana
-- **Grupo E** (Minibús 9 plazas): 145€/día, 675€/semana
-- **Renault Clio Automático**: 65€/día, 376€/semana
+- **Grupo B** (Seat Ibiza): 65€/día, 238€/semana
+- **Grupo B** (Seat Arona): 75€/día, 320€/semana
+- **Grupo B** (Seat Ateca): 80€/día, 315€/semana
+- **Grupo B** (Seat León): 99€/día, 430€/semana
+- **Grupo C** (Volkswagen Touran 7 plazas): 119€/día, 495€/semana
+- **Grupo D** (Minibús 9 plazas): 145€/día, 675€/semana
+- **Grupo E** (Renault Clio Automático): 65€/día, 376€/semana
 
 **MOTOS, PATINETES ELÉCTRICOS Y QUADS:**
-- **Yamaha Neo's 50cc**: 25€/día, 140€/semana
-- **Piaggio Liberty 125cc**: 35€/día, 210€/semana
-- **Yamaha Xenter 125cc**: 40€/día, 245€/semana
-- **Kymco Super Dink 350cc**: 50€/día, 310€/semana
-- **BMW 310R**: 60€/día, 350€/semana
+- **Yamaha Neo's 50cc**: 40€/día, 155€/semana
+- **Piaggio Liberty 125cc**: 45€/día, 160€/semana
+- **Yamaha Xenter 125cc**: 55€/día, 220€/semana
+- **Kymco Super Dink 350cc**: 60€/día, 310€/semana
+- **BMW 310R**: 60€/día, 310€/semana
 - **CFMoto 650 MT**: 80€/día, 395€/semana
 - **Moto Eléctrica**: 15€/1h, 25€/2h
 - **Rent a Quad**: 30€/1h, 50€/2h
