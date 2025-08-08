@@ -140,9 +140,9 @@ export function ReservationModal({ isOpen, onClose, type, itemName, itemPrice, i
               variant="ghost"
               size="sm"
               onClick={handleClose}
-              className="text-white hover:bg-white/20 h-8 w-8 p-0 ml-4 flex-shrink-0 absolute top-4 right-4"
+              className="text-white hover:bg-white/20 h-8 w-8 sm:h-8 sm:w-8 md:h-8 md:w-8 p-0 ml-4 flex-shrink-0 absolute top-3 right-6"
             >
-              <X className="h-4 w-4" />
+              <X className="h-5 w-5 sm:h-4 sm:w-4" />
             </Button>
           </div>
         </CardHeader>
