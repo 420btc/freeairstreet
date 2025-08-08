@@ -396,6 +396,11 @@ export default function AirXChat() {
                   }`}
                 >
                   {message.isUser ? message.content : formatMessageContent(message.content)}
+                  {!message.isUser && (
+                    <div className="text-xs opacity-70 mt-1 text-right">
+                      {message.timestamp.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' })}
+                    </div>
+                  )}
                 </div>
                 {/* Reservation Button */}
                 {!message.isUser && message.showReservationButton && message.reservationType && (
