@@ -39,12 +39,26 @@ export default function AlquilerPage() {
   const [isQrModalOpen, setIsQrModalOpen] = useState(false)
   const [selectedItem, setSelectedItem] = useState<{name: string, price?: string, duration?: string}>({name: ""})
   const [selectedPrices, setSelectedPrices] = useState<{[key: string]: {duration: string, price: string}}>({})
+  const [selectedModels, setSelectedModels] = useState<{[key: string]: string}>({})
 
   const handlePriceSelection = (itemName: string, duration: string, price: string) => {
     setSelectedPrices(prev => ({
       ...prev,
       [itemName]: { duration, price }
     }))
+  }
+
+  const handleModelSelection = (scooterName: string, modelId: string) => {
+    setSelectedModels(prev => ({
+      ...prev,
+      [scooterName]: modelId
+    }))
+    // Reset price selection when model changes
+    setSelectedPrices(prev => {
+      const newPrices = { ...prev }
+      delete newPrices[scooterName]
+      return newPrices
+    })
   }
 
   const handleReservation = (itemName: string) => {
@@ -418,11 +432,39 @@ export default function AlquilerPage() {
       name: "SCOOTER / PATINETE",
       description: "Scooter eléctrico para movilidad urbana sostenible y eficiente",
       image: "/patinelectrico.jpg",
-      prices: [
-        { duration: "30 min", price: "10€" },
-        { duration: "1h", price: "15€", featured: true },
+      models: [
+        {
+          id: "basic",
+          name: "Básico",
+          autonomy: "15km",
+          speed: "15 km/h",
+          prices: [
+            { duration: "30 min", price: "8€" },
+            { duration: "1h", price: "12€", featured: true },
+          ],
+        },
+        {
+          id: "medium",
+          name: "Medium",
+          autonomy: "25km",
+          speed: "20 km/h",
+          prices: [
+            { duration: "30 min", price: "10€" },
+            { duration: "1h", price: "15€", featured: true },
+          ],
+        },
+        {
+          id: "premium",
+          name: "Premium",
+          autonomy: "40km",
+          speed: "25 km/h",
+          prices: [
+            { duration: "30 min", price: "15€" },
+            { duration: "1h", price: "22€", featured: true },
+          ],
+        },
       ],
-      features: ["Motor eléctrico", "Autonomía 25km", "Plegable", "App móvil"],
+      features: ["Motor eléctrico", "Plegable", "App móvil", "Luces LED"],
     },
     {
       id: "electric-scooter-disabled",
@@ -1053,80 +1095,126 @@ export default function AlquilerPage() {
           {/* Scooters Tab */}
           <TabsContent value="scooters" className="sm:data-[state=active]:animate-none data-[state=active]:animate-in data-[state=active]:slide-in-from-right-4 data-[state=active]:duration-300">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              {scooters.map((scooter) => (
-                <Card key={scooter.id} className="overflow-hidden hover:shadow-lg transition-shadow">
-                  <div className="aspect-video relative">
-                    <Image src={scooter.image || "/placeholder.svg"} alt={scooter.name} fill className="object-contain" />
-
-                  </div>
-
-                  <CardHeader>
-                    <CardTitle className="text-xl text-gray-900">{scooter.name}</CardTitle>
-                    <CardDescription className="text-gray-600">{scooter.description}</CardDescription>
-                  </CardHeader>
-
-                  <CardContent>
-                    {/* Features */}
-                    <div className="mb-4">
-                      <h4 className="font-semibold text-gray-900 mb-2">Características:</h4>
-                      <div className="grid grid-cols-2 gap-1">
-                        {scooter.features.map((feature, index) => (
-                          <div key={index} className="flex items-center text-sm text-gray-600">
-                            <span className="w-1.5 h-1.5 bg-yellow-500 rounded-full mr-2"></span>
-                            {feature}
-                          </div>
-                        ))}
-                      </div>
+              {scooters.map((scooter) => {
+                const selectedModel = selectedModels[scooter.name] || (scooter.models ? scooter.models[0].id : null)
+                const currentModel = scooter.models ? scooter.models.find(m => m.id === selectedModel) : null
+                const displayPrices = currentModel ? currentModel.prices : scooter.prices || []
+                
+                return (
+                  <Card key={scooter.id} className="overflow-hidden hover:shadow-lg transition-shadow">
+                    <div className="aspect-video relative">
+                      <Image src={scooter.image || "/placeholder.svg"} alt={scooter.name} fill className="object-contain" />
                     </div>
 
-                    {/* Prices */}
-                    <div className="space-y-3 mb-4">
-                      <h4 className="font-semibold text-gray-900">Precios:</h4>
-                      <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
-                        {scooter.prices.map((price, index) => {
-                          const isSelected = selectedPrices[scooter.name]?.duration === price.duration as string
-                          return (
-                            <button
-                              key={index}
-                              onClick={() => handlePriceSelection(scooter.name, price.duration as string, price.price)}
-                              className={`flex flex-col items-center p-3 rounded-lg transition-all duration-200 border-2 ${
-                                isSelected
-                                  ? "bg-blue-600 border-blue-600 shadow-lg transform scale-105"
-                                  : "bg-gray-50 border-transparent hover:bg-gray-100 hover:border-gray-200"
-                              }`}
-                            >
-                              <div className="flex items-center space-x-1 mb-2">
-                                <Clock className={`h-4 w-4 ${isSelected ? "text-white" : "text-gray-500"}`} />
-                                <span className={`text-sm font-semibold ${isSelected ? "text-white" : "text-gray-700"}`}>{price.duration}</span>
+                    <CardHeader>
+                      <CardTitle className="text-xl text-gray-900">{scooter.name}</CardTitle>
+                      <CardDescription className="text-gray-600">{scooter.description}</CardDescription>
+                    </CardHeader>
+
+                    <CardContent>
+                      {/* Model Selector */}
+                      {scooter.models && (
+                        <div className="mb-4">
+                          <h4 className="font-semibold text-gray-900 mb-2">Modelo:</h4>
+                          <div className="grid grid-cols-3 gap-2">
+                            {scooter.models.map((model) => {
+                              const isSelected = selectedModel === model.id
+                              return (
+                                <button
+                                  key={model.id}
+                                  onClick={() => handleModelSelection(scooter.name, model.id)}
+                                  className={`p-3 rounded-lg border-2 transition-all duration-200 ${
+                                    isSelected
+                                      ? "bg-yellow-500 border-yellow-500 text-blue-900 shadow-lg"
+                                      : "bg-gray-50 border-gray-200 hover:bg-gray-100 hover:border-gray-300"
+                                  }`}
+                                >
+                                  <div className="text-sm font-semibold">{model.name}</div>
+                                  <div className="text-xs mt-1">
+                                    <div>{model.autonomy}</div>
+                                    <div>{model.speed}</div>
+                                  </div>
+                                </button>
+                              )
+                            })}
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Features */}
+                      <div className="mb-4">
+                        <h4 className="font-semibold text-gray-900 mb-2">Características:</h4>
+                        <div className="grid grid-cols-2 gap-1">
+                          {scooter.features.map((feature, index) => (
+                            <div key={index} className="flex items-center text-sm text-gray-600">
+                              <span className="w-1.5 h-1.5 bg-yellow-500 rounded-full mr-2"></span>
+                              {feature}
+                            </div>
+                          ))}
+                          {currentModel && (
+                            <>
+                              <div className="flex items-center text-sm text-gray-600">
+                                <span className="w-1.5 h-1.5 bg-yellow-500 rounded-full mr-2"></span>
+                                Autonomía {currentModel.autonomy}
                               </div>
-                              <Badge
-                                variant={price.featured ? "default" : "secondary"}
-                                className={`text-lg font-bold px-3 py-1 pointer-events-none ${
+                              <div className="flex items-center text-sm text-gray-600">
+                                <span className="w-1.5 h-1.5 bg-yellow-500 rounded-full mr-2"></span>
+                                Velocidad {currentModel.speed}
+                              </div>
+                            </>
+                          )}
+                        </div>
+                      </div>
+
+                      {/* Prices */}
+                      <div className="space-y-3 mb-4">
+                        <h4 className="font-semibold text-gray-900">Precios:</h4>
+                        <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+                          {displayPrices.map((price, index) => {
+                            const isSelected = selectedPrices[scooter.name]?.duration === price.duration as string
+                            return (
+                              <button
+                                key={index}
+                                onClick={() => handlePriceSelection(scooter.name, price.duration as string, price.price)}
+                                className={`flex flex-col items-center p-3 rounded-lg transition-all duration-200 border-2 ${
                                   isSelected
-                                    ? "bg-white text-blue-600"
-                                    : price.featured
-                                      ? "bg-yellow-500 text-blue-900 hover:bg-yellow-600"
-                                      : "bg-blue-100 text-blue-800"
+                                    ? "bg-blue-600 border-blue-600 shadow-lg transform scale-105"
+                                    : "bg-gray-50 border-transparent hover:bg-gray-100 hover:border-gray-200"
                                 }`}
                               >
-                                {price.price}
-                              </Badge>
-                            </button>
-                          )
-                        })}
+                                <div className="flex items-center space-x-1 mb-2">
+                                  <Clock className={`h-4 w-4 ${isSelected ? "text-white" : "text-gray-500"}`} />
+                                  <span className={`text-sm font-semibold ${isSelected ? "text-white" : "text-gray-700"}`}>{price.duration}</span>
+                                </div>
+                                <Badge
+                                  variant={price.featured ? "default" : "secondary"}
+                                  className={`text-lg font-bold px-3 py-1 pointer-events-none ${
+                                    isSelected
+                                      ? "bg-white text-blue-600"
+                                      : price.featured
+                                        ? "bg-yellow-500 text-blue-900 hover:bg-yellow-600"
+                                        : "bg-blue-100 text-blue-800"
+                                  }`}
+                                >
+                                  {price.price}
+                                </Badge>
+                              </button>
+                            )
+                          })}
+                        </div>
                       </div>
-                    </div>
 
-                    <Button 
-                      className="w-full bg-blue-600 hover:bg-blue-700 text-white"
-                      onClick={() => handleReservation(scooter.name)}
-                      disabled={!selectedPrices[scooter.name]}
-                    >
-                      {selectedPrices[scooter.name] ? `Reservar ${selectedPrices[scooter.name].duration} por ${selectedPrices[scooter.name].price}` : "Selecciona un precio"}
-                    </Button>
-                  </CardContent>
-                </Card>
-              ))}
+                      <Button 
+                        className="w-full bg-blue-600 hover:bg-blue-700 text-white"
+                        onClick={() => handleReservation(scooter.name)}
+                        disabled={!selectedPrices[scooter.name]}
+                      >
+                        {selectedPrices[scooter.name] ? `Reservar ${selectedPrices[scooter.name].duration} por ${selectedPrices[scooter.name].price}` : "Selecciona un precio"}
+                      </Button>
+                    </CardContent>
+                  </Card>
+                )
+              })}
             </div>
           </TabsContent>
 
