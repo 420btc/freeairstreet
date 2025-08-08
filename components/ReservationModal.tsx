@@ -82,7 +82,7 @@ export function ReservationModal({ isOpen, onClose, type, itemName, itemPrice, i
           name: "",
           email: "",
           phone: "",
-          date: "",
+          date: new Date().toISOString().split('T')[0],
           time: "",
           duration: "",
           participants: "1",
