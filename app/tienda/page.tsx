@@ -20,7 +20,8 @@ const translations = {
     store: {
       title: 'Tienda',
       subtitle: 'Productos y accesorios para tus aventuras',
-      comingSoon: 'Próximamente disponible'
+      comingSoon: 'Próximamente disponible',
+      preparingMessage: 'Estamos preparando una selección especial de productos y accesorios para ti.'
     },
     repair: {
       title: 'Servicio Reparación',
@@ -54,7 +55,8 @@ const translations = {
     store: {
       title: 'Store',
       subtitle: 'Products and accessories for your adventures',
-      comingSoon: 'Coming Soon'
+      comingSoon: 'Coming Soon',
+      preparingMessage: 'We are preparing a special selection of products and accessories for you.'
     },
     repair: {
       title: 'Repair Service',
@@ -165,7 +167,7 @@ export default function TiendaPage() {
 
             {/* Page Title for Mobile - Centered */}
             <div className="md:hidden flex-1 text-center">
-              <h1 className="text-lg font-bold text-blue-900 navbar-title">Tienda</h1>
+              <h1 className="text-lg font-bold text-blue-900 navbar-title">{t('header.shop')}</h1>
             </div>
 
             {/* QR Code, Language Toggle and Mobile Menu */}
@@ -294,7 +296,7 @@ export default function TiendaPage() {
                       {currentTranslations.store.comingSoon}
                     </h3>
                     <p className="text-blue-800">
-                      Estamos preparando una selección especial de productos y accesorios para ti.
+                      {currentTranslations.store.preparingMessage || 'Estamos preparando una selección especial de productos y accesorios para ti.'}
                     </p>
                   </CardContent>
                 </Card>

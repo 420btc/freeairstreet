@@ -11,6 +11,7 @@ import Link from "next/link"
 import { LanguageToggle } from '../../components/LanguageToggle'
 import { ThemeToggle } from '../../components/ThemeToggle'
 import { ReservationModal } from '../../components/ReservationModal'
+import { useLanguage } from '../../contexts/LanguageContext'
 
 export default function ToursPage() {
   const [activeTab, setActiveTab] = useState("excursiones")
@@ -18,6 +19,7 @@ export default function ToursPage() {
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [isQrModalOpen, setIsQrModalOpen] = useState(false)
   const [selectedItem, setSelectedItem] = useState<{name: string, price?: string}>({name: ""})
+  const { t } = useLanguage()
 
   const handleReservation = (itemName: string, itemPrice?: string) => {
     setSelectedItem({name: itemName, price: itemPrice})
@@ -199,22 +201,22 @@ export default function ToursPage() {
             {/* Desktop Navigation - Centered */}
             <nav className="hidden md:flex space-x-8 flex-1 justify-center">
               <Link href="/alquiler" className="text-blue-900 hover:text-blue-700 navbar-desktop-link font-medium transition-colors">
-                Alquiler
+                {t('header.rental')}
               </Link>
               <Link href="/tours" className="text-blue-900 hover:text-blue-700 navbar-desktop-link font-medium transition-colors border-b-2 border-blue-900">
-                Visitas Guiadas
+                {t('header.tours')}
               </Link>
               <Link href="/tienda" className="text-blue-900 hover:text-blue-700 navbar-desktop-link font-medium transition-colors">
-                Tienda
+                {t('header.shop')}
               </Link>
               <Link href="/contacto" className="text-blue-900 hover:text-blue-700 navbar-desktop-link font-medium transition-colors">
-                Contacto
+                {t('header.contact')}
               </Link>
             </nav>
 
             {/* Page Title for Mobile - Centered */}
             <div className="md:hidden flex-1 text-center">
-              <h1 className="text-lg font-bold text-blue-900 navbar-title">Visitas Guiadas</h1>
+              <h1 className="text-lg font-bold text-blue-900 navbar-title">{t('header.tours')}</h1>
             </div>
 
             {/* QR Code, Language Toggle and Mobile Menu */}
@@ -248,28 +250,28 @@ export default function ToursPage() {
                   className="text-blue-900 hover:text-blue-700 navbar-mobile-text font-medium animate-fadeInUp"
                   style={{ animationDelay: '0.1s' }}
                 >
-                  <span className="animate-typewriter">Alquiler</span>
+                  <span className="animate-typewriter">{t('header.rental')}</span>
                 </Link>
                 <Link 
                   href="/tours" 
                   className="text-blue-900 hover:text-blue-700 navbar-mobile-text font-medium border-l-4 border-blue-900 pl-2 animate-fadeInUp"
                   style={{ animationDelay: '0.2s' }}
                 >
-                  <span className="animate-typewriter" style={{ animationDelay: '0.2s' }}>Visitas Guiadas</span>
+                  <span className="animate-typewriter" style={{ animationDelay: '0.2s' }}>{t('header.tours')}</span>
                 </Link>
                 <Link 
                   href="/tienda" 
                   className="text-blue-900 hover:text-blue-700 navbar-mobile-text font-medium animate-fadeInUp"
                   style={{ animationDelay: '0.3s' }}
                 >
-                  <span className="animate-typewriter" style={{ animationDelay: '0.3s' }}>Tienda</span>
+                  <span className="animate-typewriter" style={{ animationDelay: '0.3s' }}>{t('header.shop')}</span>
                 </Link>
                 <Link 
                   href="/contacto" 
                   className="text-blue-900 hover:text-blue-700 navbar-mobile-text font-medium animate-fadeInUp"
                   style={{ animationDelay: '0.4s' }}
                 >
-                  <span className="animate-typewriter" style={{ animationDelay: '0.4s' }}>Contacto</span>
+                  <span className="animate-typewriter" style={{ animationDelay: '0.4s' }}>{t('header.contact')}</span>
                 </Link>
                 <div className="flex items-center space-x-4 pt-4 border-t border-yellow-600 animate-fadeInUp" style={{ animationDelay: '0.5s' }}>
                   <LanguageToggle />
@@ -285,11 +287,10 @@ export default function ToursPage() {
         {/* Título y Subtítulo */}
         <div className="text-center mb-12">
           <h1 className="text-4xl md:text-5xl font-bold text-black mb-4">
-            Visitas Guiadas
+            {t('tours.title')}
           </h1>
           <p className="text-lg md:text-xl text-gray-700 max-w-3xl mx-auto">
-            Descubre los destinos más fascinantes con nuestras excursiones, actividades marinas y paseos a caballo. 
-            ¡Vive experiencias únicas e inolvidables!
+            {t('tours.subtitle')}
           </p>
         </div>
 
@@ -299,15 +300,15 @@ export default function ToursPage() {
             <TabsList className="hidden sm:grid w-full grid-cols-3 h-16">
               <TabsTrigger value="excursiones" className="flex items-center space-x-2 py-4 px-6 text-lg">
                 <span>🏛️</span>
-                <span>Excursiones</span>
+                <span>{t('tours.excursions')}</span>
               </TabsTrigger>
               <TabsTrigger value="actividades-marinas" className="flex items-center space-x-2 py-4 px-6 text-lg">
                 <span>🚢</span>
-                <span>Actividades Marinas</span>
+                <span>{t('tours.activities')}</span>
               </TabsTrigger>
               <TabsTrigger value="caballos" className="flex items-center space-x-2 py-4 px-6 text-lg relative">
                 <span>🐎</span>
-                <span>Paseos a Caballo</span>
+                <span>{t('tours.experiences')}</span>
                 <div className="absolute -top-2 -right-2 bg-yellow-400 text-red-600 font-bold text-xs px-2 py-1 rounded-full border-2 border-yellow-500 shadow-lg transform rotate-12">
                   HOT!
                 </div>
@@ -319,17 +320,17 @@ export default function ToursPage() {
               <TabsList className="grid w-full grid-cols-2 mb-4 h-12">
                 <TabsTrigger value="excursiones" className="flex items-center justify-center space-x-2 h-full px-3 text-sm">
                   <span>🏛️</span>
-                  <span>Excursiones</span>
+                  <span>{t('tours.excursions')}</span>
                 </TabsTrigger>
                 <TabsTrigger value="actividades-marinas" className="flex items-center justify-center space-x-2 h-full px-3 text-sm">
                   <span>🚢</span>
-                  <span>Actividades Marinas</span>
+                  <span>{t('tours.activities')}</span>
                 </TabsTrigger>
               </TabsList>
               <TabsList className="grid w-full grid-cols-1 bg-gray-100 h-12">
                 <TabsTrigger value="caballos" className="flex items-center justify-center space-x-2 h-full px-3 text-sm relative">
                   <span>🐎</span>
-                  <span>Paseos a Caballo</span>
+                  <span>{t('tours.experiences')}</span>
                   <div className="absolute -top-1 -right-1 bg-yellow-400 text-red-600 font-bold text-xs px-1.5 py-0.5 rounded-full border-2 border-yellow-500 shadow-lg transform rotate-12">
                     HOT!
                   </div>

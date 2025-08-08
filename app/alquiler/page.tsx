@@ -11,8 +11,27 @@ import { useEffect, useState } from "react"
 import { LanguageToggle } from '../../components/LanguageToggle'
 import { ThemeToggle } from '../../components/ThemeToggle'
 import { ReservationModal } from '../../components/ReservationModal'
+import { useLanguage } from '../../contexts/LanguageContext'
 
 export default function AlquilerPage() {
+  const { t, language } = useLanguage()
+  const translations = {
+    es: {
+      'rental.vehicles.cityBike.features': ['Cesta delantera', 'Luces LED', 'Cambio de 7 velocidades', 'Asiento cómodo'],
+      'rental.vehicles.mountainBike.features': ['Suspensión delantera', 'Frenos de disco', '21 velocidades', 'Neumáticos todo terreno'],
+      'rental.vehicles.electricBike.features': ['Motor eléctrico', 'Batería de larga duración', 'Pantalla LCD', 'Cargador incluido'],
+      'rental.vehicles.fatBike.features': ['Neumáticos anchos', 'Motor potente', 'Suspensión completa', 'Resistente al agua'],
+      'rental.vehicles.toyotaAygo.features': ['Aire acondicionado', 'Dirección asistida', '5 puertas', 'Consumo eficiente']
+    },
+    en: {
+      'rental.vehicles.cityBike.features': ['Front basket', 'LED lights', '7-speed gear', 'Comfortable seat'],
+      'rental.vehicles.mountainBike.features': ['Front suspension', 'Disc brakes', '21 speeds', 'All-terrain tires'],
+      'rental.vehicles.electricBike.features': ['Electric motor', 'Long-lasting battery', 'LCD display', 'Charger included'],
+      'rental.vehicles.fatBike.features': ['Wide tires', 'Powerful motor', 'Full suspension', 'Water resistant'],
+      'rental.vehicles.toyotaAygo.features': ['Air conditioning', 'Power steering', '5 doors', 'Efficient consumption']
+    }
+  }
+  const currentTranslations = translations[language]
   const searchParams = useSearchParams()
   const [activeTab, setActiveTab] = useState("bicicletas")
   const [isMenuOpen, setIsMenuOpen] = useState(false)
@@ -48,58 +67,58 @@ export default function AlquilerPage() {
   const bicycles = [
     {
       id: "city-bike",
-      name: "BICI PASEO / CITY BIKE",
-      description: "Perfecta para paseos urbanos y recorridos tranquilos por la ciudad",
+      name: t('rental.vehicles.cityBike.name'),
+      description: t('rental.vehicles.cityBike.description'),
       image: "/urban-bicycle.png",
       prices: [
         { duration: "1h", price: "3€" },
         { duration: "2h", price: "5€" },
         { duration: "3h", price: "6€" },
         { duration: "4h", price: "7€" },
-        { duration: "Todo el día (11h)", price: "13€", featured: true },
+        { duration: t('rental.vehicles.cityBike.allDay'), price: "13€", featured: true },
       ],
-      features: ["Cómoda y ligera", "Ideal para ciudad", "Cesta incluida", "Luces LED"],
+      features: currentTranslations['rental.vehicles.cityBike.features'] as string[],
     },
     {
       id: "mountain-bike",
-      name: "MOUNTAIN BIKE / BICI CARRETERA",
-      description: "Para aventuras en montaña y carretera, diseñada para terrenos exigentes",
+      name: t('rental.vehicles.mountainBike.name'),
+      description: t('rental.vehicles.mountainBike.description'),
       image: "/mountain-bike-trail.png",
       prices: [
         { duration: "1h", price: "6€" },
         { duration: "2h", price: "7€" },
         { duration: "3h", price: "8€" },
-        { duration: "Todo el día (11h)", price: "19€", featured: true },
+        { duration: t('rental.vehicles.mountainBike.allDay'), price: "19€", featured: true },
       ],
-      features: ["Suspensión completa", "21 velocidades", "Frenos de disco", "Neumáticos todo terreno"],
+      features: currentTranslations['rental.vehicles.mountainBike.features'] as string[],
     },
     {
       id: "electric-bike",
-      name: "BIKE ELECT (Bicicleta eléctrica)",
-      description: "Sin esfuerzo, máxima diversión y alcance. Perfecta para distancias largas",
+      name: t('rental.vehicles.electricBike.name'),
+      description: t('rental.vehicles.electricBike.description'),
       image: "/modern-electric-bike.png",
       prices: [
         { duration: "1h", price: "10€" },
         { duration: "2h", price: "18€" },
         { duration: "3h", price: "25€" },
         { duration: "4h", price: "30€" },
-        { duration: "Todo el día (11h)", price: "35€", featured: true },
+        { duration: t('rental.vehicles.electricBike.allDay'), price: "35€", featured: true },
       ],
-      features: ["Motor eléctrico", "Batería 50km", "Pantalla LCD", "Cargador incluido"],
+      features: currentTranslations['rental.vehicles.electricBike.features'] as string[],
     },
     {
       id: "fat-bike",
-      name: "FAT BIKE ELECTRIC",
-      description: "Bicicleta eléctrica con ruedas anchas para todo tipo de terreno",
+      name: t('rental.vehicles.fatBike.name'),
+      description: t('rental.vehicles.fatBike.description'),
       image: "/fat-bike-electric-wide-tires.png",
       prices: [
         { duration: "1h", price: "10€" },
         { duration: "2h", price: "18€" },
         { duration: "3h", price: "25€" },
         { duration: "4h", price: "30€" },
-        { duration: "Todo el día (11h)", price: "35€", featured: true },
+        { duration: t('rental.vehicles.fatBike.allDay'), price: "35€", featured: true },
       ],
-      features: ["Ruedas extra anchas", "Motor potente", "Todo terreno", "Estabilidad máxima"],
+      features: currentTranslations['rental.vehicles.fatBike.features'] as string[],
     },
   ]
 
@@ -107,12 +126,12 @@ export default function AlquilerPage() {
     {
       id: "toyota-aygo",
       name: "TOYOTA AYGO",
-      group: "GRUPO A",
-      description: "Coche compacto ideal para la ciudad, económico y fácil de aparcar",
+      group: t('rental.vehicles.toyotaAygo.group'),
+      description: t('rental.vehicles.toyotaAygo.description'),
       image: "/coches/toyotaaygo.png",
 
       prices: [
-        { duration: "1 Día", price: "54€" },
+        { duration: t('rental.vehicles.toyotaAygo.duration1'), price: "54€" },
         { duration: "2D", price: "94€" },
         { duration: "3D", price: "118€" },
         { duration: "4D", price: "149€" },
@@ -120,7 +139,7 @@ export default function AlquilerPage() {
         { duration: "6D", price: "186€" },
         { duration: "7D", price: "196€", featured: true },
       ],
-      features: ["Aire acondicionado", "5 puertas", "Consumo eficiente", "Fácil aparcamiento"],
+      features: currentTranslations['rental.vehicles.toyotaAygo.features'] as string[],
     },
     {
       id: "citroen-c1",
@@ -461,22 +480,22 @@ export default function AlquilerPage() {
              {/* Desktop Navigation - Centered */}
              <nav className="hidden md:flex space-x-8 flex-1 justify-center">
                <Link href="/alquiler" className="text-blue-900 hover:text-blue-700 navbar-desktop-link font-medium transition-colors border-b-2 border-blue-900">
-                 Alquiler
+                 {t('header.rental')}
                </Link>
                <Link href="/tours" className="text-blue-900 hover:text-blue-700 navbar-desktop-link font-medium transition-colors">
-                 Visitas Guiadas
+                 {t('header.tours')}
                </Link>
                <Link href="/tienda" className="text-blue-900 hover:text-blue-700 navbar-desktop-link font-medium transition-colors">
-                 Tienda
+                 {t('header.shop')}
                </Link>
                <Link href="/contacto" className="text-blue-900 hover:text-blue-700 navbar-desktop-link font-medium transition-colors">
-                 Contacto
+                 {t('header.contact')}
                </Link>
              </nav>
 
              {/* Page Title for Mobile - Centered */}
              <div className="md:hidden flex-1 text-center">
-               <h1 className="text-lg font-bold text-blue-900 navbar-title">Alquiler</h1>
+               <h1 className="text-lg font-bold text-blue-900 navbar-title">{t('header.rental')}</h1>
              </div>
 
             {/* QR Code, Language Toggle and Mobile Menu */}
@@ -486,7 +505,7 @@ export default function AlquilerPage() {
                 onClick={() => setIsQrModalOpen(true)}
               >
                 <QrCode className="h-5 w-5 text-blue-900" />
-                <span className="text-sm text-blue-900 font-medium">Rent a Quad</span>
+                <span className="text-sm text-blue-900 font-medium">{t('header.scanPrices')}</span>
               </div>
 
               {/* Language Toggle and Theme Toggle */}
@@ -511,28 +530,28 @@ export default function AlquilerPage() {
                   className="text-blue-900 hover:text-blue-700 navbar-mobile-text font-medium border-l-4 border-blue-900 pl-2 animate-fadeInUp"
                   style={{ animationDelay: '0.1s' }}
                 >
-                  <span className="animate-typewriter">Alquiler</span>
+                  <span className="animate-typewriter">{t('header.rental')}</span>
                 </Link>
                 <Link 
                   href="/tours" 
                   className="text-blue-900 hover:text-blue-700 navbar-mobile-text font-medium animate-fadeInUp"
                   style={{ animationDelay: '0.2s' }}
                 >
-                  <span className="animate-typewriter" style={{ animationDelay: '0.2s' }}>Visitas Guiadas</span>
+                  <span className="animate-typewriter" style={{ animationDelay: '0.2s' }}>{t('header.tours')}</span>
                 </Link>
                 <Link 
                   href="/tienda" 
                   className="text-blue-900 hover:text-blue-700 navbar-mobile-text font-medium animate-fadeInUp"
                   style={{ animationDelay: '0.3s' }}
                 >
-                  <span className="animate-typewriter" style={{ animationDelay: '0.3s' }}>Tienda</span>
+                  <span className="animate-typewriter" style={{ animationDelay: '0.3s' }}>{t('header.shop')}</span>
                 </Link>
                 <Link 
                   href="/contacto" 
                   className="text-blue-900 hover:text-blue-700 navbar-mobile-text font-medium animate-fadeInUp"
                   style={{ animationDelay: '0.4s' }}
                 >
-                  <span className="animate-typewriter" style={{ animationDelay: '0.4s' }}>Contacto</span>
+                  <span className="animate-typewriter" style={{ animationDelay: '0.4s' }}>{t('header.contact')}</span>
                 </Link>
                 <div className="flex items-center space-x-4 pt-4 border-t border-yellow-600 animate-fadeInUp" style={{ animationDelay: '0.5s' }}>
                   <LanguageToggle />
@@ -548,11 +567,10 @@ export default function AlquilerPage() {
         {/* Título y Subtítulo */}
         <div className="text-center mb-12">
           <h1 className="text-4xl md:text-5xl font-bold text-black mb-4">
-            Alquiler de Vehículos
+            {t('rental.title')}
           </h1>
           <p className="text-lg md:text-xl text-gray-700 max-w-3xl mx-auto">
-            Descubre la libertad de moverte por Torremolinos con nuestras bicicletas, coches, motos, patinetes eléctricos y quads. 
-            ¡Elige tu vehículo ideal y vive una experiencia única!
+            {t('rental.subtitle')}
           </p>
         </div>
 
@@ -562,30 +580,30 @@ export default function AlquilerPage() {
             <TabsList className="hidden sm:grid w-full grid-cols-6 h-16">
               <TabsTrigger value="bicicletas" className="flex items-center space-x-2 py-4 px-6 text-lg">
                 <span>🚴</span>
-                <span>Bicicletas</span>
+                <span>{t('rental.bicycles')}</span>
               </TabsTrigger>
               <TabsTrigger value="coches" className="flex items-center space-x-2 py-4 px-6 text-lg">
                 <span>🚗</span>
-                <span>Coches</span>
+                <span>{t('rental.cars')}</span>
               </TabsTrigger>
               <TabsTrigger value="motos" className="flex items-center space-x-2 py-4 px-6 text-lg">
                 <span>🏍️</span>
-                <span>Motos</span>
+                <span>{t('rental.motorcycles')}</span>
               </TabsTrigger>
               <TabsTrigger value="quads" className="flex items-center space-x-2 py-4 px-6 text-lg">
                 <span>🏎️</span>
-                <span>Quads</span>
+                <span>{t('rental.quads')}</span>
               </TabsTrigger>
               <TabsTrigger value="scooters" className="flex items-center space-x-2 py-4 px-6 text-lg relative">
                 <span>🛴</span>
-                <span>Scooters</span>
+                <span>{t('rental.scooters')}</span>
                 <div className="absolute -top-2 -right-2 bg-yellow-400 text-red-600 font-bold text-xs px-2 py-1 rounded-full border-2 border-yellow-500 shadow-lg transform rotate-12">
                   HOT!
                 </div>
               </TabsTrigger>
               <TabsTrigger value="accesorios" className="flex items-center space-x-2 py-4 px-6 text-lg">
                 <span>🛍️</span>
-                <span>Accesorios</span>
+                <span>{t('rental.accessories')}</span>
               </TabsTrigger>
             </TabsList>
             
@@ -594,32 +612,32 @@ export default function AlquilerPage() {
                <TabsList className="grid w-full grid-cols-3 mb-4 h-16">
                  <TabsTrigger value="bicicletas" className="flex items-center justify-center space-x-2 h-full px-3 text-sm">
                    <span>🚴</span>
-                   <span>Bicicletas</span>
+                   <span>{t('rental.bicycles')}</span>
                  </TabsTrigger>
                  <TabsTrigger value="coches" className="flex items-center justify-center space-x-2 h-full px-3 text-sm">
                    <span>🚗</span>
-                   <span>Coches</span>
+                   <span>{t('rental.cars')}</span>
                  </TabsTrigger>
                  <TabsTrigger value="motos" className="flex items-center justify-center space-x-2 h-full px-3 text-sm">
                    <span>🏍️</span>
-                   <span>Motos</span>
+                   <span>{t('rental.motorcycles')}</span>
                  </TabsTrigger>
                </TabsList>
                <TabsList className="grid w-full grid-cols-3 bg-gray-100 h-16">
                  <TabsTrigger value="quads" className="flex items-center justify-center space-x-2 h-full px-3 text-sm">
                    <span>🏎️</span>
-                   <span>Quads</span>
+                   <span>{t('rental.quads')}</span>
                  </TabsTrigger>
                  <TabsTrigger value="scooters" className="flex items-center justify-center space-x-2 h-full px-3 text-sm relative">
                    <span>🛴</span>
-                   <span>Scooters</span>
+                   <span>{t('rental.scooters')}</span>
                    <div className="absolute -top-1 -right-1 bg-yellow-400 text-red-600 font-bold text-xs px-1.5 py-0.5 rounded-full border-2 border-yellow-500 shadow-lg transform rotate-12">
                      HOT!
                    </div>
                  </TabsTrigger>
                  <TabsTrigger value="accesorios" className="flex items-center justify-center space-x-2 h-full px-3 text-sm">
                    <span>🛍️</span>
-                   <span>Accesorios</span>
+                   <span>{t('rental.accessories')}</span>
                  </TabsTrigger>
                </TabsList>
              </div>
@@ -631,24 +649,24 @@ export default function AlquilerPage() {
               {bicycles.map((bike) => (
                 <Card key={bike.id} className="overflow-hidden hover:shadow-lg transition-shadow">
                   <div className="aspect-video relative">
-                    <Image src={bike.image || "/placeholder.svg"} alt={bike.name} fill className="object-cover" />
+                    <Image src={bike.image || "/placeholder.svg"} alt={bike.name as string} fill className="object-cover" />
 
                   </div>
 
                   <CardHeader>
-                    <CardTitle className="text-xl text-gray-900">{bike.name}</CardTitle>
-                    <CardDescription className="text-gray-600">{bike.description}</CardDescription>
+                    <CardTitle className="text-xl text-gray-900">{bike.name as string}</CardTitle>
+                    <CardDescription className="text-gray-600">{bike.description as string}</CardDescription>
                   </CardHeader>
 
                   <CardContent>
                     {/* Features */}
                     <div className="mb-4">
-                      <h4 className="font-semibold text-gray-900 mb-2">Características:</h4>
+                      <h4 className="font-semibold text-gray-900 mb-2">{t('rental.features')}:</h4>
                       <div className="grid grid-cols-2 gap-1">
                         {bike.features.map((feature, index) => (
                           <div key={index} className="flex items-center text-sm text-gray-600">
                             <span className="w-1.5 h-1.5 bg-yellow-500 rounded-full mr-2"></span>
-                            {feature}
+                            {feature as string}
                           </div>
                         ))}
                       </div>
@@ -656,14 +674,14 @@ export default function AlquilerPage() {
 
                     {/* Prices */}
                     <div className="space-y-3 mb-4">
-                      <h4 className="font-semibold text-gray-900">Precios:</h4>
+                      <h4 className="font-semibold text-gray-900">{t('rental.prices')}:</h4>
                       <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
                         {bike.prices.map((price, index) => {
-                          const isSelected = selectedPrices[bike.name]?.duration === price.duration
+                          const isSelected = selectedPrices[bike.name as string]?.duration === price.duration as string
                           return (
                             <button
                               key={index}
-                              onClick={() => handlePriceSelection(bike.name, price.duration, price.price)}
+                              onClick={() => handlePriceSelection(bike.name as string, price.duration as string, price.price)}
                               className={`flex flex-col items-center p-3 rounded-lg transition-all duration-200 border-2 ${
                                 isSelected
                                   ? "bg-blue-600 border-blue-600 shadow-lg transform scale-105"
@@ -694,10 +712,10 @@ export default function AlquilerPage() {
 
                     <Button 
                       className="w-full bg-blue-600 hover:bg-blue-700 text-white"
-                      onClick={() => handleReservation(bike.name)}
-                      disabled={!selectedPrices[bike.name]}
+                      onClick={() => handleReservation(bike.name as string)}
+                      disabled={!selectedPrices[bike.name as string]}
                     >
-                      {selectedPrices[bike.name] ? `Reservar ${selectedPrices[bike.name].duration} por ${selectedPrices[bike.name].price}` : "Selecciona un precio"}
+                      {selectedPrices[bike.name as string] ? `${t('rental.reserve')} ${selectedPrices[bike.name as string].duration} ${t('rental.for')} ${selectedPrices[bike.name as string].price}` : t('rental.selectPrice')}
                     </Button>
                   </CardContent>
                 </Card>
@@ -711,7 +729,7 @@ export default function AlquilerPage() {
               {cars.map((car) => (
                 <Card key={car.id} className="overflow-hidden hover:shadow-lg transition-shadow">
                   <div className="aspect-video relative">
-                    <Image src={car.image || "/placeholder.svg"} alt={car.name} fill className="object-cover" />
+                    <Image src={car.image || "/placeholder.svg"} alt={car.name as string} fill className="object-cover" />
 
                     <div className="absolute top-4 right-4">
                       <Badge className="bg-yellow-500 text-blue-900 font-bold">{car.group}</Badge>
@@ -719,14 +737,14 @@ export default function AlquilerPage() {
                   </div>
 
                   <CardHeader>
-                    <CardTitle className="text-xl text-gray-900">{car.name}</CardTitle>
-                    <CardDescription className="text-gray-600">{car.description}</CardDescription>
+                    <CardTitle className="text-xl text-gray-900">{car.name as string}</CardTitle>
+                    <CardDescription className="text-gray-600">{car.description as string}</CardDescription>
                   </CardHeader>
 
                   <CardContent>
                     {/* Features */}
                     <div className="mb-4">
-                      <h4 className="font-semibold text-gray-900 mb-2">Características:</h4>
+                      <h4 className="font-semibold text-gray-900 mb-2">{t('rental.features')}:</h4>
                       <div className="grid grid-cols-2 gap-1">
                         {car.features.map((feature, index) => (
                           <div key={index} className="flex items-center text-sm text-gray-600">
@@ -739,14 +757,14 @@ export default function AlquilerPage() {
 
                     {/* Prices */}
                     <div className="space-y-3 mb-4">
-                      <h4 className="font-semibold text-gray-900">Precios:</h4>
+                      <h4 className="font-semibold text-gray-900">{t('rental.prices')}:</h4>
                       <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
                         {car.prices.map((price, index) => {
-                          const isSelected = selectedPrices[car.name]?.duration === price.duration
+                          const isSelected = selectedPrices[car.name as string]?.duration === price.duration as string
                           return (
                             <button
                               key={index}
-                              onClick={() => handlePriceSelection(car.name, price.duration, price.price)}
+                              onClick={() => handlePriceSelection(car.name as string, price.duration as string, price.price)}
                               className={`flex flex-col items-center p-3 rounded-lg transition-all duration-200 border-2 ${
                                 isSelected
                                   ? "bg-blue-600 border-blue-600 shadow-lg transform scale-105"
@@ -777,10 +795,10 @@ export default function AlquilerPage() {
 
                     <Button 
                       className="w-full bg-blue-600 hover:bg-blue-700 text-white"
-                      onClick={() => handleReservation(car.name)}
-                      disabled={!selectedPrices[car.name]}
+                      onClick={() => handleReservation(car.name as string)}
+                      disabled={!selectedPrices[car.name as string]}
                     >
-                      {selectedPrices[car.name] ? `Reservar ${selectedPrices[car.name].duration} por ${selectedPrices[car.name].price}` : "Selecciona un precio"}
+                      {selectedPrices[car.name as string] ? `${t('rental.reserve')} ${selectedPrices[car.name as string].duration} ${t('rental.for')} ${selectedPrices[car.name as string].price}` : t('rental.selectPrice')}
                     </Button>
                   </CardContent>
                 </Card>
@@ -792,22 +810,22 @@ export default function AlquilerPage() {
               <CardHeader>
                 <div className="flex items-center space-x-2">
                   <span className="text-yellow-600">🚗</span>
-                  <CardTitle className="text-yellow-900">Requisitos para Alquiler de Coches</CardTitle>
+                  <CardTitle className="text-yellow-900">{t('rental.carRequirements.title')}</CardTitle>
                 </div>
               </CardHeader>
               <CardContent>
                 <ul className="space-y-2 text-yellow-800">
                   <li>
-                    • <strong>Carnet de conducir</strong> válido y vigente
+                    • <strong>{t('rental.carRequirements.license')}</strong> {t('rental.carRequirements.licenseValid')}
                   </li>
                   <li>
-                    • <strong>Pasaporte</strong> o DNI en vigor
+                    • <strong>{t('rental.carRequirements.passport')}</strong> {t('rental.carRequirements.passportValid')}
                   </li>
                   <li>
-                    • <strong>Tarjeta de crédito</strong> para depósito de seguridad
+                    • <strong>{t('rental.carRequirements.creditCard')}</strong> {t('rental.carRequirements.creditCardPurpose')}
                   </li>
-                  <li>• Edad mínima: 21 años (25 años para grupos C y D)</li>
-                  <li>• Los modelos de coches son orientativos y pueden variar según disponibilidad</li>
+                  <li>• {t('rental.carRequirements.minAge')}</li>
+                  <li>• {t('rental.carRequirements.modelsNote')}</li>
                 </ul>
               </CardContent>
             </Card>
@@ -850,11 +868,11 @@ export default function AlquilerPage() {
                       <h4 className="font-semibold text-gray-900">Precios:</h4>
                       <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
                         {moto.prices.map((price, index) => {
-                          const isSelected = selectedPrices[moto.name]?.duration === price.duration
+                          const isSelected = selectedPrices[moto.name]?.duration === price.duration as string
                           return (
                             <button
                               key={index}
-                              onClick={() => handlePriceSelection(moto.name, price.duration, price.price)}
+                              onClick={() => handlePriceSelection(moto.name, price.duration as string, price.price)}
                               className={`flex flex-col items-center p-3 rounded-lg transition-all duration-200 border-2 ${
                                 isSelected
                                   ? "bg-blue-600 border-blue-600 shadow-lg transform scale-105"
@@ -959,11 +977,11 @@ export default function AlquilerPage() {
                       <h4 className="font-semibold text-gray-900">Precios:</h4>
                       <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
                         {quad.prices.map((price, index) => {
-                          const isSelected = selectedPrices[quad.name]?.duration === price.duration
+                          const isSelected = selectedPrices[quad.name]?.duration === price.duration as string
                           return (
                             <button
                               key={index}
-                              onClick={() => handlePriceSelection(quad.name, price.duration, price.price)}
+                              onClick={() => handlePriceSelection(quad.name, price.duration as string, price.price)}
                               className={`flex flex-col items-center p-3 rounded-lg transition-all duration-200 border-2 ${
                                 isSelected
                                   ? "bg-blue-600 border-blue-600 shadow-lg transform scale-105"
@@ -1066,11 +1084,11 @@ export default function AlquilerPage() {
                       <h4 className="font-semibold text-gray-900">Precios:</h4>
                       <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
                         {scooter.prices.map((price, index) => {
-                          const isSelected = selectedPrices[scooter.name]?.duration === price.duration
+                          const isSelected = selectedPrices[scooter.name]?.duration === price.duration as string
                           return (
                             <button
                               key={index}
-                              onClick={() => handlePriceSelection(scooter.name, price.duration, price.price)}
+                              onClick={() => handlePriceSelection(scooter.name, price.duration as string, price.price)}
                               className={`flex flex-col items-center p-3 rounded-lg transition-all duration-200 border-2 ${
                                 isSelected
                                   ? "bg-blue-600 border-blue-600 shadow-lg transform scale-105"

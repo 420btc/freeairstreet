@@ -15,8 +15,10 @@ import mapboxgl from "mapbox-gl"
 import { LanguageToggle } from '../../components/LanguageToggle'
 import { ThemeToggle } from '../../components/ThemeToggle'
 import { sendContactEmail, type ContactFormData } from '@/lib/emailjs'
+import { useLanguage } from '@/contexts/LanguageContext'
 
 export default function ContactoPage() {
+  const { t } = useLanguage()
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -106,21 +108,21 @@ export default function ContactoPage() {
   const contactInfo = [
     {
       icon: <Phone className="h-6 w-6" />,
-      title: "Teléfono",
+      title: t('contact.phone'),
       info: "655 707 412",
-      description: "Llámanos de 9:00 a 20:00",
+      description: t('contact.phoneHours'),
       href: "tel:+34655707412",
     },
     {
       icon: <Mail className="h-6 w-6" />,
-      title: "Email",
+      title: t('contact.email'),
       info: "rentairstreet@gmail.com",
-      description: "Respuesta en 24h",
+      description: t('contact.emailResponse'),
       href: "mailto:rentairstreet@gmail.com",
     },
     {
       icon: <MapPin className="h-6 w-6" />,
-      title: "Ubicación",
+      title: t('contact.location'),
       info: "Calle de la Playa, 22",
       description: "29620 - Torremolinos",
       href: "https://maps.google.com/?q=Calle+de+la+Playa+22+Torremolinos",
@@ -128,8 +130,8 @@ export default function ContactoPage() {
   ]
 
   const businessHours = [
-    { day: "Lunes - Domingo", hours: "9:00 - 20:00" },
-    { day: "Festivos", hours: "10:00 - 19:00" },
+    { day: t('contact.mondayToSunday'), hours: t('contact.regularHours') },
+    { day: t('contact.holidays'), hours: t('contact.holidayHours') },
   ]
 
   return (
@@ -157,22 +159,22 @@ export default function ContactoPage() {
              {/* Desktop Navigation - Centered */}
              <nav className="hidden md:flex space-x-8 flex-1 justify-center">
                <Link href="/alquiler" className="text-blue-900 hover:text-blue-700 navbar-desktop-link font-medium transition-colors">
-                 Alquiler
+                 {t('header.rental')}
                </Link>
                <Link href="/tours" className="text-blue-900 hover:text-blue-700 navbar-desktop-link font-medium transition-colors">
-                 Visitas Guiadas
+                 {t('header.tours')}
                </Link>
                <Link href="/tienda" className="text-blue-900 hover:text-blue-700 navbar-desktop-link font-medium transition-colors">
-                 Tienda
+                 {t('header.shop')}
                </Link>
                <Link href="/contacto" className="text-blue-900 hover:text-blue-700 navbar-desktop-link font-medium transition-colors border-b-2 border-blue-900">
-                 Contacto
+                 {t('header.contact')}
                </Link>
              </nav>
 
              {/* Page Title for Mobile - Centered */}
              <div className="md:hidden flex-1 text-center">
-               <h1 className="text-lg font-bold text-blue-900 navbar-title">Contacto</h1>
+               <h1 className="text-lg font-bold text-blue-900 navbar-title">{t('header.contact')}</h1>
              </div>
 
              {/* QR Code, Language Toggle and Mobile Menu */}
@@ -206,28 +208,28 @@ export default function ContactoPage() {
                   className="text-blue-900 hover:text-blue-700 navbar-mobile-text font-medium animate-fadeInUp"
                   style={{ animationDelay: '0.1s' }}
                 >
-                  <span className="animate-typewriter">Alquiler</span>
+                  <span className="animate-typewriter">{t('header.rental')}</span>
                 </Link>
                 <Link 
                   href="/tours" 
                   className="text-blue-900 hover:text-blue-700 navbar-mobile-text font-medium animate-fadeInUp"
                   style={{ animationDelay: '0.2s' }}
                 >
-                  <span className="animate-typewriter" style={{ animationDelay: '0.2s' }}>Visitas Guiadas</span>
+                  <span className="animate-typewriter" style={{ animationDelay: '0.2s' }}>{t('header.tours')}</span>
                 </Link>
                 <Link 
                   href="/tienda" 
                   className="text-blue-900 hover:text-blue-700 navbar-mobile-text font-medium animate-fadeInUp"
                   style={{ animationDelay: '0.3s' }}
                 >
-                  <span className="animate-typewriter" style={{ animationDelay: '0.3s' }}>Tienda</span>
+                  <span className="animate-typewriter" style={{ animationDelay: '0.3s' }}>{t('header.shop')}</span>
                 </Link>
                 <Link 
                   href="/contacto" 
                   className="text-blue-900 hover:text-blue-700 navbar-mobile-text font-medium border-l-4 border-blue-900 pl-2 animate-fadeInUp"
                   style={{ animationDelay: '0.4s' }}
                 >
-                  <span className="animate-typewriter" style={{ animationDelay: '0.4s' }}>Contacto</span>
+                  <span className="animate-typewriter" style={{ animationDelay: '0.4s' }}>{t('header.contact')}</span>
                 </Link>
                 <div className="flex items-center space-x-4 pt-4 border-t border-yellow-500 animate-fadeInUp" style={{ animationDelay: '0.5s' }}>
                   <LanguageToggle />
@@ -243,11 +245,10 @@ export default function ContactoPage() {
         {/* Título y Subtítulo */}
         <div className="text-center mb-12">
           <h1 className="text-4xl md:text-5xl font-bold text-black mb-4">
-            Contacto
+            {t('contact.title')}
           </h1>
           <p className="text-lg md:text-xl text-gray-700 max-w-3xl mx-auto">
-            ¿Tienes alguna pregunta sobre nuestros servicios? ¿Necesitas ayuda con tu reserva? 
-            Estamos aquí para ayudarte en tu próxima aventura.
+            {t('contact.subtitle')}
           </p>
         </div>
 
@@ -255,24 +256,24 @@ export default function ContactoPage() {
           {/* Contact Form */}
           <Card className="order-2 lg:order-1 xl:col-span-3 lg:col-span-2">
             <CardHeader>
-              <CardTitle className="text-xl text-gray-900">Envíanos un mensaje</CardTitle>
+              <CardTitle className="text-xl text-gray-900">{t('contact.form.title')}</CardTitle>
               <CardDescription>
-                Completa el formulario y te responderemos lo antes posible.
+                {t('contact.form.description')}
               </CardDescription>
             </CardHeader>
             <CardContent>
               {isSubmitted ? (
                 <div className="text-center py-8">
                   <CheckCircle className="h-16 w-16 text-green-500 mx-auto mb-4" />
-                  <h3 className="text-xl font-semibold text-gray-900 mb-2">¡Mensaje enviado!</h3>
+                  <h3 className="text-xl font-semibold text-gray-900 mb-2">{t('contact.form.success')}</h3>
                   <p className="text-gray-600 mb-4">
-                    Gracias por contactarnos. Te responderemos en las próximas 24 horas.
+                    {t('contact.form.successMessage')}
                   </p>
                   <Button onClick={() => {
                     setIsSubmitted(false)
                     setSubmitError(null)
                   }} className="bg-blue-600 hover:bg-blue-700">
-                    Enviar otro mensaje
+                    {t('contact.form.sendAnother')}
                   </Button>
                 </div>
               ) : (
@@ -285,7 +286,7 @@ export default function ContactoPage() {
                   <form onSubmit={handleSubmit} className="space-y-6">
                   <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
                     <div>
-                      <Label htmlFor="name" className="text-base font-medium">Nombre *</Label>
+                      <Label htmlFor="name" className="text-base font-medium">{t('contact.form.name')} *</Label>
                       <Input
                         id="name"
                         name="name"
@@ -294,11 +295,11 @@ export default function ContactoPage() {
                         onChange={handleInputChange}
                         required
                         className="mt-1 h-11"
-                        placeholder="Tu nombre"
+                        placeholder={t('contact.form.namePlaceholder') as string}
                       />
                     </div>
                     <div>
-                      <Label htmlFor="phone" className="text-base font-medium">Teléfono *</Label>
+                      <Label htmlFor="phone" className="text-base font-medium">{t('contact.form.phone')} *</Label>
                       <Input
                         id="phone"
                         name="phone"
@@ -307,11 +308,11 @@ export default function ContactoPage() {
                         onChange={handleInputChange}
                         required
                         className="mt-1 h-11"
-                        placeholder="+34 XXX XXX XXX"
+                        placeholder={t('contact.form.phonePlaceholder') as string}
                       />
                     </div>
                     <div>
-                      <Label htmlFor="email" className="text-base font-medium">Email *</Label>
+                      <Label htmlFor="email" className="text-base font-medium">{t('contact.form.email')} *</Label>
                       <Input
                         id="email"
                         name="email"
@@ -320,13 +321,13 @@ export default function ContactoPage() {
                         onChange={handleInputChange}
                         required
                         className="mt-1 h-11"
-                        placeholder="tu@email.com"
+                        placeholder={t('contact.form.emailPlaceholder') as string}
                       />
                     </div>
                   </div>
 
                   <div>
-                    <Label htmlFor="subject" className="text-base font-medium">Asunto *</Label>
+                    <Label htmlFor="subject" className="text-base font-medium">{t('contact.form.subject')} *</Label>
                     <Input
                       id="subject"
                       name="subject"
@@ -335,12 +336,12 @@ export default function ContactoPage() {
                       onChange={handleInputChange}
                       required
                       className="mt-1 h-11"
-                      placeholder="¿En qué podemos ayudarte?"
+                      placeholder={t('contact.form.subjectPlaceholder') as string}
                     />
                   </div>
 
                   <div>
-                    <Label htmlFor="message" className="text-base font-medium">Mensaje *</Label>
+                    <Label htmlFor="message" className="text-base font-medium">{t('contact.form.message')} *</Label>
                     <Textarea
                       id="message"
                       name="message"
@@ -348,7 +349,7 @@ export default function ContactoPage() {
                       onChange={handleInputChange}
                       required
                       className="mt-1 min-h-[120px] text-base"
-                      placeholder="Cuéntanos más detalles sobre tu consulta..."
+                      placeholder={t('contact.form.messagePlaceholder') as string}
                     />
                   </div>
 
@@ -360,12 +361,12 @@ export default function ContactoPage() {
                     {isSubmitting ? (
                       <>
                         <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-                        Enviando...
+                        {t('contact.form.sending')}
                       </>
                     ) : (
                       <>
                         <Send className="h-4 w-4 mr-2" />
-                        Enviar mensaje
+                        {t('contact.form.send')}
                       </>
                     )}
                   </Button>
@@ -410,7 +411,7 @@ export default function ContactoPage() {
                     <Clock className="h-6 w-6" />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <h3 className="font-semibold text-gray-900 text-sm mb-1">Horarios</h3>
+                    <h3 className="font-semibold text-gray-900 text-sm mb-1">{t('contact.hours')}</h3>
                     <div className="space-y-1">
                       {businessHours.map((schedule, index) => (
                         <div key={index} className="flex justify-between items-center">
