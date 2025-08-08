@@ -34,7 +34,7 @@ export function ReservationModal({ isOpen, onClose, type, itemName, itemPrice, i
     name: prefillData?.name || "",
     email: prefillData?.email || "",
     phone: prefillData?.phone || "",
-    date: prefillData?.date || "",
+    date: prefillData?.date || new Date().toISOString().split('T')[0],
     time: prefillData?.time || "",
     duration: itemDuration || "",
     participants: prefillData?.participants || "1",
@@ -48,7 +48,7 @@ export function ReservationModal({ isOpen, onClose, type, itemName, itemPrice, i
       name: prefillData?.name || "",
       email: prefillData?.email || "",
       phone: prefillData?.phone || "",
-      date: prefillData?.date || "",
+      date: prefillData?.date || new Date().toISOString().split('T')[0],
       time: prefillData?.time || "",
       duration: itemDuration || "",
       participants: prefillData?.participants || "1",
@@ -262,22 +262,32 @@ export function ReservationModal({ isOpen, onClose, type, itemName, itemPrice, i
                 {isRental && (
                   <div>
                     <Label htmlFor="duration" className="text-gray-700 dark:text-gray-300">Duración *</Label>
-                    <Select onValueChange={(value) => handleInputChange("duration", value)} value={formData.duration}>
-                      <SelectTrigger className="border-gray-300 focus:border-blue-500 dark:border-gray-600 dark:bg-gray-800">
-                        <SelectValue placeholder="Selecciona duración" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="1h">1 hora</SelectItem>
-                        <SelectItem value="2h">2 horas</SelectItem>
-                        <SelectItem value="3h">3 horas</SelectItem>
-                        <SelectItem value="4h">4 horas</SelectItem>
-                        <SelectItem value="6h">6 horas</SelectItem>
-                        <SelectItem value="1d">1 día completo</SelectItem>
-                        <SelectItem value="2d">2 días</SelectItem>
-                        <SelectItem value="3d">3 días</SelectItem>
-                        <SelectItem value="1w">1 semana</SelectItem>
-                      </SelectContent>
-                    </Select>
+                    {itemDuration ? (
+                      <Input
+                        id="duration"
+                        value={formData.duration}
+                        onChange={(e) => handleInputChange("duration", e.target.value)}
+                        className="border-gray-300 focus:border-blue-500 dark:border-gray-600 dark:bg-gray-800"
+                        placeholder="Duración seleccionada"
+                      />
+                    ) : (
+                      <Select onValueChange={(value) => handleInputChange("duration", value)} value={formData.duration}>
+                        <SelectTrigger className="border-gray-300 focus:border-blue-500 dark:border-gray-600 dark:bg-gray-800">
+                          <SelectValue placeholder="Selecciona duración" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="1h">1 hora</SelectItem>
+                          <SelectItem value="2h">2 horas</SelectItem>
+                          <SelectItem value="3h">3 horas</SelectItem>
+                          <SelectItem value="4h">4 horas</SelectItem>
+                          <SelectItem value="6h">6 horas</SelectItem>
+                          <SelectItem value="1d">1 día completo</SelectItem>
+                          <SelectItem value="2d">2 días</SelectItem>
+                          <SelectItem value="3d">3 días</SelectItem>
+                          <SelectItem value="1w">1 semana</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    )}
                   </div>
                 )}
                 
