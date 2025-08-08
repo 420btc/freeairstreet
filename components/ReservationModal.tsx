@@ -121,17 +121,17 @@ export function ReservationModal({ isOpen, onClose, type, itemName, itemPrice, i
   return (
     <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-start justify-center p-2 sm:p-4 overflow-y-auto">
       <Card className="w-full max-w-lg my-4 sm:my-8 bg-gradient-to-br from-yellow-50 via-white to-blue-50 dark:from-gray-900 dark:via-gray-800 dark:to-blue-900 border-2 border-blue-600 shadow-2xl overflow-hidden">
-        <CardHeader className="bg-gradient-to-r from-yellow-400 to-blue-600 text-white relative -m-6 mb-0 p-6 rounded-t-lg">
+        <CardHeader className="bg-blue-600 text-white relative -m-6 mb-0 p-6 rounded-t-lg">
           <div className="flex justify-between items-start">
             <div className="flex-1 text-center">
-              <CardTitle className="text-2xl font-bold mb-2">
+              <CardTitle className="text-3xl font-bold mb-1">
                 {isSubmitted ? "¡Reserva Enviada!" : title}
               </CardTitle>
               {itemName && !isSubmitted && (
-                <div>
-                  <p className="text-xl font-semibold text-blue-900">{itemName}</p>
+                <div className="mt-1">
+                  <p className="text-3xl font-semibold text-white mb-0 border-b-2 border-yellow-400 pb-1 inline-block">{itemName}</p>
                   {itemDuration && itemPrice && (
-                    <p className="text-lg font-medium text-blue-800 mt-1">{itemDuration} - <span className="text-2xl font-bold">{itemPrice}</span></p>
+                    <p className="text-lg font-medium mt-2 text-center flex items-center justify-center"><span className="text-3xl font-bold text-white">{itemDuration}</span> <span className="mx-2 text-xl">=</span> <span className="text-3xl font-bold text-yellow-300">{itemPrice}</span></p>
                   )}
                 </div>
               )}
@@ -352,7 +352,7 @@ export function ReservationModal({ isOpen, onClose, type, itemName, itemPrice, i
                   <Button
                     type="submit"
                     disabled={isSubmitting}
-                    className="flex-1 bg-gradient-to-r from-yellow-400 to-blue-500 hover:from-yellow-500 hover:to-blue-600 text-white font-semibold shadow-lg py-3 disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="flex-1 bg-yellow-400 hover:bg-yellow-500 text-black font-semibold shadow-lg py-3 disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     {isSubmitting ? "Enviando..." : (isRental ? "Confirmar Alquiler" : "Confirmar Reserva")}
                   </Button>
