@@ -19,7 +19,7 @@ export default function ToursPage() {
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [isQrModalOpen, setIsQrModalOpen] = useState(false)
   const [selectedItem, setSelectedItem] = useState<{name: string, price?: string}>({name: ""})
-  const { t } = useLanguage()
+  const { t, language } = useLanguage()
 
   const handleReservation = (itemName: string, itemPrice?: string) => {
     setSelectedItem({name: itemName, price: itemPrice})
@@ -38,6 +38,109 @@ export default function ToursPage() {
       emoji: "🐎",
     },
   ]
+
+  // Helpers: localization for EN
+  const dayMap: Record<string, string> = {
+    'Lunes': 'Monday',
+    'Martes': 'Tuesday',
+    'Miércoles': 'Wednesday',
+    'Jueves': 'Thursday',
+    'Viernes': 'Friday',
+    'Sábado': 'Saturday',
+    'Domingo': 'Sunday',
+  }
+
+  const countryMap: Record<string, string> = {
+    'España': 'Spain',
+    'Marruecos': 'Morocco',
+  }
+
+  const translateExcursion = (e: any) => {
+    if (language !== 'en') return e
+    const nameMap: Record<string, string> = {
+      'Sevilla': 'Seville',
+      'Córdoba': 'Cordoba',
+      'Nerja y Frigiliana': 'Nerja & Frigiliana',
+      'Mijas Marbella Banús': 'Mijas Marbella Banús',
+    }
+    const descMap: Record<string, string> = {
+      'Compras libres de impuestos en Gibraltar con tiempo libre': 'Tax-free shopping in Gibraltar with free time',
+      'Visita completa a Gibraltar incluyendo el Peñón y los monos': 'Complete visit to Gibraltar including the Rock and the monkeys',
+      'Visita a la majestuosa Alhambra y los jardines del Generalife': 'Visit the majestic Alhambra and the Generalife gardens',
+      'Descubre la capital andaluza: Catedral, Alcázar y barrio de Santa Cruz': 'Discover the Andalusian capital: Cathedral, Alcázar and Santa Cruz neighborhood',
+      'Mezquita-Catedral y el encantador barrio judío de Córdoba': 'Mosque-Cathedral and the charming Jewish quarter of Cordoba',
+      'Pueblo blanco con impresionantes vistas y plaza de toros histórica': 'White town with stunning views and a historic bullring',
+      'Aventura por el sendero más espectacular de Andalucía': 'Adventure along Andalusia’s most spectacular trail',
+      'Pueblos blancos costeros con cuevas y vistas al Mediterráneo': 'Coastal white villages with caves and Mediterranean views',
+      'Ruta por la Costa del Sol: Mijas, Marbella y Puerto Banús': 'Route along the Costa del Sol: Mijas, Marbella and Puerto Banús',
+      'Excursión a Marruecos: medina, mercados y cultura bereber': 'Excursion to Morocco: medina, markets and Berber culture',
+    }
+    return {
+      ...e,
+      name: nameMap[e.name] || e.name,
+      description: descMap[e.description] || e.description,
+      days: Array.isArray(e.days) ? e.days.map((d: string) => dayMap[d] || d) : e.days,
+      country: countryMap[e.country] || e.country,
+    }
+  }
+
+  const translateBoat = (b: any) => {
+    if (language !== 'en') return b
+    const nameMap: Record<string, string> = {
+      'Dolphin Trip (Paseo de los Delfines)': 'Dolphin Trip',
+      'Fiestas en Barco (Boat Party)': 'Boat Party',
+      'Alquiler de Embarcaciones Pequeñas sin Carnet': 'Small Boat Rental (No License Required)',
+    }
+    const descMap: Record<string, string> = {
+      'Avistamiento de delfines en su hábitat natural desde Puerto Marina': 'Dolphin watching in their natural habitat from Puerto Marina',
+      'Fiesta en barco con música, bebidas y diversión en alta mar': 'Boat party with music, drinks and fun at sea',
+      'Alquila una embarcación pequeña sin necesidad de licencia náutica': 'Rent a small boat without the need for a nautical license',
+    }
+    const locationMap: Record<string, string> = {
+      'Consultar disponibilidad': 'Check availability',
+      'Consultar modelo': 'Check model',
+    }
+    const priceMap: Record<string, string> = {
+      'Consultar precio': 'Consult price',
+    }
+    const highlightsMap: Record<string, string> = {
+      'Avistamiento delfines': 'Dolphin watching',
+      'Puerto Marina': 'Puerto Marina',
+      'Guía marino': 'Marine guide',
+      'Experiencia familiar': 'Family experience',
+      'Música en vivo': 'Live music',
+      'Bebidas incluidas': 'Drinks included',
+      'Ambiente festivo': 'Festive atmosphere',
+      'Grupos grandes': 'Large groups',
+      'Sin carnet necesario': 'No license required',
+      'Fácil manejo': 'Easy to operate',
+      'Libertad total': 'Total freedom',
+      'Aventura marina': 'Sea adventure',
+    }
+    return {
+      ...b,
+      name: nameMap[b.name] || b.name,
+      description: descMap[b.description] || b.description,
+      location: locationMap[b.location] || b.location,
+      price: priceMap[b.price] || b.price,
+      highlights: Array.isArray(b.highlights) ? b.highlights.map((h: string) => highlightsMap[h] || h) : b.highlights,
+    }
+  }
+
+  const translateHorse = (h: any) => {
+    if (language !== 'en') return h
+    return {
+      ...h,
+      name: 'Horse Riding',
+      duration: '1.30 hours',
+      capacity: '1 person',
+      description: 'Enjoy a relaxing horse ride through unique natural landscapes',
+      highlights: ['Expert guide', 'Docile horse', 'Natural landscapes', 'Unique experience'],
+    }
+  }
+
+  // Localized Horse Riding
+  const horseRidingLocalized = language === 'en' ? horseRiding.map((h: any) => translateHorse(h)) : horseRiding
 
   const boatActivities = [
     {
@@ -165,6 +268,7 @@ export default function ToursPage() {
 
   const getDayColor = (day: string) => {
     const colors: { [key: string]: string } = {
+      // ES
       Lunes: "bg-blue-100 text-blue-800",
       Martes: "bg-green-100 text-green-800",
       Miércoles: "bg-yellow-100 text-yellow-800",
@@ -172,6 +276,14 @@ export default function ToursPage() {
       Viernes: "bg-pink-100 text-pink-800",
       Sábado: "bg-orange-100 text-orange-800",
       Domingo: "bg-red-100 text-red-800",
+      // EN
+      Monday: "bg-blue-100 text-blue-800",
+      Tuesday: "bg-green-100 text-green-800",
+      Wednesday: "bg-yellow-100 text-yellow-800",
+      Thursday: "bg-purple-100 text-purple-800",
+      Friday: "bg-pink-100 text-pink-800",
+      Saturday: "bg-orange-100 text-orange-800",
+      Sunday: "bg-red-100 text-red-800",
     }
     return colors[day] || "bg-gray-100 text-gray-800"
   }
@@ -226,7 +338,7 @@ export default function ToursPage() {
                 onClick={() => setIsQrModalOpen(true)}
               >
                 <QrCode className="h-5 w-5 text-blue-900" />
-                <span className="text-sm text-blue-900 font-medium">Rent a Quad</span>
+                <span className="text-sm text-blue-900 font-medium">{t('header.scanPrices')}</span>
               </div>
 
               {/* Language Toggle and Theme Toggle */}
@@ -342,7 +454,7 @@ export default function ToursPage() {
           {/* Excursiones Tab */}
           <TabsContent value="excursiones">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {excursions.map((excursion, index) => (
+              {(language === 'en' ? excursions.map(translateExcursion) : excursions).map((excursion, index) => (
                 <Card key={index} className={`overflow-hidden hover:shadow-lg transition-shadow ${
                   excursion.name === "Granada Alhambra" || excursion.name === "Sevilla" || excursion.name === "Caminito del Rey" 
                     ? "bg-gradient-to-br from-yellow-400 via-yellow-300 to-blue-400 border-2 border-yellow-500 shadow-xl" 
@@ -388,14 +500,14 @@ export default function ToursPage() {
                         excursion.name === "Granada Alhambra" || excursion.name === "Sevilla" || excursion.name === "Caminito del Rey" 
                           ? "text-blue-900" 
                           : "text-gray-900"
-                      }`}>Días disponibles:</h4>
-                      <div className="flex flex-wrap gap-2">
-                        {excursion.days.map((day, dayIndex) => (
+                       }`}>{t('tours.availableDays')}</h4>
+                       <div className="flex flex-wrap gap-2">
+                        {(language === 'en' ? (excursion.days || []).map((d: string) => dayMap[d] || d) : excursion.days).map((day: string, dayIndex: number) => (
                           <Badge key={dayIndex} className={`text-sm font-semibold px-3 py-1 ${getDayColor(day)}`}>
                             {day}
                           </Badge>
                         ))}
-                      </div>
+                       </div>
                     </div>
 
                     <Button 
@@ -414,12 +526,8 @@ export default function ToursPage() {
           {/* Actividades Marinas Tab */}
           <TabsContent value="actividades-marinas">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {boatActivities.map((activity, index) => (
-                <Card key={index} className={`overflow-hidden hover:shadow-lg transition-shadow ${
-                  activity.name === "Alquiler de Embarcaciones Pequeñas sin Carnet" 
-                    ? "bg-gradient-to-br from-yellow-400 via-yellow-300 to-blue-400 border-2 border-yellow-500 shadow-xl" 
-                    : ""
-                }`}>
+              {(language === 'en' ? boatActivities.map(translateBoat) : boatActivities).map((activity, index) => (
+                <Card key={index} className="overflow-hidden hover:shadow-lg transition-shadow">
                   <div className="aspect-video relative">
                     <Image
                       src={activity.image || "/placeholder.svg"}
@@ -434,14 +542,14 @@ export default function ToursPage() {
                       {activity.priceAdult ? (
                         <div className="space-y-2">
                           <Badge className="bg-yellow-500 text-blue-900 font-bold block text-sm px-3 py-1">
-                            Adultos: {activity.priceAdult}
+                            {t('tours.adults')}: {activity.priceAdult}
                           </Badge>
                           <Badge className="bg-green-500 text-white font-bold block text-sm px-3 py-1">
-                            Niños: {activity.priceChild}
+                            {t('tours.children')}: {activity.priceChild}
                           </Badge>
                         </div>
                       ) : (
-                        <Badge className="bg-gray-500 text-white font-bold text-sm px-3 py-1">Consultar</Badge>
+                        <Badge className="bg-gray-500 text-white font-bold text-sm px-3 py-1">{t('tours.consult')}</Badge>
                       )}
                     </div>
                   </div>
@@ -474,9 +582,9 @@ export default function ToursPage() {
                         activity.name === "Alquiler de Embarcaciones Pequeñas sin Carnet" 
                           ? "text-blue-900" 
                           : "text-gray-900"
-                      }`}>Incluye:</h4>
+                      }`}>{t('tours.whatIncludes')}</h4>
                       <ul className="space-y-1">
-                        {activity.highlights.map((highlight, highlightIndex) => (
+                        {activity.highlights.map((highlight: string, highlightIndex: number) => (
                           <li key={highlightIndex} className={`text-sm flex items-center ${
                             activity.name === "Alquiler de Embarcaciones Pequeñas sin Carnet" 
                               ? "text-blue-800" 
@@ -498,7 +606,10 @@ export default function ToursPage() {
                       onClick={() => handleReservation(activity.name, activity.priceAdult || activity.price)}
                     >
                       <Calendar className="h-4 w-4 mr-2" />
-                      {activity.price === "Consultar precio" ? "Consultar Disponibilidad" : "Reservar Actividad"}
+                      {(
+                        activity.price === "Consultar precio" ||
+                        activity.price === "Consult price"
+                      ) ? t('tours.consultAvailability') : t('tours.reserveActivity')}
                     </Button>
                   </CardContent>
                 </Card>
@@ -509,7 +620,7 @@ export default function ToursPage() {
           {/* Caballos Tab */}
           <TabsContent value="caballos">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {horseRiding.map((activity, index) => (
+              {horseRidingLocalized.map((activity, index) => (
                 <Card key={index} className="overflow-hidden hover:shadow-lg transition-shadow">
                   <div className="aspect-video relative">
                     <Image
@@ -546,9 +657,9 @@ export default function ToursPage() {
 
                     {/* Highlights */}
                     <div className="mb-4">
-                      <h4 className="font-semibold text-gray-900 mb-2">Incluye:</h4>
+                      <h4 className="font-semibold text-gray-900 mb-2">{t('tours.whatIncludes')}</h4>
                       <ul className="space-y-1">
-                        {activity.highlights.map((highlight, highlightIndex) => (
+                        {activity.highlights.map((highlight: string, highlightIndex: number) => (
                           <li key={highlightIndex} className="text-sm text-gray-600 flex items-center">
                             <span className="w-1.5 h-1.5 bg-yellow-500 rounded-full mr-2"></span>
                             {highlight}
@@ -562,7 +673,7 @@ export default function ToursPage() {
                       onClick={() => handleReservation(activity.name, activity.price)}
                     >
                       <Calendar className="h-4 w-4 mr-2" />
-                      Reservar Paseo
+                      {t('tours.reserveRide')}
                     </Button>
                   </CardContent>
                 </Card>
@@ -578,19 +689,19 @@ export default function ToursPage() {
             <CardHeader>
               <div className="flex items-center space-x-2">
                 <Euro className="h-5 w-5 text-green-600" />
-                <CardTitle className="text-green-900">Precios Especiales</CardTitle>
+                <CardTitle className="text-green-900">{t('tours.specialPrices.title')}</CardTitle>
               </div>
             </CardHeader>
             <CardContent>
               <ul className="space-y-2 text-green-800">
                 <li>
-                  • <strong>Niños (0-3 años):</strong> ¡GRATIS!
+                  • {t('tours.specialPrices.childrenFree')}
                 </li>
                 <li>
-                  • <strong>Niños (4-11 años):</strong> 25% de descuento
+                  • {t('tours.specialPrices.childrenDiscount')}
                 </li>
-                <li>• Grupos familiares: Consulta descuentos especiales</li>
-                <li>• Reserva anticipada: Mejores precios garantizados</li>
+                <li>• {t('tours.specialPrices.familyGroups')}</li>
+                <li>• {t('tours.specialPrices.earlyBooking')}</li>
               </ul>
             </CardContent>
           </Card>
@@ -600,30 +711,30 @@ export default function ToursPage() {
             <CardHeader>
               <div className="flex items-center space-x-2">
                 <Users className="h-5 w-5 text-blue-600" />
-                <CardTitle className="text-blue-900">Idiomas Disponibles</CardTitle>
+                <CardTitle className="text-blue-900">{t('tours.languages.title')}</CardTitle>
               </div>
             </CardHeader>
             <CardContent>
               <div className="grid grid-cols-2 gap-2">
                 <div className="flex items-center space-x-2">
                   <span className="text-lg">🇪🇸</span>
-                  <span className="text-blue-800">Español</span>
+                  <span className="text-blue-800">{t('tours.languages.spanish')}</span>
                 </div>
                 <div className="flex items-center space-x-2">
                   <span className="text-lg">🇬🇧</span>
-                  <span className="text-blue-800">Inglés</span>
+                  <span className="text-blue-800">{t('tours.languages.english')}</span>
                 </div>
                 <div className="flex items-center space-x-2">
                   <span className="text-lg">🇫🇷</span>
-                  <span className="text-blue-800">Francés</span>
+                  <span className="text-blue-800">{t('tours.languages.french')}</span>
                 </div>
                 <div className="flex items-center space-x-2">
                   <span className="text-lg">🇩🇪</span>
-                  <span className="text-blue-800">Alemán</span>
+                  <span className="text-blue-800">{t('tours.languages.german')}</span>
                 </div>
                 <div className="flex items-center space-x-2">
                   <span className="text-lg">🇮🇹</span>
-                  <span className="text-blue-800">Italiano</span>
+                  <span className="text-blue-800">{t('tours.languages.italian')}</span>
                 </div>
               </div>
             </CardContent>
@@ -635,29 +746,29 @@ export default function ToursPage() {
           <CardHeader>
             <div className="flex items-center space-x-2">
               <Info className="h-5 w-5 text-yellow-600" />
-              <CardTitle className="text-yellow-900">Información Importante</CardTitle>
+              <CardTitle className="text-yellow-900">{t('tours.importantInfo.title')}</CardTitle>
             </div>
           </CardHeader>
           <CardContent>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
-                <h4 className="font-semibold text-yellow-900 mb-3">¿Qué incluye?</h4>
+                <h4 className="font-semibold text-yellow-900 mb-3">{t('tours.importantInfo.includesTitle')}</h4>
                 <ul className="space-y-2 text-yellow-800">
-                  <li>• Transporte en autocar climatizado</li>
-                  <li>• Guía oficial certificado</li>
-                  <li>• Seguro de viaje</li>
-                  <li>• Entradas a monumentos (según tour)</li>
-                  <li>• Asistencia durante todo el recorrido</li>
+                  <li>• {t('tours.importantInfo.includes.transport')}</li>
+                  <li>• {t('tours.importantInfo.includes.guide')}</li>
+                  <li>• {t('tours.importantInfo.includes.insurance')}</li>
+                  <li>• {t('tours.importantInfo.includes.tickets')}</li>
+                  <li>• {t('tours.importantInfo.includes.assistance')}</li>
                 </ul>
               </div>
               <div>
-                <h4 className="font-semibold text-yellow-900 mb-3">Recomendaciones</h4>
+                <h4 className="font-semibold text-yellow-900 mb-3">{t('tours.importantInfo.recommendationsTitle')}</h4>
                 <ul className="space-y-2 text-yellow-800">
-                  <li>• Calzado cómodo para caminar</li>
-                  <li>• Protector solar y gorra</li>
-                  <li>• Cámara fotográfica</li>
-                  <li>• Documentación personal</li>
-                  <li>• Reserva con 48h de antelación</li>
+                  <li>• {t('tours.importantInfo.recommendations.shoes')}</li>
+                  <li>• {t('tours.importantInfo.recommendations.sun')}</li>
+                  <li>• {t('tours.importantInfo.recommendations.camera')}</li>
+                  <li>• {t('tours.importantInfo.recommendations.docs')}</li>
+                  <li>• {t('tours.importantInfo.recommendations.booking')}</li>
                 </ul>
               </div>
             </div>

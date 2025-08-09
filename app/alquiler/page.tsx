@@ -497,6 +497,146 @@ export default function AlquilerPage() {
     },
   ]
 
+  // ===== Localization helpers (runtime) =====
+  const featureMap: Record<string, string> = {
+    'Aire acondicionado': 'Air conditioning',
+    '5 puertas': '5 doors',
+    'Consumo eficiente': 'Fuel efficient',
+    'Fácil aparcamiento': 'Easy parking',
+    'Mayor espacio': 'More space',
+    'Maletero amplio': 'Large trunk',
+    'Tecnología avanzada': 'Advanced technology',
+    'Confort superior': 'Superior comfort',
+    '7 plazas': '7 seats',
+    'Maletero XXL': 'XXL trunk',
+    'Puertas correderas': 'Sliding doors',
+    'Ideal familias': 'Ideal for families',
+    'Transmisión automática': 'Automatic transmission',
+    'Fácil conducción': 'Easy driving',
+    'Confort urbano': 'Urban comfort',
+    'Tecnología moderna': 'Modern technology',
+    'Asiento cómodo': 'Comfortable seat',
+    'Gran autonomía': 'Long range',
+    'Velocidad 45km/h': 'Speed 45 km/h',
+    'Baúl incluido': 'Top case included',
+    'Automático': 'Automatic',
+    'Bajo consumo': 'Low consumption',
+    'Fácil manejo': 'Easy handling',
+    'Ideal ciudad': 'Ideal for city',
+    'Diseño italiano': 'Italian design',
+    'Cómodo': 'Comfortable',
+    'Maletero bajo asiento': 'Under-seat storage',
+    'Económico': 'Economical',
+    'Deportivo': 'Sporty',
+    'Alto rendimiento': 'High performance',
+    'Estilo moderno': 'Modern style',
+    'Calidad BMW': 'BMW quality',
+    'Motor potente': 'Powerful engine',
+    'Tecnología premium': 'Premium technology',
+    'Maxiscooter': 'Maxi scooter',
+    'Viajes largos': 'Long trips',
+    'Gran comodidad': 'Great comfort',
+    'Moto trail': 'Trail bike',
+    'Todo terreno': 'All terrain',
+    'Aventura total': 'Total adventure',
+    '1 persona': '1 person',
+    'Diversión garantizada': 'Guaranteed fun',
+    'Excursiones': 'Excursions',
+    'Motor eléctrico': 'Electric motor',
+    'Plegable': 'Foldable',
+    'App móvil': 'Mobile app',
+    'Luces LED': 'LED lights',
+    'Adaptado minusválidos': 'Adapted for reduced mobility',
+    'Fácil acceso': 'Easy access',
+    'Seguridad extra': 'Extra safety',
+  }
+
+  const descMap: Record<string, string> = {
+    'Coche compacto ideal para la ciudad, económico y fácil de aparcar': 'Compact city car, economical and easy to park',
+    'Vehículo versátil con más espacio y comodidad para viajes largos': 'Versatile vehicle with more space and comfort for long trips',
+    'SUV compacto versátil con más espacio y comodidad para viajes largos': 'Compact SUV with more space and comfort for long trips',
+    'SUV familiar versátil con más espacio y comodidad para viajes largos': 'Family SUV with more space and comfort for long trips',
+    'Vehículo deportivo versátil con más espacio y comodidad para viajes largos': 'Sporty versatile vehicle with more space and comfort for long trips',
+    'Monovolumen familiar con capacidad para 7 personas y gran maletero': 'Family minivan with capacity for 7 people and a large trunk',
+    'Minibús para grupos grandes, perfecto para excursiones y eventos': 'Minibus for large groups, perfect for excursions and events',
+    'Coche automático cómodo y fácil de conducir para cualquier ocasión': 'Automatic car, comfortable and easy to drive for any occasion',
+    'Moto eléctrica para recorridos más largos con comodidad y estilo': 'Electric motorbike for longer rides with comfort and style',
+    "Scooter urbano de 50cc, perfecto para la ciudad. No requiere carnet A": '50cc urban scooter, perfect for the city. No A license required',
+    'Scooter clásico de 125cc con estilo italiano y gran comodidad': 'Classic 125cc scooter with Italian style and great comfort',
+    'Scooter deportivo de 125cc con tecnología avanzada y gran rendimiento': 'Sporty 125cc scooter with advanced technology and great performance',
+    'Moto naked de alta gama con motor de 313cc y tecnología BMW': 'High-end naked bike with 313cc engine and BMW technology',
+    'Maxiscooter de 350cc ideal para viajes largos y carretera': '350cc maxi scooter ideal for long trips and highway',
+    'Moto trail de 650cc para aventuras on-road y off-road': '650cc trail bike for on-road and off-road adventures',
+    'Quad para una persona, perfecto para excursiones y diversión': 'Quad for one person, perfect for excursions and fun',
+    'Scooter eléctrico para movilidad urbana sostenible y eficiente': 'Electric scooter for sustainable and efficient urban mobility',
+    'Scooter eléctrico especial para personas con movilidad reducida': 'Electric scooter specially designed for people with reduced mobility',
+    'Asiento adicional para niños, seguro y cómodo': 'Additional child seat, safe and comfortable',
+    'Remolque para transporte de equipaje o niños': 'Trailer for carrying luggage or children',
+  }
+
+  const durationMap: Record<string, string> = {
+    '1 Día': '1 Day',
+    '1D': '1D', '2D': '2D', '3D': '3D', '4D': '4D', '5D': '5D', '6D': '6D', '7D': '7D',
+    '1 hora': '1 hour', '2 horas': '2 hours', '30 min': '30 min', '1h': '1h', '2h': '2h', '3h': '3h', '4h': '4h'
+  }
+
+  const groupTransform = (g?: string) => g?.startsWith('GRUPO ') ? g.replace('GRUPO ', 'GROUP ') : g
+  const translateFeatures = (arr: string[] = []) => arr.map((f: string) => featureMap[f] || f)
+
+  const translateCar = (c: any) => ({
+    ...c,
+    group: groupTransform(c.group),
+    description: descMap[c.description] || c.description,
+    features: translateFeatures(c.features),
+    prices: Array.isArray(c.prices) ? c.prices.map((p: any) => ({ ...p, duration: durationMap[p.duration] || p.duration })) : c.prices,
+  })
+
+  const translateMoto = (m: any) => ({
+    ...m,
+    name: m.name === 'MOTORBIKE MOTO ELÉCTRICA' ? 'ELECTRIC MOTORBIKE' : m.name,
+    cc: m.cc === 'Eléctrica' ? 'Electric' : m.cc,
+    description: descMap[m.description] || m.description,
+    features: translateFeatures(m.features),
+    prices: Array.isArray(m.prices) ? m.prices.map((p: any) => ({ ...p, duration: durationMap[p.duration] || p.duration })) : m.prices,
+  })
+
+  const translateQuad = (q: any) => ({
+    ...q,
+    description: descMap[q.description] || q.description,
+    features: translateFeatures(q.features),
+    prices: Array.isArray(q.prices) ? q.prices.map((p: any) => ({ ...p, duration: durationMap[p.duration] || p.duration })) : q.prices,
+  })
+
+  const translateScooter = (s: any) => ({
+    ...s,
+    name: s.name === 'SCOOTER / PATINETE' ? 'SCOOTER / E-SCOOTER' : s.name,
+    description: descMap[s.description] || s.description,
+    features: translateFeatures(s.features),
+    models: Array.isArray(s.models) ? s.models.map((m: any) => ({
+      ...m,
+      name: m.name === 'Básico' ? 'Basic' : m.name,
+      prices: Array.isArray(m.prices) ? m.prices.map((p: any) => ({ ...p, duration: durationMap[p.duration] || p.duration })) : m.prices,
+    })) : s.models,
+    prices: Array.isArray(s.prices) ? s.prices.map((p: any) => ({
+      ...p,
+      duration: p.duration === 'Consultar' ? 'Consult' : (durationMap[p.duration] || p.duration),
+      price: p.price === 'Precio a consultar' ? 'Price on request' : p.price,
+    })) : s.prices,
+  })
+
+  const translateAccessory = (a: any) => ({
+    ...a,
+    name: a.name === 'Sillón' ? 'Child seat' : a.name === 'Carro' ? 'Trailer' : a.name,
+    description: descMap[a.description] || a.description,
+    features: translateFeatures(a.features),
+  })
+
+  const carsLocalized = language === 'en' ? cars.map(translateCar) : cars
+  const motorcyclesLocalized = language === 'en' ? motorcycles.map(translateMoto) : motorcycles
+  const quadsLocalized = language === 'en' ? quads.map(translateQuad) : quads
+  const scootersLocalized = language === 'en' ? scooters.map(translateScooter) : scooters
+  const accessoriesLocalized = language === 'en' ? accessories.map(translateAccessory) : accessories
+
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
@@ -768,7 +908,7 @@ export default function AlquilerPage() {
           {/* Coches Tab */}
           <TabsContent value="coches" className="sm:data-[state=active]:animate-none data-[state=active]:animate-in data-[state=active]:slide-in-from-right-4 data-[state=active]:duration-300">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              {cars.map((car) => (
+              {carsLocalized.map((car) => (
                 <Card key={car.id} className="overflow-hidden hover:shadow-lg transition-shadow">
                   <div className="aspect-video relative">
                     <Image src={car.image || "/placeholder.svg"} alt={car.name as string} fill className="object-cover" />
@@ -788,7 +928,7 @@ export default function AlquilerPage() {
                     <div className="mb-4">
                       <h4 className="font-semibold text-gray-900 mb-2">{t('rental.features')}:</h4>
                       <div className="grid grid-cols-2 gap-1">
-                        {car.features.map((feature, index) => (
+                        {car.features.map((feature: string, index: number) => (
                           <div key={index} className="flex items-center text-sm text-gray-600">
                             <span className="w-1.5 h-1.5 bg-yellow-500 rounded-full mr-2"></span>
                             {feature}
@@ -801,7 +941,7 @@ export default function AlquilerPage() {
                     <div className="space-y-3 mb-4">
                       <h4 className="font-semibold text-gray-900">{t('rental.prices')}:</h4>
                       <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
-                        {car.prices.map((price, index) => {
+                        {car.prices.map((price: { duration: string; price: string; featured?: boolean }, index: number) => {
                           const isSelected = selectedPrices[car.name as string]?.duration === price.duration as string
                           return (
                             <button
@@ -857,17 +997,11 @@ export default function AlquilerPage() {
               </CardHeader>
               <CardContent>
                 <ul className="space-y-2 text-yellow-800">
-                  <li>
-                    • <strong>{t('rental.carRequirements.license')}</strong> {t('rental.carRequirements.licenseValid')}
-                  </li>
-                  <li>
-                    • <strong>{t('rental.carRequirements.passport')}</strong> {t('rental.carRequirements.passportValid')}
-                  </li>
-                  <li>
-                    • <strong>{t('rental.carRequirements.creditCard')}</strong> {t('rental.carRequirements.creditCardPurpose')}
-                  </li>
-                  <li>• {t('rental.carRequirements.minAge')}</li>
-                  <li>• {t('rental.carRequirements.modelsNote')}</li>
+                  <li>• {t('rental.carRequirements.license')}</li>
+                  <li>• {t('rental.carRequirements.passport')}</li>
+                  <li>• {t('rental.carRequirements.creditCard')}</li>
+                  <li>• {t('rental.carRequirements.age')}</li>
+                  <li>• {t('rental.carRequirements.models')}</li>
                 </ul>
               </CardContent>
             </Card>
@@ -876,7 +1010,7 @@ export default function AlquilerPage() {
           {/* Motos Tab */}
           <TabsContent value="motos" className="sm:data-[state=active]:animate-none data-[state=active]:animate-in data-[state=active]:slide-in-from-right-4 data-[state=active]:duration-300">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              {motorcycles.map((moto) => (
+              {motorcyclesLocalized.map((moto) => (
                 <Card key={moto.id} className="overflow-hidden hover:shadow-lg transition-shadow">
                   <div className="aspect-video relative">
                     <Image src={moto.image || "/placeholder.svg"} alt={moto.name} fill className="object-cover" />
@@ -894,9 +1028,9 @@ export default function AlquilerPage() {
                   <CardContent className={moto.id === 'motorbike' || moto.id === 'quad-rental' ? 'flex flex-col h-full' : ''}>
                     {/* Features */}
                     <div className="mb-4">
-                      <h4 className="font-semibold text-gray-900 mb-2">Características:</h4>
+                      <h4 className="font-semibold text-gray-900 mb-2">{t('rental.features')}</h4>
                       <div className="grid grid-cols-2 gap-1">
-                        {moto.features.map((feature, index) => (
+                        {moto.features.map((feature: string, index: number) => (
                           <div key={index} className="flex items-center text-sm text-gray-600">
                             <span className="w-1.5 h-1.5 bg-yellow-500 rounded-full mr-2"></span>
                             {feature}
@@ -907,9 +1041,9 @@ export default function AlquilerPage() {
 
                     {/* Prices */}
                     <div className={`space-y-3 mb-4 ${moto.id === 'motorbike' || moto.id === 'quad-rental' ? 'flex-grow' : ''}`}>
-                      <h4 className="font-semibold text-gray-900">Precios:</h4>
+                      <h4 className="font-semibold text-gray-900">{t('rental.prices')}</h4>
                       <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
-                        {moto.prices.map((price, index) => {
+                        {moto.prices.map((price: { duration: string; price: string; featured?: boolean }, index: number) => {
                           const isSelected = selectedPrices[moto.name]?.duration === price.duration as string
                           return (
                             <button
@@ -948,7 +1082,7 @@ export default function AlquilerPage() {
                       onClick={() => handleReservation(moto.name)}
                       disabled={!selectedPrices[moto.name]}
                     >
-                      {selectedPrices[moto.name] ? `Reservar ${selectedPrices[moto.name].duration} por ${selectedPrices[moto.name].price}` : "Selecciona un precio"}
+                      {selectedPrices[moto.name] ? `${t('rental.reserve')} ${selectedPrices[moto.name].duration} ${t('rental.for')} ${selectedPrices[moto.name].price}` : t('rental.selectPrice')}
                     </Button>
                   </CardContent>
                 </Card>
@@ -960,23 +1094,17 @@ export default function AlquilerPage() {
               <CardHeader>
                 <div className="flex items-center space-x-2">
                   <span className="text-red-600">⚡</span>
-                  <CardTitle className="text-red-900">Requisitos para Alquiler de Motos</CardTitle>
+                  <CardTitle className="text-red-900">{t('rental.motorcycleRequirements.title')}</CardTitle>
                 </div>
               </CardHeader>
               <CardContent>
                 <ul className="space-y-2 text-red-800">
-                  <li>
-                    • <strong>Carnet de conducir</strong> válido y vigente (A1, A2 o A según cilindrada)
-                  </li>
-                  <li>
-                    • <strong>Reserva obligatoria</strong> con antelación
-                  </li>
-                  <li>
-                    • <strong>Documento de identidad</strong> (DNI o pasaporte)
-                  </li>
-                  <li>• Edad mínima: 16 años (50cc), 18 años (125cc), 20 años (+300cc)</li>
-                  <li>• Depósito de seguridad requerido</li>
-                  <li>• Casco homologado incluido</li>
+                  <li>• {t('rental.motorcycleRequirements.license')}</li>
+                  <li>• {t('rental.motorcycleRequirements.reservation')}</li>
+                  <li>• {t('rental.motorcycleRequirements.id')}</li>
+                  <li>• {t('rental.motorcycleRequirements.minAge')}</li>
+                  <li>• {t('rental.motorcycleRequirements.deposit')}</li>
+                  <li>• {t('rental.motorcycleRequirements.helmet')}</li>
                 </ul>
               </CardContent>
             </Card>
@@ -985,7 +1113,7 @@ export default function AlquilerPage() {
           {/* Quads Tab */}
           <TabsContent value="quads" className="sm:data-[state=active]:animate-none data-[state=active]:animate-in data-[state=active]:slide-in-from-right-4 data-[state=active]:duration-300">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              {quads.map((quad) => (
+              {quadsLocalized.map((quad) => (
                 <Card key={quad.id} className="overflow-hidden hover:shadow-lg transition-shadow">
                   <div className="aspect-video relative">
                     <Image src={quad.image || "/placeholder.svg"} alt={quad.name} fill className="object-cover" />
@@ -1003,9 +1131,9 @@ export default function AlquilerPage() {
                   <CardContent>
                     {/* Features */}
                     <div className="mb-4">
-                      <h4 className="font-semibold text-gray-900 mb-2">Características:</h4>
+                      <h4 className="font-semibold text-gray-900 mb-2">{t('rental.features')}</h4>
                       <div className="grid grid-cols-2 gap-1">
-                        {quad.features.map((feature, index) => (
+                        {quad.features.map((feature: string, index: number) => (
                           <div key={index} className="flex items-center text-sm text-gray-600">
                             <span className="w-1.5 h-1.5 bg-yellow-500 rounded-full mr-2"></span>
                             {feature}
@@ -1016,9 +1144,9 @@ export default function AlquilerPage() {
 
                     {/* Prices */}
                     <div className="space-y-3 mb-4">
-                      <h4 className="font-semibold text-gray-900">Precios:</h4>
+                      <h4 className="font-semibold text-gray-900">{t('rental.prices')}</h4>
                       <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
-                        {quad.prices.map((price, index) => {
+                        {quad.prices.map((price: { duration: string; price: string; featured?: boolean }, index: number) => {
                           const isSelected = selectedPrices[quad.name]?.duration === price.duration as string
                           return (
                             <button
@@ -1057,7 +1185,7 @@ export default function AlquilerPage() {
                       onClick={() => handleReservation(quad.name)}
                       disabled={!selectedPrices[quad.name]}
                     >
-                      {selectedPrices[quad.name] ? `Reservar ${selectedPrices[quad.name].duration} por ${selectedPrices[quad.name].price}` : "Selecciona un precio"}
+                      {selectedPrices[quad.name] ? `${t('rental.reserve')} ${selectedPrices[quad.name].duration} ${t('rental.for')} ${selectedPrices[quad.name].price}` : t('rental.selectPrice')}
                     </Button>
                   </CardContent>
                 </Card>
@@ -1069,24 +1197,18 @@ export default function AlquilerPage() {
               <CardHeader>
                 <div className="flex items-center space-x-2">
                   <span className="text-orange-600">🏎️</span>
-                  <CardTitle className="text-orange-900">Requisitos para Alquiler de Quads</CardTitle>
+                  <CardTitle className="text-orange-900">{t('rental.quadRequirements.title')}</CardTitle>
                 </div>
               </CardHeader>
               <CardContent>
                 <ul className="space-y-2 text-orange-800">
-                  <li>
-                    • <strong>Carnet de conducir</strong> válido y vigente (B o superior)
-                  </li>
-                  <li>
-                    • <strong>Reserva obligatoria</strong> con antelación
-                  </li>
-                  <li>
-                    • <strong>Documento de identidad</strong> (DNI o pasaporte)
-                  </li>
-                  <li>• Edad mínima: 18 años</li>
-                  <li>• Depósito de seguridad requerido</li>
-                  <li>• Casco homologado incluido</li>
-                  <li>• Briefing de seguridad obligatorio</li>
+                  <li>• {t('rental.quadRequirements.license')}</li>
+                  <li>• {t('rental.quadRequirements.reservation')}</li>
+                  <li>• {t('rental.quadRequirements.id')}</li>
+                  <li>• {t('rental.quadRequirements.minAge')}</li>
+                  <li>• {t('rental.quadRequirements.deposit')}</li>
+                  <li>• {t('rental.quadRequirements.helmet')}</li>
+                  <li>• {t('rental.quadRequirements.safetyBriefing')}</li>
                 </ul>
               </CardContent>
             </Card>
@@ -1095,9 +1217,9 @@ export default function AlquilerPage() {
           {/* Scooters Tab */}
           <TabsContent value="scooters" className="sm:data-[state=active]:animate-none data-[state=active]:animate-in data-[state=active]:slide-in-from-right-4 data-[state=active]:duration-300">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              {scooters.map((scooter) => {
+              {scootersLocalized.map((scooter) => {
                 const selectedModel = selectedModels[scooter.name] || (scooter.models ? scooter.models[0].id : null)
-                const currentModel = scooter.models ? scooter.models.find(m => m.id === selectedModel) : null
+                const currentModel = scooter.models ? scooter.models.find((m: any) => m.id === selectedModel) : null
                 const displayPrices = currentModel ? currentModel.prices : scooter.prices || []
                 
                 return (
@@ -1115,9 +1237,9 @@ export default function AlquilerPage() {
                       {/* Model Selector */}
                       {scooter.models && (
                         <div className="mb-4">
-                          <h4 className="font-semibold text-gray-900 mb-2">Modelo:</h4>
+                          <h4 className="font-semibold text-gray-900 mb-2">{t('rental.model')}</h4>
                           <div className="grid grid-cols-3 gap-2">
-                            {scooter.models.map((model) => {
+                            {scooter.models.map((model: any) => {
                               const isSelected = selectedModel === model.id
                               return (
                                 <button
@@ -1143,9 +1265,9 @@ export default function AlquilerPage() {
 
                       {/* Features */}
                       <div className="mb-4">
-                        <h4 className="font-semibold text-gray-900 mb-2">Características:</h4>
+                        <h4 className="font-semibold text-gray-900 mb-2">{t('rental.features')}</h4>
                         <div className="grid grid-cols-2 gap-1">
-                          {scooter.features.map((feature, index) => (
+                          {scooter.features.map((feature: string, index: number) => (
                             <div key={index} className="flex items-center text-sm text-gray-600">
                               <span className="w-1.5 h-1.5 bg-yellow-500 rounded-full mr-2"></span>
                               {feature}
@@ -1155,11 +1277,11 @@ export default function AlquilerPage() {
                             <>
                               <div className="flex items-center text-sm text-gray-600">
                                 <span className="w-1.5 h-1.5 bg-yellow-500 rounded-full mr-2"></span>
-                                Autonomía {currentModel.autonomy}
+                                {t('rental.autonomy')} {currentModel.autonomy}
                               </div>
                               <div className="flex items-center text-sm text-gray-600">
                                 <span className="w-1.5 h-1.5 bg-yellow-500 rounded-full mr-2"></span>
-                                Velocidad {currentModel.speed}
+                                {t('rental.speed')} {currentModel.speed}
                               </div>
                             </>
                           )}
@@ -1168,9 +1290,9 @@ export default function AlquilerPage() {
 
                       {/* Prices */}
                       <div className="space-y-3 mb-4">
-                        <h4 className="font-semibold text-gray-900">Precios:</h4>
+                        <h4 className="font-semibold text-gray-900">{t('rental.prices')}</h4>
                         <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
-                          {displayPrices.map((price, index) => {
+                          {displayPrices.map((price: { duration: string; price: string; featured?: boolean }, index: number) => {
                             const isSelected = selectedPrices[scooter.name]?.duration === price.duration as string
                             return (
                               <button
@@ -1209,7 +1331,7 @@ export default function AlquilerPage() {
                         onClick={() => handleReservation(scooter.name)}
                         disabled={!selectedPrices[scooter.name]}
                       >
-                        {selectedPrices[scooter.name] ? `Reservar ${selectedPrices[scooter.name].duration} por ${selectedPrices[scooter.name].price}` : "Selecciona un precio"}
+                        {selectedPrices[scooter.name] ? `${t('rental.reserve')} ${selectedPrices[scooter.name].duration} ${t('rental.for')} ${selectedPrices[scooter.name].price}` : t('rental.selectPrice')}
                       </Button>
                     </CardContent>
                   </Card>
@@ -1221,7 +1343,7 @@ export default function AlquilerPage() {
           {/* Accesorios Tab */}
           <TabsContent value="accesorios" className="sm:data-[state=active]:animate-none data-[state=active]:animate-in data-[state=active]:slide-in-from-right-4 data-[state=active]:duration-300">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {accessories.map((accessory) => (
+              {accessoriesLocalized.map((accessory) => (
                 <Card key={accessory.id} className="hover:shadow-lg transition-shadow">
                   <CardHeader className="text-center">
                     {accessory.image ? (
@@ -1245,9 +1367,9 @@ export default function AlquilerPage() {
                   <CardContent>
                     {/* Features */}
                     <div className="mb-4">
-                      <h4 className="font-semibold text-gray-900 mb-2">Incluye:</h4>
+                      <h4 className="font-semibold text-gray-900 mb-2">{t('tours.whatIncludes')}</h4>
                       <div className="space-y-1">
-                        {accessory.features.map((feature, index) => (
+                        {accessory.features.map((feature: string, index: number) => (
                           <div key={index} className="flex items-center text-sm text-gray-600">
                             <span className="w-1.5 h-1.5 bg-yellow-500 rounded-full mr-2"></span>
                             {feature}
@@ -1267,7 +1389,7 @@ export default function AlquilerPage() {
                       className="w-full bg-blue-600 hover:bg-blue-700 text-white"
                       onClick={() => handleReservation(accessory.name)}
                     >
-                      Añadir al Alquiler
+                      {t('rental.reserve')}
                     </Button>
                   </CardContent>
                 </Card>
