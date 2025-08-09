@@ -349,7 +349,7 @@ export default function HomePage() {
                   <CardHeader className="text-center">
                     <div className="mx-auto mb-4 p-4 bg-yellow-400 rounded-full text-blue-600 group-hover:bg-yellow-500 transition-colors">
                       <div className="h-10 w-10 flex items-center justify-center">
-                        <Store className="h-6 w-6" />
+                        <Store className="h-10 w-10" />
                       </div>
                     </div>
                     <CardTitle className="text-2xl text-gray-900 group-hover:text-blue-600 transition-colors">Tienda</CardTitle>
