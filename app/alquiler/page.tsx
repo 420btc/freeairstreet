@@ -243,7 +243,7 @@ export default function AlquilerPage() {
     {
       id: "volkswagen-touran",
       name: "VOLKSWAGEN TOURAN",
-      group: "GRUPO C",
+      group: "GRUPO I",
       description: "Monovolumen familiar con capacidad para 7 personas y gran maletero",
       image: "/coches/volktouran.png",
       prices: [
@@ -260,7 +260,7 @@ export default function AlquilerPage() {
     {
       id: "minibus-9-seat",
       name: "MINIBUS 9 SEAT",
-      group: "GRUPO D",
+      group: "GRUPO H",
       description: "Minibús para grupos grandes, perfecto para excursiones y eventos",
       image: "/coches/Boxer-9-seat.png",
       prices: [
@@ -277,7 +277,7 @@ export default function AlquilerPage() {
     {
       id: "renault-clio",
       name: "RENAULT CLIO AUTOMÁTICO",
-      group: "GRUPO E",
+      group: "GRUPO J",
       description: "Coche automático cómodo y fácil de conducir para cualquier ocasión",
       image: "/coches/renaultclio.jpeg",
       prices: [
