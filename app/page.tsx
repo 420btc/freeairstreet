@@ -114,8 +114,8 @@ export default function HomePage() {
       href: "/alquiler?tab=scooters",
     },
     {
-      title: "Servicio Reparación",
-      description: "Reparación y mantenimiento",
+      title: t('services.repairService'),
+      description: t('services.repairDescription'),
       icon: <Wrench className="h-10 w-10" />,
       href: "/tienda",
     },
@@ -287,7 +287,7 @@ export default function HomePage() {
                     <CardDescription className="text-center text-lg text-gray-600 group-hover:text-gray-800 transition-colors">{service.description}</CardDescription>
                     <div className="text-center mt-3">
                       <span className="text-sm text-blue-600 group-hover:text-blue-800 font-medium opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-                        Ver más →
+                        {t('common.seeMore')}
                       </span>
                     </div>
                   </CardContent>
@@ -311,7 +311,7 @@ export default function HomePage() {
                     <CardDescription className="text-center text-lg text-gray-600 group-hover:text-gray-800 transition-colors">{services[4].description}</CardDescription>
                     <div className="text-center mt-3">
                       <span className="text-sm text-blue-600 group-hover:text-blue-800 font-medium opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-                        Ver más →
+                        {t('common.seeMore')}
                       </span>
                     </div>
                   </CardContent>
@@ -335,7 +335,7 @@ export default function HomePage() {
                     <CardDescription className="text-center text-lg text-gray-600 group-hover:text-gray-800 transition-colors">{service.description}</CardDescription>
                     <div className="text-center mt-3">
                       <span className="text-sm text-blue-600 group-hover:text-blue-800 font-medium opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-                        Ver más →
+                        {t('common.seeMore')}
                       </span>
                     </div>
                   </CardContent>
@@ -353,13 +353,13 @@ export default function HomePage() {
                         <Store className="h-10 w-10" />
                       </div>
                     </div>
-                    <CardTitle className="text-2xl text-gray-900 group-hover:text-blue-600 transition-colors">Tienda</CardTitle>
+                    <CardTitle className="text-2xl text-gray-900 group-hover:text-blue-600 transition-colors">{t('services.store')}</CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <CardDescription className="text-center text-lg text-gray-600 group-hover:text-gray-800 transition-colors">Descubre nuestra selección de productos y accesorios</CardDescription>
+                    <CardDescription className="text-center text-lg text-gray-600 group-hover:text-gray-800 transition-colors">{t('services.storeDescription')}</CardDescription>
                     <div className="text-center mt-3">
                       <span className="text-sm text-blue-600 group-hover:text-blue-800 font-medium opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-                        Ver más →
+                        {t('common.seeMore')}
                       </span>
                     </div>
                   </CardContent>
@@ -385,7 +385,7 @@ export default function HomePage() {
                   <CardDescription className="text-center text-lg text-gray-600 group-hover:text-gray-800 transition-colors">{services[0].description}</CardDescription>
                   <div className="text-center mt-3">
                     <span className="text-sm text-blue-600 group-hover:text-blue-800 font-medium opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-                      Ver más →
+                      {t('common.seeMore')}
                     </span>
                   </div>
                 </CardContent>
@@ -490,7 +490,9 @@ export default function HomePage() {
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">{t('location.title')}</h2>
             <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-              Visítanos en nuestra ubicación privilegiada a orillas del Mar de Alborán en La Colina <Badge className="bg-yellow-400 text-blue-600 hover:bg-yellow-500 text-lg">Torremolinos</Badge> donde podrás encontrar todo lo que necesitas para tu aventura.
+              {t('location.description.before')}
+              <Badge className="bg-yellow-400 text-blue-600 hover:bg-yellow-500 text-lg">Torremolinos</Badge>
+              {t('location.description.after')}
             </p>
           </div>
           

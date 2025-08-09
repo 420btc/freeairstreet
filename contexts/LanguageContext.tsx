@@ -38,9 +38,17 @@ const translations = {
     'services.carDescription': 'Desde compactos hasta minibuses de 9 plazas',
     'services.motosScooters': 'Motos y Scooters',
     'services.motosDescription': 'Motos, patinetes - scooters eléctricos y quads',
+    'services.repairService': 'Servicio de reparación',
+    'services.repairDescription': 'Reparación y mantenimiento',
+    'services.store': 'Tienda',
+    'services.storeDescription': 'Descubre nuestra selección de productos y accesorios',
+    // Common
+    'common.seeMore': 'Ver más →',
     
     // Location Section
     'location.title': 'Donde Estamos',
+    'location.description.before': 'Visítanos en nuestra ubicación privilegiada a orillas del Mar de Alborán en La Colina ',
+    'location.description.after': ' donde podrás encontrar todo lo que necesitas para tu aventura.',
     'location.subtitle': 'Nos encontramos en el corazón de Torremolinos, listos para tu próxima aventura',
     'location.description': 'Visítanos en nuestra ubicación privilegiada a orillas del mar mediterráneo en Torremolinos donde podrás encontrar todo lo que necesitas para tu aventura.',
     'location.ourLocation': 'Nuestra Ubicación',
@@ -296,9 +304,17 @@ const translations = {
     'services.carDescription': 'From compact cars to 9-seater minibuses',
     'services.motosScooters': 'Motorcycles & Scooters',
     'services.motosDescription': 'Motorcycles, electric scooters and quads',
+    'services.repairService': 'Repair Service',
+    'services.repairDescription': 'Repair and maintenance',
+    'services.store': 'Shop',
+    'services.storeDescription': 'Discover our selection of products and accessories',
+    // Common
+    'common.seeMore': 'See more →',
     
     // Location Section
     'location.title': 'Where We Are',
+    'location.description.before': 'Visit us at our privileged location on the shores of the Alboran Sea in La Colina ',
+    'location.description.after': ' where you can find everything you need for your adventure.',
     'location.subtitle': 'We are located in the heart of Torremolinos, ready for your next adventure',
     'location.description': 'Visit us at our privileged location on the shores of the Mediterranean Sea in Torremolinos where you can find everything you need for your adventure.',
     'location.ourLocation': 'Our Location',
