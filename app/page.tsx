@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { Menu, X, Phone, Mail, MapPin, QrCode, Clock, Users, Car, Bike, Zap, Wrench, ChevronDown } from "lucide-react"
+import { Menu, X, Phone, Mail, MapPin, QrCode, Clock, Users, Car, Bike, Zap, Wrench, ChevronDown, Store } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
@@ -98,6 +98,12 @@ export default function HomePage() {
       description: t('services.motosDescription'),
       icon: <Zap className="h-10 w-10" />,
       href: "/alquiler?tab=scooters",
+    },
+    {
+      title: "Servicio Reparación",
+      description: "Reparación y mantenimiento",
+      icon: <Wrench className="h-10 w-10" />,
+      href: "/tienda",
     },
   ]
 
@@ -249,8 +255,9 @@ export default function HomePage() {
               </p>
           </div>
 
-          <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {services.map((service, index) => (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {/* First row: 2 cards */}
+            {services.slice(0, 2).map((service, index) => (
               <Link key={index} href={service.href}>
                 <Card className="hover:shadow-lg hover:scale-105 transition-all duration-200 cursor-pointer group h-full border-2 border-transparent hover:border-yellow-400 max-w-sm md:max-w-none mx-auto">
                   <CardHeader className="text-center">
@@ -272,31 +279,80 @@ export default function HomePage() {
                 </Card>
               </Link>
             ))}
+
+            {/* Second row: Repair Service (2 cols) */}
+            <div className="lg:col-span-2">
+              <Link href={services[4].href}>
+                <Card className="hover:shadow-lg hover:scale-105 transition-all duration-200 cursor-pointer group h-full border-2 border-transparent hover:border-yellow-400 max-w-sm md:max-w-none mx-auto">
+                  <CardHeader className="text-center">
+                    <div className="mx-auto mb-4 p-4 bg-yellow-400 rounded-full text-blue-600 group-hover:bg-yellow-500 transition-colors">
+                      <div className="h-10 w-10 flex items-center justify-center">
+                        {services[4].icon}
+                      </div>
+                    </div>
+                    <CardTitle className="text-2xl text-gray-900 group-hover:text-blue-600 transition-colors">{services[4].title}</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <CardDescription className="text-center text-lg text-gray-600 group-hover:text-gray-800 transition-colors">{services[4].description}</CardDescription>
+                    <div className="text-center mt-3">
+                      <span className="text-sm text-blue-600 group-hover:text-blue-800 font-medium opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                        Ver más →
+                      </span>
+                    </div>
+                  </CardContent>
+                </Card>
+              </Link>
+            </div>
+
+            {/* Second row: Car and Motos cards */}
+            {services.slice(2, 4).map((service, index) => (
+              <Link key={index} href={service.href}>
+                <Card className="hover:shadow-lg hover:scale-105 transition-all duration-200 cursor-pointer group h-full border-2 border-transparent hover:border-yellow-400 max-w-sm md:max-w-none mx-auto">
+                  <CardHeader className="text-center">
+                    <div className="mx-auto mb-4 p-4 bg-yellow-400 rounded-full text-blue-600 group-hover:bg-yellow-500 transition-colors">
+                      <div className="h-10 w-10 flex items-center justify-center">
+                        {service.icon}
+                      </div>
+                    </div>
+                    <CardTitle className="text-2xl text-gray-900 group-hover:text-blue-600 transition-colors">{service.title}</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <CardDescription className="text-center text-lg text-gray-600 group-hover:text-gray-800 transition-colors">{service.description}</CardDescription>
+                    <div className="text-center mt-3">
+                      <span className="text-sm text-blue-600 group-hover:text-blue-800 font-medium opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                        Ver más →
+                      </span>
+                    </div>
+                  </CardContent>
+                </Card>
+              </Link>
+            ))}
+
+            {/* Store Card */}
+            <div className="lg:col-span-2">
+              <Link href="/tienda">
+                <Card className="hover:shadow-lg hover:scale-105 transition-all duration-200 cursor-pointer group h-full border-2 border-transparent hover:border-yellow-400 max-w-sm md:max-w-none mx-auto">
+                  <CardHeader className="text-center">
+                    <div className="mx-auto mb-4 p-4 bg-yellow-400 rounded-full text-blue-600 group-hover:bg-yellow-500 transition-colors">
+                      <div className="h-10 w-10 flex items-center justify-center">
+                        <Store className="h-6 w-6" />
+                      </div>
+                    </div>
+                    <CardTitle className="text-2xl text-gray-900 group-hover:text-blue-600 transition-colors">Tienda</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <CardDescription className="text-center text-lg text-gray-600 group-hover:text-gray-800 transition-colors">Descubre nuestra selección de productos y accesorios</CardDescription>
+                    <div className="text-center mt-3">
+                      <span className="text-sm text-blue-600 group-hover:text-blue-800 font-medium opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                        Ver más →
+                      </span>
+                    </div>
+                  </CardContent>
+                </Card>
+              </Link>
+            </div>
           </div>
 
-          {/* Repair Service Button */}
-          <div className="flex justify-center mt-8">
-            <Link href="/tienda">
-              <Card className="hover:shadow-lg hover:scale-105 transition-all duration-200 cursor-pointer group border-2 border-transparent hover:border-yellow-400 w-full max-w-sm md:max-w-md mx-auto">
-                 <div className="flex items-center p-4 space-x-3">
-                   <div className="flex-shrink-0">
-                     <div className="p-3 bg-yellow-400 rounded-full text-blue-600 group-hover:bg-yellow-500 transition-colors">
-                       <Wrench className="h-10 w-10" />
-                     </div>
-                   </div>
-                   <div className="flex-grow flex flex-col justify-center text-left ml-9">
-                      <CardTitle className="text-2xl text-gray-900 group-hover:text-blue-600 transition-colors mb-3 whitespace-nowrap">Servicio Reparación</CardTitle>
-                      <CardDescription className="text-lg text-gray-600 group-hover:text-gray-800 transition-colors">Reparación y mantenimiento</CardDescription>
-                    </div>
-                   <div className="flex-shrink-0">
-                     <span className="text-sm text-blue-600 group-hover:text-blue-800 -ml-9 font-medium opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-                       Ver más →
-                     </span>
-                   </div>
-                 </div>
-               </Card>
-            </Link>
-          </div>
         </div>
       </section>
 
