@@ -269,7 +269,8 @@ export default function HomePage() {
               </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          {/* Desktop (md+) layout: keep existing structure and include Store card */}
+          <div className="hidden md:grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {/* First row: 2 cards */}
             {services.slice(0, 2).map((service, index) => (
               <Link key={index} href={service.href}>
@@ -342,7 +343,7 @@ export default function HomePage() {
               </Link>
             ))}
 
-            {/* Store Card */}
+            {/* Store Card (desktop only visible due to parent) */}
             <div className="lg:col-span-2">
               <Link href="/tienda?tab=store">
                 <Card className="hover:shadow-lg hover:scale-105 transition-all duration-200 cursor-pointer group h-full border-2 border-transparent hover:border-yellow-400 max-w-sm md:max-w-none mx-auto">
@@ -365,6 +366,119 @@ export default function HomePage() {
                 </Card>
               </Link>
             </div>
+          </div>
+
+          {/* Mobile (sm) layout: custom order without Store card */}
+          <div className="md:hidden grid grid-cols-1 gap-6">
+            {/* 1. Alquiler de Bicicletas (services[0]) */}
+            <Link href={services[0].href}>
+              <Card className="hover:shadow-lg hover:scale-105 transition-all duration-200 cursor-pointer group h-full border-2 border-transparent hover:border-yellow-400 max-w-sm md:max-w-none mx-auto">
+                <CardHeader className="text-center">
+                  <div className="mx-auto mb-4 p-4 bg-yellow-400 rounded-full text-blue-600 group-hover:bg-yellow-500 transition-colors">
+                    <div className="h-10 w-10 flex items-center justify-center">
+                      {services[0].icon}
+                    </div>
+                  </div>
+                  <CardTitle className="text-2xl text-gray-900 group-hover:text-blue-600 transition-colors">{services[0].title}</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <CardDescription className="text-center text-lg text-gray-600 group-hover:text-gray-800 transition-colors">{services[0].description}</CardDescription>
+                  <div className="text-center mt-3">
+                    <span className="text-sm text-blue-600 group-hover:text-blue-800 font-medium opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                      Ver más →
+                    </span>
+                  </div>
+                </CardContent>
+              </Card>
+            </Link>
+
+            {/* 2. Alquiler de Coches (services[2]) */}
+            <Link href={services[2].href}>
+              <Card className="hover:shadow-lg hover:scale-105 transition-all duration-200 cursor-pointer group h-full border-2 border-transparent hover:border-yellow-400 max-w-sm md:max-w-none mx-auto">
+                <CardHeader className="text-center">
+                  <div className="mx-auto mb-4 p-4 bg-yellow-400 rounded-full text-blue-600 group-hover:bg-yellow-500 transition-colors">
+                    <div className="h-10 w-10 flex items-center justify-center">
+                      {services[2].icon}
+                    </div>
+                  </div>
+                  <CardTitle className="text-2xl text-gray-900 group-hover:text-blue-600 transition-colors">{services[2].title}</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <CardDescription className="text-center text-lg text-gray-600 group-hover:text-gray-800 transition-colors">{services[2].description}</CardDescription>
+                  <div className="text-center mt-3">
+                    <span className="text-sm text-blue-600 group-hover:text-blue-800 font-medium opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                      Ver más →
+                    </span>
+                  </div>
+                </CardContent>
+              </Card>
+            </Link>
+
+            {/* 3. Motos y Scooters (services[3]) */}
+            <Link href={services[3].href}>
+              <Card className="hover:shadow-lg hover:scale-105 transition-all duration-200 cursor-pointer group h-full border-2 border-transparent hover:border-yellow-400 max-w-sm md:max-w-none mx-auto">
+                <CardHeader className="text-center">
+                  <div className="mx-auto mb-4 p-4 bg-yellow-400 rounded-full text-blue-600 group-hover:bg-yellow-500 transition-colors">
+                    <div className="h-10 w-10 flex items-center justify-center">
+                      {services[3].icon}
+                    </div>
+                  </div>
+                  <CardTitle className="text-2xl text-gray-900 group-hover:text-blue-600 transition-colors">{services[3].title}</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <CardDescription className="text-center text-lg text-gray-600 group-hover:text-gray-800 transition-colors">{services[3].description}</CardDescription>
+                  <div className="text-center mt-3">
+                    <span className="text-sm text-blue-600 group-hover:text-blue-800 font-medium opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                      Ver más →
+                    </span>
+                  </div>
+                </CardContent>
+              </Card>
+            </Link>
+
+            {/* 4. Visitas Guiadas (services[1]) */}
+            <Link href={services[1].href}>
+              <Card className="hover:shadow-lg hover:scale-105 transition-all duration-200 cursor-pointer group h-full border-2 border-transparent hover:border-yellow-400 max-w-sm md:max-w-none mx-auto">
+                <CardHeader className="text-center">
+                  <div className="mx-auto mb-4 p-4 bg-yellow-400 rounded-full text-blue-600 group-hover:bg-yellow-500 transition-colors">
+                    <div className="h-10 w-10 flex items-center justify-center">
+                      {services[1].icon}
+                    </div>
+                  </div>
+                  <CardTitle className="text-2xl text-gray-900 group-hover:text-blue-600 transition-colors">{services[1].title}</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <CardDescription className="text-center text-lg text-gray-600 group-hover:text-gray-800 transition-colors">{services[1].description}</CardDescription>
+                  <div className="text-center mt-3">
+                    <span className="text-sm text-blue-600 group-hover:text-blue-800 font-medium opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                      Ver más →
+                    </span>
+                  </div>
+                </CardContent>
+              </Card>
+            </Link>
+
+            {/* 5. Servicio Reparación (services[4]) */}
+            <Link href={services[4].href}>
+              <Card className="hover:shadow-lg hover:scale-105 transition-all duration-200 cursor-pointer group h-full border-2 border-transparent hover:border-yellow-400 max-w-sm md:max-w-none mx-auto">
+                <CardHeader className="text-center">
+                  <div className="mx-auto mb-4 p-4 bg-yellow-400 rounded-full text-blue-600 group-hover:bg-yellow-500 transition-colors">
+                    <div className="h-10 w-10 flex items-center justify-center">
+                      {services[4].icon}
+                    </div>
+                  </div>
+                  <CardTitle className="text-2xl text-gray-900 group-hover:text-blue-600 transition-colors">{services[4].title}</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <CardDescription className="text-center text-lg text-gray-600 group-hover:text-gray-800 transition-colors">{services[4].description}</CardDescription>
+                  <div className="text-center mt-3">
+                    <span className="text-sm text-blue-600 group-hover:text-blue-800 font-medium opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                      Ver más →
+                    </span>
+                  </div>
+                </CardContent>
+              </Card>
+            </Link>
           </div>
 
         </div>
