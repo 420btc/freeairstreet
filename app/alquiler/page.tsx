@@ -158,7 +158,7 @@ export default function AlquilerPage() {
     {
       id: "citroen-c1",
       name: "CITROËN C-1",
-      group: "GRUPO A",
+      group: "GRUPO B",
       description: "Coche compacto ideal para la ciudad, económico y fácil de aparcar",
       image: "/coches/citroenc1.jpg",
       prices: [
@@ -175,7 +175,7 @@ export default function AlquilerPage() {
     {
       id: "seat-ibiza",
       name: "SEAT IBIZA",
-      group: "GRUPO B",
+      group: "GRUPO C",
       description: "Vehículo versátil con más espacio y comodidad para viajes largos",
       image: "/coches/seatibiza.jpg",
       prices: [
