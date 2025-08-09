@@ -14,7 +14,7 @@ import Link from "next/link"
 import mapboxgl from "mapbox-gl"
 import { LanguageToggle } from '../../components/LanguageToggle'
 import { ThemeToggle } from '../../components/ThemeToggle'
-import { sendContactEmail, type ContactFormData } from '@/lib/emailjs'
+import { sendContactEmail, sendAdvertisingEmail, type ContactFormData, type AdvertisingFormData } from '@/lib/emailjs'
 import { useLanguage } from '@/contexts/LanguageContext'
 
 export default function ContactoPage() {
@@ -31,6 +31,19 @@ export default function ContactoPage() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [isQrModalOpen, setIsQrModalOpen] = useState(false)
   const [submitError, setSubmitError] = useState<string | null>(null)
+  
+  // Advertising form states
+  const [isAdvertisingSubmitted, setIsAdvertisingSubmitted] = useState(false)
+  const [isAdvertisingSubmitting, setIsAdvertisingSubmitting] = useState(false)
+  const [advertisingSubmitError, setAdvertisingSubmitError] = useState<string | null>(null)
+  const [advertisingFormData, setAdvertisingFormData] = useState({
+    businessName: '',
+    contactPerson: '',
+    email: '',
+    phone: '',
+    advertisingType: '',
+    message: ''
+  })
 
   useEffect(() => {
     mapboxgl.accessToken = 'pk.eyJ1IjoiNDIwYnRjIiwiYSI6ImNtOTN3ejBhdzByNjgycHF6dnVmeHl2ZTUifQ.Utq_q5wN6DHwpkn6rcpZdw'
@@ -102,6 +115,45 @@ export default function ContactoPage() {
       setSubmitError('Error al enviar el mensaje. Por favor, inténtalo de nuevo.')
     } finally {
       setIsSubmitting(false)
+    }
+  }
+
+  const handleAdvertisingInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+    const { name, value } = e.target
+    setAdvertisingFormData(prev => ({
+      ...prev,
+      [name]: value
+    }))
+  }
+
+  // La función sendAdvertisingEmail ahora se importa desde @/lib/emailjs
+
+  const handleAdvertisingSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setIsAdvertisingSubmitting(true)
+    setAdvertisingSubmitError(null)
+
+    try {
+      const result = await sendAdvertisingEmail(advertisingFormData)
+      
+      if (result.success) {
+        setIsAdvertisingSubmitted(true)
+        setAdvertisingFormData({
+          businessName: '',
+          contactPerson: '',
+          email: '',
+          phone: '',
+          advertisingType: '',
+          message: ''
+        })
+      } else {
+        setAdvertisingSubmitError(result.error || 'Error al enviar la solicitud. Por favor, inténtalo de nuevo.')
+      }
+    } catch (error) {
+      console.error('Error submitting advertising form:', error)
+      setAdvertisingSubmitError('Error al enviar la solicitud. Por favor, inténtalo de nuevo.')
+    } finally {
+      setIsAdvertisingSubmitting(false)
     }
   }
 
@@ -371,6 +423,153 @@ export default function ContactoPage() {
                     )}
                   </Button>
                 </form>
+                </>
+              )}
+            </CardContent>
+          </Card>
+
+          {/* Advertising Request Form */}
+          <Card className="order-3 xl:col-span-4 lg:col-span-3 col-span-1 mt-6 bg-gradient-to-br from-orange-50 to-yellow-50 border-orange-200">
+            <CardHeader>
+              <CardTitle className="text-xl text-orange-800 flex items-center">
+                <svg className="w-6 h-6 mr-2" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                </svg>
+                Solicitar Publicidad
+              </CardTitle>
+              <CardDescription className="text-orange-700">
+                ¿Tienes un negocio? Solicita información sobre nuestros espacios publicitarios en la web y en nuestra tienda física.
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              {isAdvertisingSubmitted ? (
+                <div className="text-center py-6">
+                  <CheckCircle className="h-12 w-12 text-green-500 mx-auto mb-3" />
+                  <h3 className="text-lg font-semibold text-gray-900 mb-2">¡Solicitud Enviada!</h3>
+                  <p className="text-gray-600 mb-4">
+                    Hemos recibido tu solicitud de publicidad. Te contactaremos pronto con más información.
+                  </p>
+                  <Button onClick={() => {
+                    setIsAdvertisingSubmitted(false)
+                    setAdvertisingSubmitError(null)
+                  }} className="bg-orange-600 hover:bg-orange-700">
+                    Enviar Otra Solicitud
+                  </Button>
+                </div>
+              ) : (
+                <>
+                  {advertisingSubmitError && (
+                    <div className="mb-4 p-3 bg-red-50 rounded-lg border border-red-200">
+                      <p className="text-red-700 text-sm">{advertisingSubmitError}</p>
+                    </div>
+                  )}
+                  <form onSubmit={handleAdvertisingSubmit} className="space-y-4">
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                      <div>
+                        <Label htmlFor="adv-name" className="text-sm font-medium text-orange-800">Nombre del Negocio *</Label>
+                        <Input
+                          id="adv-name"
+                          name="businessName"
+                          type="text"
+                          value={advertisingFormData.businessName}
+                          onChange={handleAdvertisingInputChange}
+                          required
+                          className="mt-1 h-10 border-orange-200 focus:border-orange-400"
+                          placeholder="Nombre de tu empresa o negocio"
+                        />
+                      </div>
+                      <div>
+                        <Label htmlFor="adv-contact" className="text-sm font-medium text-orange-800">Contacto *</Label>
+                        <Input
+                          id="adv-contact"
+                          name="contactPerson"
+                          type="text"
+                          value={advertisingFormData.contactPerson}
+                          onChange={handleAdvertisingInputChange}
+                          required
+                          className="mt-1 h-10 border-orange-200 focus:border-orange-400"
+                          placeholder="Tu nombre"
+                        />
+                      </div>
+                    </div>
+                    
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                      <div>
+                        <Label htmlFor="adv-email" className="text-sm font-medium text-orange-800">Email *</Label>
+                        <Input
+                          id="adv-email"
+                          name="email"
+                          type="email"
+                          value={advertisingFormData.email}
+                          onChange={handleAdvertisingInputChange}
+                          required
+                          className="mt-1 h-10 border-orange-200 focus:border-orange-400"
+                          placeholder="tu@email.com"
+                        />
+                      </div>
+                      <div>
+                        <Label htmlFor="adv-phone" className="text-sm font-medium text-orange-800">Teléfono</Label>
+                        <Input
+                          id="adv-phone"
+                          name="phone"
+                          type="tel"
+                          value={advertisingFormData.phone}
+                          onChange={handleAdvertisingInputChange}
+                          className="mt-1 h-10 border-orange-200 focus:border-orange-400"
+                          placeholder="655 123 456"
+                        />
+                      </div>
+                    </div>
+
+                    <div className="lg:col-span-2 xl:col-span-3">
+                      <Label htmlFor="adv-type" className="text-sm font-medium text-orange-800">Tipo de Publicidad *</Label>
+                      <select
+                        id="adv-type"
+                        name="advertisingType"
+                        value={advertisingFormData.advertisingType}
+                        onChange={handleAdvertisingInputChange}
+                        required
+                        className="mt-1 w-full h-10 px-3 border border-orange-200 rounded-md focus:border-orange-400 focus:ring-1 focus:ring-orange-400"
+                      >
+                        <option value="">Selecciona una opción</option>
+                        <option value="web">Solo en la web</option>
+                        <option value="tienda">Solo en la tienda física</option>
+                        <option value="ambos">En la web y tienda física</option>
+                      </select>
+                    </div>
+
+                    <div>
+                      <Label htmlFor="adv-message" className="text-sm font-medium text-orange-800">Mensaje</Label>
+                      <Textarea
+                        id="adv-message"
+                        name="message"
+                        value={advertisingFormData.message}
+                        onChange={handleAdvertisingInputChange}
+                        className="mt-1 min-h-[80px] text-sm border-orange-200 focus:border-orange-400"
+                        placeholder="Cuéntanos sobre tu negocio y qué tipo de publicidad te interesa..."
+                      />
+                    </div>
+
+                    <Button
+                      type="submit"
+                      disabled={isAdvertisingSubmitting}
+                      className="w-full bg-orange-600 hover:bg-orange-700 text-white h-10 text-sm font-semibold"
+                    >
+                      {isAdvertisingSubmitting ? (
+                        <>
+                          <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                          Enviando...
+                        </>
+                      ) : (
+                        <>
+                          <svg className="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>
+                          </svg>
+                          Solicitar Información
+                        </>
+                      )}
+                    </Button>
+                  </form>
                 </>
               )}
             </CardContent>

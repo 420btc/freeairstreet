@@ -34,6 +34,15 @@ export interface ReservationFormData {
   type: 'rental' | 'tour'
 }
 
+export interface AdvertisingFormData {
+  businessName: string
+  contactPerson: string
+  email: string
+  phone: string
+  advertisingType: string
+  message: string
+}
+
 // Función para enviar formulario de contacto
 export const sendContactEmail = async (formData: ContactFormData) => {
   // Validar configuración antes de enviar
@@ -153,6 +162,63 @@ export const sendReservationEmail = async (formData: ReservationFormData) => {
     return { success: true, adminResponse, clientResponse }
   } catch (error) {
     console.error('Error sending reservation email:', error)
+    
+    // Proporcionar más información sobre el error
+    let errorMessage = 'Error desconocido'
+    if (error instanceof Error) {
+      errorMessage = error.message
+    } else if (typeof error === 'object' && error !== null) {
+      errorMessage = JSON.stringify(error)
+    }
+    
+    return { 
+      success: false, 
+      error: errorMessage,
+      details: error 
+    }
+  }
+}
+
+// Función para enviar formulario de publicidad
+export const sendAdvertisingEmail = async (formData: AdvertisingFormData) => {
+  // Validar configuración antes de enviar
+  if (!EMAILJS_PUBLIC_KEY) {
+    throw new Error('EmailJS Public Key no está configurada. Verifica tu archivo .env.local')
+  }
+
+  try {
+    // Enviar email al administrador
+    const adminResponse = await emailjs.send(
+      EMAILJS_SERVICE_ID,
+      EMAILJS_TEMPLATE_ADMIN,
+      {
+        from_name: formData.contactPerson,
+        from_email: formData.email,
+        phone: formData.phone || 'No proporcionado',
+        subject: `Solicitud de Publicidad - ${formData.businessName}`,
+        message: `Negocio: ${formData.businessName}\nContacto: ${formData.contactPerson}\nTipo de publicidad: ${formData.advertisingType}\nMensaje: ${formData.message}`,
+        to_email: 'rentairstreet@gmail.com',
+        form_type: 'Solicitud de Publicidad'
+      },
+      EMAILJS_PUBLIC_KEY
+    )
+
+    // Enviar email de confirmación al cliente
+    const clientResponse = await emailjs.send(
+      EMAILJS_SERVICE_ID,
+      EMAILJS_TEMPLATE_CLIENT,
+      {
+        to_name: formData.contactPerson,
+        to_email: formData.email,
+        subject: 'Confirmación de solicitud de publicidad - Free Air Street',
+        message: `Hola ${formData.contactPerson},\n\nHemos recibido tu solicitud de publicidad para ${formData.businessName}.\n\nTe contactaremos pronto para discutir las opciones disponibles.\n\nGracias por tu interés.\n\nSaludos,\nEquipo Free Air Street`
+      },
+      EMAILJS_PUBLIC_KEY
+    )
+
+    return { success: true, adminResponse, clientResponse }
+  } catch (error) {
+    console.error('Error sending advertising email:', error)
     
     // Proporcionar más información sobre el error
     let errorMessage = 'Error desconocido'
