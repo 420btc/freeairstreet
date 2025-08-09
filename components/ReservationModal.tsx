@@ -158,6 +158,21 @@ export function ReservationModal({ isOpen, onClose, type, itemName, itemPrice, i
                 Hemos recibido tu solicitud de {type === "rental" ? "alquiler" : "excursión"}.
                 Te contactaremos pronto para confirmar los detalles.
               </p>
+              
+              {/* Video de confirmación */}
+              <div className="my-6">
+                <video 
+                  width="100%" 
+                  height="auto" 
+                  controls 
+                  autoPlay 
+                  className="rounded-lg shadow-lg max-w-md mx-auto"
+                >
+                  <source src="/videopedido.mp4" type="video/mp4" />
+                  Tu navegador no soporta el elemento de video.
+                </video>
+              </div>
+              
               <Button onClick={handleClose} className="mt-4">
                 Cerrar
               </Button>
