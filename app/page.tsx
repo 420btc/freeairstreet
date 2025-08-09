@@ -20,58 +20,72 @@ export default function HomePage() {
   const { t } = useLanguage()
 
   useEffect(() => {
+    // Only run on client-side where window is defined
+    if (typeof window === 'undefined') return;
+    
+    // Ensure the map container exists
+    if (!document.getElementById('mapbox-container')) return;
+    
     // Set Mapbox access token
-    mapboxgl.accessToken = 'pk.eyJ1IjoiNDIwYnRjIiwiYSI6ImNtOTN3ejBhdzByNjgycHF6dnVmeHl2ZTUifQ.Utq_q5wN6DHwpkn6rcpZdw'
+    mapboxgl.accessToken = 'pk.eyJ1IjoiNDIwYnRjIiwiYSI6ImNtOTN3ejBhdzByNjgycHF6dnVmeHl2ZTUifQ.Utq_q5wN6DHwpkn6rcpZdw';
 
-    // Initialize map
-    const map = new mapboxgl.Map({
-      container: 'mapbox-container',
-      style: 'mapbox://styles/mapbox/satellite-streets-v12',
-      center: [0, 0], // Start with global view
-      zoom: 1,
-      projection: 'globe'
-    })
+    try {
+      // Initialize map
+      const map = new mapboxgl.Map({
+        container: 'mapbox-container',
+        style: 'mapbox://styles/mapbox/satellite-streets-v12',
+        center: [0, 0], // Start with global view
+        zoom: 1,
+        projection: 'globe'
+      });
 
-    map.on('load', () => {
-      // Add atmosphere for globe effect
-      map.setFog({
-        'color': 'rgb(186, 210, 235)',
-        'high-color': 'rgb(36, 92, 223)',
-        'horizon-blend': 0.02,
-        'space-color': 'rgb(11, 11, 25)',
-        'star-intensity': 0.6
-      })
+      map.on('load', () => {
+        // Add atmosphere for globe effect
+        map.setFog({
+          'color': 'rgb(186, 210, 235)',
+          'high-color': 'rgb(36, 92, 223)',
+          'horizon-blend': 0.02,
+          'space-color': 'rgb(11, 11, 25)',
+          'star-intensity': 0.6
+        });
 
-      // Wait a moment then animate to location
-       setTimeout(() => {
-         map.flyTo({
-           center: [-4.489167162077166, 36.63222134109576], // Exact coordinates
-           zoom: 17,
-           duration: 3000,
-           essential: true
-         })
+        // Wait a moment then animate to location
+        setTimeout(() => {
+          map.flyTo({
+            center: [-4.489167162077166, 36.63222134109576], // Exact coordinates
+            zoom: 17,
+            duration: 3000,
+            essential: true
+          });
 
-        // Add custom scooter marker after animation
-         setTimeout(() => {
-           // Create custom marker element
-           const markerElement = document.createElement('div')
-           markerElement.innerHTML = '🛴'
-           markerElement.style.fontSize = '12px'
-           markerElement.style.backgroundColor = '#fbbf24'
-           markerElement.style.borderRadius = '50%'
-           markerElement.style.padding = '4px'
-           markerElement.style.border = '1px solid #f59e0b'
-           markerElement.style.boxShadow = '0 1px 4px rgba(0,0,0,0.3)'
+          // Add custom scooter marker after animation
+          setTimeout(() => {
+            // Create custom marker element
+            const markerElement = document.createElement('div');
+            markerElement.innerHTML = '🛴';
+            markerElement.style.fontSize = '12px';
+            markerElement.style.backgroundColor = '#fbbf24';
+            markerElement.style.borderRadius = '50%';
+            markerElement.style.padding = '4px';
+            markerElement.style.border = '1px solid #f59e0b';
+            markerElement.style.boxShadow = '0 1px 4px rgba(0,0,0,0.3)';
 
-           new mapboxgl.Marker(markerElement)
-             .setLngLat([-4.489167162077166, 36.63222134109576])
-             .addTo(map)
-         }, 3200)
-      }, 1000)
-    })
+            new mapboxgl.Marker(markerElement)
+              .setLngLat([-4.489167162077166, 36.63222134109576])
+              .addTo(map);
+          }, 3200);
+        }, 1000);
+      });
 
-    // Cleanup
-    return () => map.remove()
+      // Cleanup
+      return () => {
+        if (map) {
+          map.remove();
+        }
+      };
+    } catch (error) {
+      console.error('Error initializing map:', error);
+    }
   }, [])
 
   const services = [
@@ -330,7 +344,7 @@ export default function HomePage() {
 
             {/* Store Card */}
             <div className="lg:col-span-2">
-              <Link href="/tienda">
+              <Link href="/tienda?tab=store">
                 <Card className="hover:shadow-lg hover:scale-105 transition-all duration-200 cursor-pointer group h-full border-2 border-transparent hover:border-yellow-400 max-w-sm md:max-w-none mx-auto">
                   <CardHeader className="text-center">
                     <div className="mx-auto mb-4 p-4 bg-yellow-400 rounded-full text-blue-600 group-hover:bg-yellow-500 transition-colors">
