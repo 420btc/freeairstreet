@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useRef, useEffect } from 'react';
-import { MessageCircle, X, Send } from 'lucide-react';
+import { MessageCircle, X, Send, RotateCcw } from 'lucide-react';
 import { Button } from './ui/button';
 import { useModal } from '../contexts/ModalContext';
 
@@ -71,20 +71,43 @@ export default function AirXChat() {
     setCurrentLanguage(targetLang);
   };
 
-  // Function to format message content with purple badges for text between asterisks
+  // Function to reset chat
+  const resetChat = () => {
+    const welcomeMessage = {
+      id: '1',
+      content: currentLanguage === 'en' 
+        ? 'Hello! 👋 I\'m AirX, your virtual assistant. How can I help you today? I can help you with information or booking our rental vehicles, tours and services in Torremolinos 😊🌴'
+        : '¡Hola! 👋 Soy AirX, tu asistente virtual. ¿En qué puedo ayudarte hoy? Puedo ayudarte con información o a reservar nuestros vehículos de alquiler, excursiones y servicios en Torremolinos 😊🌴',
+      isUser: false,
+      timestamp: new Date(),
+      showTranslateButton: true
+    };
+    
+    setMessages([welcomeMessage]);
+    setConversationContext({});
+    setInputMessage('');
+  };
+
+  // Function to format message content with purple badges only for prices
   const formatMessageContent = (content: string) => {
     const parts = content.split(/\*\*(.*?)\*\*/g);
     return parts.map((part, index) => {
       if (index % 2 === 1) {
-        // This is text that was between asterisks
-        return (
-          <span
-            key={index}
-            className="inline-block bg-purple-600 text-white px-2 py-1 rounded-full text-xs font-medium mx-1"
-          >
-            {part}
-          </span>
-        );
+        // This is text that was between asterisks - only show badge if it contains a price
+        const isPriceText = /\d+€|€\d+|\d+\s*€|€\s*\d+/.test(part);
+        if (isPriceText) {
+          return (
+            <span
+              key={index}
+              className="inline-block bg-purple-600 text-white px-2 py-1 rounded-full text-xs font-medium mx-1"
+            >
+              {part}
+            </span>
+          );
+        } else {
+          // Return plain text without badge for non-price content
+          return part;
+        }
       }
       return part;
     });
@@ -411,12 +434,21 @@ export default function AirXChat() {
               <MessageCircle className="h-5 w-5" />
               <span className="font-semibold">AirX Assistant</span>
             </div>
-            <button
-              onClick={() => setIsOpen(false)}
-              className="text-white hover:text-gray-200 transition-colors"
-            >
-              <X className="h-4 w-4" />
-            </button>
+            <div className="flex items-center space-x-2">
+              <button
+                onClick={resetChat}
+                className="text-white hover:text-gray-200 transition-colors"
+                title={currentLanguage === 'en' ? 'Reset chat' : 'Reiniciar chat'}
+              >
+                <RotateCcw className="h-4 w-4" />
+              </button>
+              <button
+                onClick={() => setIsOpen(false)}
+                className="text-white hover:text-gray-200 transition-colors"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            </div>
           </div>
 
           {/* Messages */}

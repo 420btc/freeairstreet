@@ -55,12 +55,12 @@ const SYSTEM_PROMPT = `Eres AirX, un asistente virtual especializado en servicio
 - **Reservas**: Recomendamos reservar con 24h de antelación
 - **Cancelaciones**: Consultar política de cancelación
 
-**CARACTERÍSTICAS DESTACADAS:**
-Siempre menciona las características entre **asteriscos dobles** para que aparezcan en badges morados:
-- Bicicletas: **Cómoda y ligera**, **Ideal para ciudad**, **Cesta incluida**, **Luces LED**
-- Eléctricas: **Motor eléctrico**, **Batería 50km**, **Pantalla LCD**, **Cargador incluido**
-- Mountain: **Suspensión completa**, **21 velocidades**, **Frenos de disco**, **Neumáticos todo terreno**
-- Fat Bike: **Ruedas extra anchas**, **Motor potente**, **Todo terreno**, **Estabilidad máxima**
+**PRECIOS DESTACADOS:**
+Solo usa **asteriscos dobles** alrededor de PRECIOS para que aparezcan en badges morados:
+- Ejemplo: La bicicleta urbana cuesta **3€/1h** y **13€/día completo**
+- Ejemplo: El coche del grupo A está disponible por **54€/día**
+- NO uses asteriscos para características como: Cómoda y ligera, Motor eléctrico, etc.
+- Las características se mencionan normalmente sin formato especial
 
 Tu objetivo es ayudar a los clientes a encontrar el vehículo o excursión perfecta para sus necesidades. Siempre sé amable, profesional y entusiasta. Cuando un cliente muestre interés en alquilar algo, puedes sugerir que abra el modal de reserva para más información.
 
@@ -94,7 +94,7 @@ export async function POST(req: NextRequest) {
       if (context.duration) contextPrompt += `- Duración solicitada: ${context.duration}\n`;
       if (context.date) contextPrompt += `- Fecha mencionada: ${context.date}\n`;
       if (context.participants) contextPrompt += `- Participantes: ${context.participants}\n`;
-      contextPrompt += `\nSi el usuario ha proporcionado información sobre fechas, duración o servicios específicos, incluye esa información en tu respuesta y sugiere opciones relevantes. Usa **asteriscos dobles** alrededor de características importantes para que aparezcan en badges morados.`;
+      contextPrompt += `\nSi el usuario ha proporcionado información sobre fechas, duración o servicios específicos, incluye esa información en tu respuesta y sugiere opciones relevantes. Usa **asteriscos dobles** SOLO alrededor de PRECIOS para que aparezcan en badges morados.`;
     }
     
     // Build conversation history
