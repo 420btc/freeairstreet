@@ -9,6 +9,7 @@ import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { sendReservationEmail, type ReservationFormData } from "@/lib/emailjs"
+import { useInventory } from "@/contexts/InventoryContext"
 
 interface ReservationModalProps {
   isOpen: boolean
@@ -17,6 +18,7 @@ interface ReservationModalProps {
   itemName?: string
   itemPrice?: string
   itemDuration?: string
+  itemId?: string
   prefillData?: {
     name?: string
     email?: string
@@ -29,7 +31,8 @@ interface ReservationModalProps {
   }
 }
 
-export function ReservationModal({ isOpen, onClose, type, itemName, itemPrice, itemDuration, prefillData }: ReservationModalProps) {
+export function ReservationModal({ isOpen, onClose, type, itemName, itemPrice, itemDuration, itemId, prefillData }: ReservationModalProps) {
+  const { makeReservation } = useInventory()
   const [formData, setFormData] = useState({
     name: prefillData?.name || "",
     email: prefillData?.email || "",
@@ -76,6 +79,19 @@ export function ReservationModal({ isOpen, onClose, type, itemName, itemPrice, i
       const result = await sendReservationEmail(reservationData)
       
       if (result.success) {
+        // Si es un alquiler y tenemos itemId, hacer la reserva en el inventario
+        if (type === 'rental' && itemId && formData.duration) {
+          const reservationId = makeReservation(itemId, formData.duration, {
+            name: formData.name,
+            email: formData.email
+          })
+          
+          if (!reservationId) {
+            setSubmitError('No hay stock disponible para este vehículo.')
+            return
+          }
+        }
+        
         setIsSubmitted(true)
         // Reset form after successful submission
         setFormData({

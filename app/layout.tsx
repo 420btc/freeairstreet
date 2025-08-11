@@ -5,6 +5,7 @@ import "./globals.css"
 import { LanguageProvider } from "../contexts/LanguageContext"
 import { ThemeProvider } from "../contexts/ThemeContext"
 import { ModalProvider } from "../contexts/ModalContext"
+import { InventoryProvider } from "../contexts/InventoryContext"
 import AirXChat from "../components/AirXChat"
 import { GlobalModals } from "../components/GlobalModals"
 import { Analytics } from "@vercel/analytics/react"
@@ -32,12 +33,14 @@ export default function RootLayout({
       <body className={inter.className}>
         <ThemeProvider>
           <LanguageProvider>
-            <ModalProvider>
-              {children}
-              <AirXChat />
-              <GlobalModals />
-              <Analytics />
-            </ModalProvider>
+            <InventoryProvider>
+              <ModalProvider>
+                {children}
+                <AirXChat />
+                <GlobalModals />
+                <Analytics />
+              </ModalProvider>
+            </InventoryProvider>
           </LanguageProvider>
         </ThemeProvider>
       </body>

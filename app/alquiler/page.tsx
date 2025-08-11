@@ -12,9 +12,11 @@ import { LanguageToggle } from '../../components/LanguageToggle'
 import { ThemeToggle } from '../../components/ThemeToggle'
 import { ReservationModal } from '../../components/ReservationModal'
 import { useLanguage } from '../../contexts/LanguageContext'
+import { useInventory } from '../../contexts/InventoryContext'
 
 export default function AlquilerPage() {
   const { t, language } = useLanguage()
+  const { getAvailableStock, makeReservation, inventory } = useInventory()
   const translations = {
     es: {
       'rental.vehicles.cityBike.features': ['Cesta delantera', 'Luces LED', 'Cambio de 7 velocidades', 'Asiento cómodo'],
@@ -37,7 +39,7 @@ export default function AlquilerPage() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [isQrModalOpen, setIsQrModalOpen] = useState(false)
-  const [selectedItem, setSelectedItem] = useState<{name: string, price?: string, duration?: string}>({name: ""})
+  const [selectedItem, setSelectedItem] = useState<{name: string, price?: string, duration?: string, id?: string}>({name: ""})
   const [selectedPrices, setSelectedPrices] = useState<{[key: string]: {duration: string, price: string}}>({})
   const [selectedModels, setSelectedModels] = useState<{[key: string]: string}>({})
 
@@ -61,14 +63,34 @@ export default function AlquilerPage() {
     })
   }
 
-  const handleReservation = (itemName: string) => {
+  const handleReservation = (itemName: string, itemId: string) => {
     const selectedPrice = selectedPrices[itemName]
+    const availableStock = getAvailableStock(itemId)
+    
+    if (availableStock <= 0) {
+      alert('Lo siento, no hay stock disponible para este vehículo.')
+      return
+    }
+    
     setSelectedItem({
       name: itemName, 
       price: selectedPrice?.price,
-      duration: selectedPrice?.duration
+      duration: selectedPrice?.duration,
+      id: itemId
     })
     setIsModalOpen(true)
+  }
+
+  const getStockDisplay = (itemId: string) => {
+    const availableStock = getAvailableStock(itemId)
+    const totalStock = inventory.find(item => item.id === itemId)?.totalStock || 0
+    const isLowStock = availableStock <= totalStock * 0.2 // 20% o menos
+    const isOutOfStock = availableStock === 0
+    
+    return {
+      text: `${availableStock}/${totalStock}`,
+      color: isOutOfStock ? 'bg-red-500' : isLowStock ? 'bg-yellow-500' : 'bg-green-500'
+    }
   }
 
   useEffect(() => {
@@ -436,19 +458,10 @@ export default function AlquilerPage() {
       models: [
         {
           id: "basic",
-          name: "Básico",
-          autonomy: "15km",
-          speed: "15 km/h",
-          prices: [
-            { duration: "30 min", price: "8€" },
-            { duration: "1h", price: "12€", featured: true },
-          ],
-        },
-        {
-          id: "medium",
-          name: "Medium",
+          name: "Skateflash 3.0",
           autonomy: "25km",
           speed: "20 km/h",
+          image: "/skateflash.jpg",
           prices: [
             { duration: "30 min", price: "10€" },
             { duration: "1h", price: "15€", featured: true },
@@ -456,9 +469,10 @@ export default function AlquilerPage() {
         },
         {
           id: "premium",
-          name: "Premium",
+          name: "EcoXtrem",
           autonomy: "40km",
           speed: "25 km/h",
+          image: "/ecoextrem.jpg",
           prices: [
             { duration: "30 min", price: "15€" },
             { duration: "1h", price: "22€", featured: true },
@@ -473,7 +487,9 @@ export default function AlquilerPage() {
       description: "Scooter eléctrico especial para personas con movilidad reducida",
       image: "/Scooterelectrico.jpg",
       prices: [
-        { duration: "Consultar", price: "Precio a consultar", featured: true },
+        { duration: "1D", price: "25€" },
+        { duration: "3D", price: "60€", featured: true },
+        { duration: "7D", price: "120€" },
       ],
       features: ["Adaptado minusválidos", "Asiento cómodo", "Fácil acceso", "Seguridad extra"],
     },
@@ -627,7 +643,7 @@ export default function AlquilerPage() {
     features: translateFeatures(s.features),
     models: Array.isArray(s.models) ? s.models.map((m: any) => ({
       ...m,
-      name: m.name === 'Básico' ? 'Basic' : m.name,
+      name: m.name === 'Skateflash 3.0' ? 'Skateflash 3.0' : m.name === 'EcoXtrem' ? 'EcoXtrem' : m.name,
       prices: Array.isArray(m.prices) ? m.prices.map((p: any) => ({ ...p, duration: durationMap[p.duration] || p.duration })) : m.prices,
     })) : s.models,
     prices: Array.isArray(s.prices) ? s.prices.map((p: any) => ({
@@ -849,7 +865,12 @@ export default function AlquilerPage() {
                   </div>
 
                   <CardHeader>
-                    <CardTitle className="text-xl text-gray-900">{bike.name as string}</CardTitle>
+                    <div className="flex justify-between items-start mb-2">
+                      <CardTitle className="text-xl text-gray-900">{bike.name as string}</CardTitle>
+                      <Badge className={`${getStockDisplay(bike.id).color} text-white font-bold px-3 py-1`}>
+                        {getStockDisplay(bike.id).text}
+                      </Badge>
+                    </div>
                     <CardDescription className="text-gray-600">{bike.description as string}</CardDescription>
                   </CardHeader>
 
@@ -906,11 +927,20 @@ export default function AlquilerPage() {
                     </div>
 
                     <Button 
-                      className="w-full bg-blue-600 hover:bg-blue-700 text-white"
-                      onClick={() => handleReservation(bike.name as string)}
-                      disabled={!selectedPrices[bike.name as string]}
+                      className={`w-full text-white ${
+                        getAvailableStock(bike.id) === 0 
+                          ? 'bg-gray-400 cursor-not-allowed' 
+                          : 'bg-blue-600 hover:bg-blue-700'
+                      }`}
+                      onClick={() => handleReservation(bike.name as string, bike.id)}
+                      disabled={!selectedPrices[bike.name as string] || getAvailableStock(bike.id) === 0}
                     >
-                      {selectedPrices[bike.name as string] ? `${t('rental.reserve')} ${selectedPrices[bike.name as string].duration} ${t('rental.for')} ${selectedPrices[bike.name as string].price}` : t('rental.selectPrice')}
+                      {getAvailableStock(bike.id) === 0 
+                        ? 'Sin Stock' 
+                        : selectedPrices[bike.name as string] 
+                          ? `${t('rental.reserve')} ${selectedPrices[bike.name as string].duration} ${t('rental.for')} ${selectedPrices[bike.name as string].price}` 
+                          : t('rental.selectPrice')
+                      }
                     </Button>
                   </CardContent>
                 </Card>
@@ -990,7 +1020,7 @@ export default function AlquilerPage() {
 
                     <Button 
                       className="w-full bg-blue-600 hover:bg-blue-700 text-white"
-                      onClick={() => handleReservation(car.name as string)}
+                      onClick={() => handleReservation(car.name as string, car.id)}
                       disabled={!selectedPrices[car.name as string]}
                     >
                       {selectedPrices[car.name as string] ? `${t('rental.reserve')} ${selectedPrices[car.name as string].duration} ${t('rental.for')} ${selectedPrices[car.name as string].price}` : t('rental.selectPrice')}
@@ -1092,7 +1122,7 @@ export default function AlquilerPage() {
 
                     <Button 
                       className="w-full bg-blue-600 hover:bg-blue-700 text-white mt-auto"
-                      onClick={() => handleReservation(moto.name)}
+                      onClick={() => handleReservation(moto.name, moto.id)}
                       disabled={!selectedPrices[moto.name]}
                     >
                       {selectedPrices[moto.name] ? `${t('rental.reserve')} ${selectedPrices[moto.name].duration} ${t('rental.for')} ${selectedPrices[moto.name].price}` : t('rental.selectPrice')}
@@ -1195,7 +1225,7 @@ export default function AlquilerPage() {
 
                     <Button 
                       className="w-full bg-blue-600 hover:bg-blue-700 text-white"
-                      onClick={() => handleReservation(quad.name)}
+                      onClick={() => handleReservation(quad.name, quad.id)}
                       disabled={!selectedPrices[quad.name]}
                     >
                       {selectedPrices[quad.name] ? `${t('rental.reserve')} ${selectedPrices[quad.name].duration} ${t('rental.for')} ${selectedPrices[quad.name].price}` : t('rental.selectPrice')}
@@ -1234,15 +1264,21 @@ export default function AlquilerPage() {
                 const selectedModel = selectedModels[scooter.name] || (scooter.models ? scooter.models[0].id : null)
                 const currentModel = scooter.models ? scooter.models.find((m: any) => m.id === selectedModel) : null
                 const displayPrices = currentModel ? currentModel.prices : scooter.prices || []
+                const displayImage = currentModel?.image || scooter.image || "/placeholder.svg"
                 
                 return (
                   <Card key={scooter.id} className="overflow-hidden hover:shadow-lg transition-shadow">
                     <div className="aspect-video relative">
-                      <Image src={scooter.image || "/placeholder.svg"} alt={scooter.name} fill className="object-contain" />
+                      <Image src={displayImage} alt={currentModel?.name || scooter.name} fill className="object-contain" />
                     </div>
 
                     <CardHeader>
-                      <CardTitle className="text-xl text-gray-900">{scooter.name}</CardTitle>
+                      <div className="flex justify-between items-start mb-2">
+                        <CardTitle className="text-xl text-gray-900">{scooter.name}</CardTitle>
+                        <Badge className={`${getStockDisplay(scooter.id).color} text-white font-bold px-3 py-1`}>
+                          {getStockDisplay(scooter.id).text}
+                        </Badge>
+                      </div>
                       <CardDescription className="text-gray-600">{scooter.description}</CardDescription>
                     </CardHeader>
 
@@ -1340,11 +1376,20 @@ export default function AlquilerPage() {
                       </div>
 
                       <Button 
-                        className="w-full bg-blue-600 hover:bg-blue-700 text-white"
-                        onClick={() => handleReservation(scooter.name)}
-                        disabled={!selectedPrices[scooter.name]}
+                        className={`w-full text-white ${
+                          getAvailableStock(scooter.id) === 0 
+                            ? 'bg-gray-400 cursor-not-allowed' 
+                            : 'bg-blue-600 hover:bg-blue-700'
+                        }`}
+                        onClick={() => handleReservation(scooter.name, scooter.id)}
+                        disabled={!selectedPrices[scooter.name] || getAvailableStock(scooter.id) === 0}
                       >
-                        {selectedPrices[scooter.name] ? `${t('rental.reserve')} ${selectedPrices[scooter.name].duration} ${t('rental.for')} ${selectedPrices[scooter.name].price}` : t('rental.selectPrice')}
+                        {getAvailableStock(scooter.id) === 0 
+                          ? 'Sin Stock' 
+                          : selectedPrices[scooter.name] 
+                            ? `${t('rental.reserve')} ${selectedPrices[scooter.name].duration} ${t('rental.for')} ${selectedPrices[scooter.name].price}` 
+                            : t('rental.selectPrice')
+                        }
                       </Button>
                     </CardContent>
                   </Card>
@@ -1400,7 +1445,7 @@ export default function AlquilerPage() {
 
                     <Button 
                       className="w-full bg-blue-600 hover:bg-blue-700 text-white"
-                      onClick={() => handleReservation(accessory.name)}
+                      onClick={() => handleReservation(accessory.name, accessory.id)}
                     >
                       {t('rental.reserve')}
                     </Button>
@@ -1483,6 +1528,7 @@ export default function AlquilerPage() {
         itemName={selectedItem.name}
         itemPrice={selectedItem.price}
         itemDuration={selectedItem.duration}
+        itemId={selectedItem.id}
       />
 
       {/* QR Modal */}
