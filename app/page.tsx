@@ -760,11 +760,11 @@ export default function HomePage() {
                          className="object-contain"
                        />
                        <Button
-                          onClick={() => window.open('https://www.quadaventuracostadelsol.com', '_blank')}
-                          className="bg-yellow-400 hover:bg-yellow-500 text-blue-900 font-bold px-4 py-2 rounded text-sm"
-                        >
-                          Reservar Ahora
-                        </Button>
+                           onClick={() => window.open('https://quadaventuracostadelsol.com/actividades-de-aventura', '_blank')}
+                           className="bg-yellow-400 hover:bg-yellow-500 text-blue-900 font-bold px-4 py-2 rounded text-sm"
+                         >
+                           Reservar Ahora
+                         </Button>
                      </div>
                   </div>
                </div>
