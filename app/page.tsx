@@ -639,9 +639,10 @@ export default function HomePage() {
             </p>
           </div>
 
-          {/* Sol Hires Animated Image */}
-          <div className="flex justify-center -mt-6 md:-mt-8" style={{marginBottom: '0px'}}>
-            <div className="relative w-full max-w-xs md:max-w-sm">
+          {/* Sol Hires Images and Video Section */}
+          <div className="flex flex-col lg:flex-row items-center justify-center gap-8 mt-8 mb-8">
+            {/* Sol Hires Animated Images - Left Side */}
+            <div className="relative w-full max-w-xs md:max-w-sm lg:max-w-md">
               <div 
                 className="relative w-full h-auto sol-hires-container overflow-hidden"
                 ref={(el) => {
@@ -679,6 +680,95 @@ export default function HomePage() {
                 />
               </div>
             </div>
+            
+            {/* Video Section - Right Side */}
+             <div className="relative w-full max-w-xs md:max-w-sm lg:max-w-md">
+               <div className="relative w-full h-auto overflow-hidden rounded-lg shadow-lg mb-6">
+                 <video
+                   autoPlay
+                   loop
+                   muted
+                   playsInline
+                   className="w-full h-auto object-cover"
+                 >
+                   <source src="/videoplayback.mp4" type="video/mp4" />
+                   Tu navegador no soporta el elemento de video.
+                 </video>
+               </div>
+               
+               {/* Quad Tours Pricing Table */}
+               <div className="bg-white rounded-lg shadow-lg p-4 border-2 border-gray-200">
+                 <div className="text-center mb-4">
+                   <h3 className="text-lg font-bold text-gray-800 mb-1">{t('quadTours.title')}</h3>
+                   <p className="text-sm text-gray-600">{t('quadTours.subtitle')}</p>
+                 </div>
+                 
+                 <div className="grid grid-cols-3 gap-1 text-xs font-bold">
+                   {/* Headers */}
+                   <div className="bg-black text-white p-2 text-center rounded-tl">{t('quadTours.hour')}</div>
+                   <div className="bg-black text-white p-2 text-center">{t('quadTours.tour')}</div>
+                   <div className="bg-black text-white p-2 text-center rounded-tr">{t('quadTours.price')}</div>
+                   
+                   {/* 1H Row */}
+                      <div className="bg-yellow-400 text-black p-2 text-center flex items-center justify-center font-black text-lg">1H</div>
+                      <div className="bg-yellow-400 text-black p-2 text-center flex flex-col justify-center">
+                        <div className="text-lg mb-1">👤</div>
+                        <div className="text-lg">👥</div>
+                      </div>
+                      <div className="bg-yellow-400 text-black p-2 text-center flex flex-col justify-center">
+                        <div className="text-xs font-bold mb-1">75€ {t('quadTours.perQuad')}</div>
+                        <div className="text-xs font-bold">90€ {t('quadTours.perQuad')}</div>
+                      </div>
+                      
+                      {/* 2H Row */}
+                      <div className="bg-orange-500 text-black p-2 text-center flex items-center justify-center font-black text-lg">2H</div>
+                      <div className="bg-orange-500 text-black p-2 text-center flex flex-col justify-center">
+                        <div className="text-lg mb-1">👤</div>
+                        <div className="text-lg">👥</div>
+                      </div>
+                      <div className="bg-orange-500 text-black p-2 text-center flex flex-col justify-center">
+                        <div className="text-xs font-bold mb-1">90€ {t('quadTours.perQuad')}</div>
+                        <div className="text-xs font-bold">120€ {t('quadTours.perQuad')}</div>
+                      </div>
+                      
+                      {/* 3H Row */}
+                      <div className="bg-red-500 text-white p-2 text-center flex items-center justify-center font-black text-lg">3H</div>
+                      <div className="bg-red-500 text-white p-2 text-center flex flex-col justify-center">
+                        <div className="text-lg mb-1">👤</div>
+                        <div className="text-lg">👥</div>
+                      </div>
+                      <div className="bg-red-500 text-white p-2 text-center flex flex-col justify-center">
+                        <div className="text-xs font-bold mb-1">150€ {t('quadTours.perQuad')}</div>
+                        <div className="text-xs font-bold">170€ {t('quadTours.perQuad')}</div>
+                      </div>
+                 </div>
+                 
+                 <div className="mt-3 text-center">
+                    <div className="bg-blue-100 text-blue-800 p-2 rounded text-xs font-semibold">
+                      {t('quadTours.kidsTravel')}
+                      <div className="text-xs font-normal">({t('quadTours.ageRange')})</div>
+                      <div className="text-xs font-bold">{t('quadTours.adventureForAll')}</div>
+                    </div>
+                    
+                    {/* Rent Quad Logo and Reserve Button */}
+                     <div className="mt-3 flex items-center justify-center gap-3">
+                       <Image
+                         src="/rentwuad.png"
+                         alt="Rent Quad Logo"
+                         width={80}
+                         height={30}
+                         className="object-contain"
+                       />
+                       <Button
+                          onClick={() => window.open('https://www.quadaventuracostadelsol.com', '_blank')}
+                          className="bg-yellow-400 hover:bg-yellow-500 text-blue-900 font-bold px-4 py-2 rounded text-sm"
+                        >
+                          Reservar Ahora
+                        </Button>
+                     </div>
+                  </div>
+               </div>
+             </div>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">

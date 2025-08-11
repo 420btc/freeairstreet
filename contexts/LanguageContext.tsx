@@ -278,6 +278,19 @@ const translations = {
     'contact.hours.holidaysTime': '10:00 - 19:00',
     'contact.map.title': 'Nuestra Ubicación',
     'contact.callNow': 'Llamar Ahora',
+    
+    // Quad Tours
+    'quadTours.title': 'EXPERIENCIA INOLVIDABLE',
+    'quadTours.subtitle': 'TENEMOS 3 TOURS EN QUAD DISPONIBLES:',
+    'quadTours.hour': 'HORA',
+    'quadTours.tour': 'TOUR',
+    'quadTours.price': 'PRECIO',
+    'quadTours.single': 'SINGLE',
+    'quadTours.double': 'DOBLE',
+    'quadTours.perQuad': 'POR QUAD',
+    'quadTours.kidsTravel': 'NIÑOS VIAJAN GRATIS!',
+    'quadTours.ageRange': '7 - 16 AÑOS',
+    'quadTours.adventureForAll': '¡AVENTURA PARA TODOS!',
   },
   en: {
     // Header
@@ -545,6 +558,19 @@ const translations = {
     'contact.hours.holidaysTime': '10:00 - 19:00',
     'contact.map.title': 'Our Location',
     'contact.callNow': 'Call Now',
+    
+    // Quad Tours
+    'quadTours.title': 'UNFORGETTABLE EXPERIENCE',
+    'quadTours.subtitle': 'WE HAVE 3 QUAD TOURS AVAILABLE:',
+    'quadTours.hour': 'HOUR',
+    'quadTours.tour': 'TOUR',
+    'quadTours.price': 'PRICE',
+    'quadTours.single': 'SINGLE',
+    'quadTours.double': 'DOUBLE',
+    'quadTours.perQuad': 'PER QUAD',
+    'quadTours.kidsTravel': 'KIDS TRAVEL FREE!',
+    'quadTours.ageRange': '7 - 16 YEARS OLD',
+    'quadTours.adventureForAll': 'ADVENTURE FOR ALL!',
   },
 }
 
