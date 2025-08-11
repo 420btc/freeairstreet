@@ -144,6 +144,18 @@ export default function ToursPage() {
 
   const boatActivities = [
     {
+      name: "Quad Aventura",
+      location: "Alrededores de Málaga",
+      priceAdult: "75€",
+      priceChild: "Gratis (7-16 años)",
+      description: "Experiencia inolvidable en quad por los alrededores de Málaga. Rutas adaptadas a todos los niveles.",
+      video: "/videoplayback.mp4",
+      highlights: ["Niños viajan gratis", "Guía experto incluido", "Equipamiento de seguridad", "Rutas adaptadas"],
+      emoji: "🏎️",
+      isVideo: true,
+      reservationUrl: "https://quadaventuracostadelsol.com/actividades-de-aventura"
+    },
+    {
       name: "Dolphin Trip (Paseo de los Delfines)",
       location: "Puerto Marina Benalmádena",
       priceAdult: "19€",
@@ -529,12 +541,24 @@ export default function ToursPage() {
               {(language === 'en' ? boatActivities.map(translateBoat) : boatActivities).map((activity, index) => (
                 <Card key={index} className="overflow-hidden hover:shadow-lg transition-shadow">
                   <div className="aspect-video relative">
-                    <Image
-                      src={activity.image || "/placeholder.svg"}
-                      alt={activity.name}
-                      fill
-                      className="object-cover"
-                    />
+                    {activity.isVideo ? (
+                      <video
+                        autoPlay
+                        loop
+                        muted
+                        playsInline
+                        className="w-full h-full object-cover"
+                      >
+                        <source src={activity.video} type="video/mp4" />
+                      </video>
+                    ) : (
+                      <Image
+                        src={activity.image || "/placeholder.svg"}
+                        alt={activity.name}
+                        fill
+                        className="object-cover"
+                      />
+                    )}
                     <div className="absolute top-4 left-4">
                       <div className="bg-white/90 backdrop-blur-sm rounded-full p-2 text-2xl">{activity.emoji}</div>
                     </div>
@@ -602,14 +626,27 @@ export default function ToursPage() {
                     </div>
 
                     <Button 
-                      className="w-full bg-blue-600 hover:bg-blue-700"
-                      onClick={() => handleReservation(activity.name, activity.priceAdult || activity.price)}
+                      className={`w-full ${
+                        activity.reservationUrl 
+                          ? 'bg-yellow-400 hover:bg-yellow-500 text-blue-900' 
+                          : 'bg-blue-600 hover:bg-blue-700'
+                      }`}
+                      onClick={() => {
+                        if (activity.reservationUrl) {
+                          window.open(activity.reservationUrl, '_blank')
+                        } else {
+                          handleReservation(activity.name, activity.priceAdult || activity.price)
+                        }
+                      }}
                     >
                       <Calendar className="h-4 w-4 mr-2" />
-                      {(
-                        activity.price === "Consultar precio" ||
-                        activity.price === "Consult price"
-                      ) ? t('tours.consultAvailability') : t('tours.reserveActivity')}
+                      {activity.reservationUrl 
+                        ? 'Reservar Ahora'
+                        : (
+                          activity.price === "Consultar precio" ||
+                          activity.price === "Consult price"
+                        ) ? t('tours.consultAvailability') : t('tours.reserveActivity')
+                      }
                     </Button>
                   </CardContent>
                 </Card>

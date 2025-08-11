@@ -568,7 +568,7 @@ export default function HomePage() {
             <p className="text-lg text-blue-800">{t('prices.subtitle')}</p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             <Card className="bg-white">
               <CardHeader>
                 <CardTitle className="text-blue-900">{t('prices.cityBike')}</CardTitle>
@@ -625,6 +625,8 @@ export default function HomePage() {
                 </div>
               </CardContent>
             </Card>
+
+
           </div>
         </div>
       </section>
@@ -771,7 +773,7 @@ export default function HomePage() {
              </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             <Card className="hover:shadow-lg transition-shadow overflow-hidden">
               <div className="aspect-video relative">
                 <Image
