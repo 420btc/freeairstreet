@@ -76,8 +76,16 @@ Detecta automáticamente el idioma del usuario y responde en el mismo idioma. Ma
 
 export async function POST(req: NextRequest) {
   try {
-    const { message, context, conversationHistory } = await req.json();
+    const { message, context, conversationHistory, detectedLanguage } = await req.json();
     
+    // Build language-specific prompt
+    let languagePrompt = '';
+    if (detectedLanguage === 'en') {
+      languagePrompt = `\n\nIMPORTANT: The user is communicating in ENGLISH. You MUST respond in ENGLISH. Adapt all information, prices, and details to English while maintaining the same helpful and professional tone.`;
+    } else {
+      languagePrompt = `\n\nIMPORTANTE: El usuario se está comunicando en ESPAÑOL. Debes responder en ESPAÑOL con tu tono habitual amigable y profesional.`;
+    }
+
     // Build context-aware prompt
     let contextPrompt = '';
     if (context && Object.keys(context).length > 0) {
@@ -103,7 +111,7 @@ export async function POST(req: NextRequest) {
       messages: [
         {
           role: "system",
-          content: SYSTEM_PROMPT + contextPrompt + historyPrompt
+          content: SYSTEM_PROMPT + languagePrompt + contextPrompt + historyPrompt
         },
         {
           role: "user",

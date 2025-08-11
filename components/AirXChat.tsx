@@ -12,6 +12,8 @@ interface Message {
   timestamp: Date;
   showReservationButton?: boolean;
   reservationType?: 'rental' | 'tour' | 'appointment';
+  showTranslateButton?: boolean;
+  translatedContent?: string;
 }
 
 interface ConversationContext {
@@ -25,18 +27,49 @@ interface ConversationContext {
 export default function AirXChat() {
   const { openReservationModal } = useModal();
   const [isOpen, setIsOpen] = useState(false);
+  const [currentLanguage, setCurrentLanguage] = useState<'es' | 'en'>('es');
   const [messages, setMessages] = useState<Message[]>([
     {
       id: '1',
       content: '¡Hola! 👋 Soy AirX, tu asistente virtual. ¿En qué puedo ayudarte hoy? Puedo ayudarte con información o a reservar nuestros vehículos de alquiler, excursiones y servicios en Torremolinos 😊🌴',
       isUser: false,
-      timestamp: new Date()
+      timestamp: new Date(),
+      showTranslateButton: true
     }
   ]);
   const [inputMessage, setInputMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [conversationContext, setConversationContext] = useState<ConversationContext>({});
   const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  // Function to detect language from user message
+  const detectLanguage = (message: string): 'es' | 'en' => {
+    const englishWords = ['hello', 'hi', 'bike', 'rent', 'car', 'tour', 'help', 'please', 'thank', 'yes', 'no', 'how', 'what', 'when', 'where', 'price', 'cost', 'available', 'book', 'reserve'];
+    const spanishWords = ['hola', 'bici', 'alquiler', 'coche', 'tour', 'ayuda', 'por favor', 'gracias', 'sí', 'no', 'cómo', 'qué', 'cuándo', 'dónde', 'precio', 'coste', 'disponible', 'reservar'];
+    
+    const lowerMessage = message.toLowerCase();
+    const englishMatches = englishWords.filter(word => lowerMessage.includes(word)).length;
+    const spanishMatches = spanishWords.filter(word => lowerMessage.includes(word)).length;
+    
+    return englishMatches > spanishMatches ? 'en' : 'es';
+  };
+
+  // Function to translate welcome message
+  const translateWelcomeMessage = async (messageId: string) => {
+    const targetLang = currentLanguage === 'es' ? 'en' : 'es';
+    const welcomeMessages = {
+      es: '¡Hola! 👋 Soy AirX, tu asistente virtual. ¿En qué puedo ayudarte hoy? Puedo ayudarte con información o a reservar nuestros vehículos de alquiler, excursiones y servicios en Torremolinos 😊🌴',
+      en: 'Hello! 👋 I\'m AirX, your virtual assistant. How can I help you today? I can help you with information or booking our rental vehicles, tours and services in Torremolinos 😊🌴'
+    };
+    
+    setMessages(prev => prev.map(msg => 
+      msg.id === messageId 
+        ? { ...msg, content: welcomeMessages[targetLang], translatedContent: msg.content }
+        : msg
+    ));
+    
+    setCurrentLanguage(targetLang);
+  };
 
   // Function to format message content with purple badges for text between asterisks
   const formatMessageContent = (content: string) => {
@@ -259,6 +292,10 @@ export default function AirXChat() {
   const sendMessage = async () => {
     if (!inputMessage.trim() || isLoading) return;
 
+    // Detect language from user message
+    const detectedLanguage = detectLanguage(inputMessage);
+    setCurrentLanguage(detectedLanguage);
+
     // Extract context from user message
     const newContext = extractContext(inputMessage);
     setConversationContext(newContext);
@@ -283,7 +320,8 @@ export default function AirXChat() {
         body: JSON.stringify({ 
           message: inputMessage,
           context: newContext,
-          conversationHistory: messages.slice(-5) // Send last 5 messages for context
+          conversationHistory: messages.slice(-5), // Send last 5 messages for context
+          detectedLanguage: detectedLanguage // Send detected language to API
         }),
       });
 
@@ -294,7 +332,7 @@ export default function AirXChat() {
       
       const aiMessage: Message = {
         id: (Date.now() + 1).toString(),
-        content: data.response || 'Lo siento, hubo un error procesando tu consulta.',
+        content: data.response || (detectedLanguage === 'en' ? 'Sorry, there was an error processing your query.' : 'Lo siento, hubo un error procesando tu consulta.'),
         isUser: false,
         timestamp: new Date(),
         showReservationButton: Boolean(showButton),
@@ -306,7 +344,7 @@ export default function AirXChat() {
       console.error('Error sending message:', error);
       const errorMessage: Message = {
         id: (Date.now() + 1).toString(),
-        content: 'Lo siento, hubo un error de conexión. Por favor, inténtalo de nuevo.',
+        content: detectedLanguage === 'en' ? 'Sorry, there was a connection error. Please try again.' : 'Lo siento, hubo un error de conexión. Por favor, inténtalo de nuevo.',
         isUser: false,
         timestamp: new Date()
       };
@@ -355,7 +393,7 @@ export default function AirXChat() {
       <button
         onClick={() => setIsOpen(!isOpen)}
         className="fixed bottom-6 right-6 z-50 bg-blue-600 hover:bg-blue-700 text-white p-4 rounded-full shadow-lg transition-all duration-300 transform hover:scale-110"
-        aria-label="Abrir chat AirX"
+        aria-label={currentLanguage === 'en' ? 'Open AirX chat' : 'Abrir chat AirX'}
       >
         {isOpen ? (
           <X className="h-6 w-6" />
@@ -397,8 +435,19 @@ export default function AirXChat() {
                 >
                   {message.isUser ? message.content : formatMessageContent(message.content)}
                   {!message.isUser && (
-                    <div className="text-xs opacity-70 mt-1 text-right">
-                      {message.timestamp.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' })}
+                    <div className="flex items-center justify-between mt-1">
+                      <div className="text-xs opacity-70">
+                        {message.timestamp.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' })}
+                      </div>
+                      {message.showTranslateButton && (
+                        <button
+                          onClick={() => translateWelcomeMessage(message.id)}
+                          className="text-xs bg-blue-100 hover:bg-blue-200 dark:bg-blue-900 dark:hover:bg-blue-800 text-blue-700 dark:text-blue-300 px-2 py-1 rounded transition-colors"
+                          title={currentLanguage === 'es' ? 'Translate to English' : 'Traducir al español'}
+                        >
+                          {currentLanguage === 'es' ? '🇬🇧 EN' : '🇪🇸 ES'}
+                        </button>
+                      )}
                     </div>
                   )}
                 </div>
@@ -438,7 +487,7 @@ export default function AirXChat() {
                 value={inputMessage}
                 onChange={(e) => setInputMessage(e.target.value)}
                 onKeyPress={handleKeyPress}
-                placeholder="Escribe tu mensaje..."
+                placeholder={currentLanguage === 'en' ? 'Type your message...' : 'Escribe tu mensaje...'}
                 className="flex-1 px-3 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
                 disabled={isLoading}
               />
