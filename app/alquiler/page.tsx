@@ -102,6 +102,7 @@ export default function AlquilerPage() {
         { duration: "1h", price: "6€" },
         { duration: "2h", price: "7€" },
         { duration: "3h", price: "8€" },
+        { duration: "4h", price: "9€" },
         { duration: t('rental.vehicles.mountainBike.allDay'), price: "19€", featured: true },
       ],
       features: currentTranslations['rental.vehicles.mountainBike.features'] as string[],
@@ -495,6 +496,14 @@ export default function AlquilerPage() {
       image: "/Carrobici.jpg",
       features: ["Capacidad 40kg", "Ruedas grandes", "Lona impermeable", "Enganche universal"],
     },
+    {
+      id: "quad-ninos",
+      name: "Quad para Niños",
+      price: "30€/30min",
+      description: "Quad eléctrico seguro para niños",
+      image: "/quad.jpeg",
+      features: ["Eléctrico", "Seguro para niños", "Fácil manejo", "Supervisión adulta"],
+    },
   ]
 
   // ===== Localization helpers (runtime) =====
@@ -517,11 +526,14 @@ export default function AlquilerPage() {
     'Tecnología moderna': 'Modern technology',
     'Asiento cómodo': 'Comfortable seat',
     'Gran autonomía': 'Long range',
+    'Eléctrico': 'Electric',
+    'Seguro para niños': 'Safe for children',
+    'Fácil manejo': 'Easy handling',
+    'Supervisión adulta': 'Adult supervision',
     'Velocidad 45km/h': 'Speed 45 km/h',
     'Baúl incluido': 'Top case included',
     'Automático': 'Automatic',
     'Bajo consumo': 'Low consumption',
-    'Fácil manejo': 'Easy handling',
     'Ideal ciudad': 'Ideal for city',
     'Diseño italiano': 'Italian design',
     'Cómodo': 'Comfortable',
@@ -572,6 +584,7 @@ export default function AlquilerPage() {
     'Scooter eléctrico especial para personas con movilidad reducida': 'Electric scooter specially designed for people with reduced mobility',
     'Asiento adicional para niños, seguro y cómodo': 'Additional child seat, safe and comfortable',
     'Remolque para transporte de equipaje o niños': 'Trailer for carrying luggage or children',
+    'Quad eléctrico seguro para niños': 'Safe electric quad for children',
   }
 
   const durationMap: Record<string, string> = {
@@ -626,7 +639,7 @@ export default function AlquilerPage() {
 
   const translateAccessory = (a: any) => ({
     ...a,
-    name: a.name === 'Sillón' ? 'Child seat' : a.name === 'Carro' ? 'Trailer' : a.name,
+    name: a.name === 'Sillón' ? 'Child seat' : a.name === 'Carro' ? 'Trailer' : a.name === 'Quad para Niños' ? 'Kids Quad' : a.name,
     description: descMap[a.description] || a.description,
     features: translateFeatures(a.features),
   })

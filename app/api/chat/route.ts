@@ -14,11 +14,12 @@ const SYSTEM_PROMPT = `Eres AirX, un asistente virtual especializado en servicio
 - Horario: Lunes a Domingo 9:00-20:00
 
 **BICICLETAS Y PATINETES:**
-- **Bicicleta Paseo Urbana**: 3€/1h, 5€/2h, 6€/3h, 7€/4h, 13€/día completo (11h)
-- **Bicicleta Eléctrica**: 10€/1h, 18€/2h, 25€/3h, 30€/4h, 35€/día completo
-- **Mountain Bike**: 6€/1h, 7€/2h, 8€/3h, 19€/día completo
-- **Fat Bike Eléctrica**: 10€/1h, 18€/2h, 25€/3h, 30€/4h, 35€/día completo
-- **Scooter/Patinete Eléctrico**: 10€/30min, 15€/1h
+- **Bicicleta Paseo Urbana (City Bike)**: 3€/1h, 5€/2h, 6€/3h, 7€/4h, 13€/día completo (24h)
+- **Bicicleta Eléctrica (Fat Bike Elect)**: 10€/1h, 18€/2h, 25€/3h, 30€/4h, 35€/día completo (11h)
+- **Mountain Bike (Bici de Carrera)**: 6€/1h, 7€/2h, 8€/3h, 9€/4h, 19€/día completo
+- **Scooter/Patinete Eléctrico**: Consultar precios
+- **Carro para Niños**: 6€
+- **Quad para Niños**: 30€/30min
 
 **COCHES (Grupos por tamaño):**
 - **Grupo A** (Toyota Aygo, Citroën C1): 54-58€/día, 196-224€/semana
