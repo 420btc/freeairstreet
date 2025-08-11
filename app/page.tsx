@@ -568,14 +568,14 @@ export default function HomePage() {
             <p className="text-lg text-blue-800">{t('prices.subtitle')}</p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            <Card className="bg-white">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto">
+            <Card className="bg-white flex flex-col h-full">
               <CardHeader>
                 <CardTitle className="text-blue-900">{t('prices.cityBike')}</CardTitle>
                 <CardDescription>{t('prices.cityBikeDesc')}</CardDescription>
               </CardHeader>
-              <CardContent>
-                <div className="space-y-2">
+              <CardContent className="flex-1 flex flex-col">
+                <div className="space-y-2 mb-4 flex-1">
                   <div className="flex justify-between">
                     <span>{t('prices.hour')}</span>
                     <Badge variant="secondary" className="text-lg font-bold">3€</Badge>
@@ -585,16 +585,23 @@ export default function HomePage() {
                     <Badge className="bg-yellow-500 text-blue-900 text-xl font-bold">13€</Badge>
                   </div>
                 </div>
+                <div className="text-center mt-auto">
+                  <Link href="/alquiler?tab=bicicletas">
+                    <Button className="bg-blue-600 hover:bg-blue-700 text-white font-bold px-6 py-2">
+                      Reservar
+                    </Button>
+                  </Link>
+                </div>
               </CardContent>
             </Card>
 
-            <Card className="bg-white">
+            <Card className="bg-white flex flex-col h-full">
               <CardHeader>
                 <CardTitle className="text-blue-900">{t('prices.electricBike')}</CardTitle>
                 <CardDescription>{t('prices.electricBikeDesc')}</CardDescription>
               </CardHeader>
-              <CardContent>
-                <div className="space-y-2">
+              <CardContent className="flex-1 flex flex-col">
+                <div className="space-y-2 mb-4 flex-1">
                   <div className="flex justify-between">
                     <span>{t('prices.hour')}</span>
                     <Badge variant="secondary" className="text-lg font-bold">10€</Badge>
@@ -604,16 +611,23 @@ export default function HomePage() {
                     <Badge className="bg-yellow-500 text-blue-900 text-xl font-bold">35€</Badge>
                   </div>
                 </div>
+                <div className="text-center mt-auto">
+                  <Link href="/alquiler?tab=bicicletas">
+                    <Button className="bg-blue-600 hover:bg-blue-700 text-white font-bold px-6 py-2">
+                      Reservar
+                    </Button>
+                  </Link>
+                </div>
               </CardContent>
             </Card>
 
-            <Card className="bg-white">
+            <Card className="bg-white flex flex-col h-full">
               <CardHeader>
                 <CardTitle className="text-blue-900">{t('prices.traditionalScooter')}</CardTitle>
                 <CardDescription>{t('prices.traditionalScooterDesc')}</CardDescription>
               </CardHeader>
-              <CardContent>
-                <div className="space-y-2">
+              <CardContent className="flex-1 flex flex-col">
+                <div className="space-y-2 mb-4 flex-1">
                   <div className="flex justify-between">
                     <span>{t('prices.halfHour')}</span>
                     <Badge variant="secondary" className="text-lg font-bold">10€</Badge>
@@ -622,6 +636,13 @@ export default function HomePage() {
                     <span>{t('prices.hour')}</span>
                     <Badge className="bg-yellow-500 text-blue-900 text-xl font-bold">15€</Badge>
                   </div>
+                </div>
+                <div className="text-center mt-auto">
+                  <Link href="/alquiler?tab=scooters">
+                    <Button className="bg-blue-600 hover:bg-blue-700 text-white font-bold px-6 py-2">
+                      Reservar
+                    </Button>
+                  </Link>
                 </div>
               </CardContent>
             </Card>
@@ -773,7 +794,7 @@ export default function HomePage() {
              </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-7xl mx-auto">
             <Card className="hover:shadow-lg transition-shadow overflow-hidden">
               <div className="aspect-video relative">
                 <Image
