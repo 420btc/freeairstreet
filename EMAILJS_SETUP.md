@@ -122,7 +122,7 @@ Mensaje: {{message}}
 • Teléfono: 655 707 412
 • Email: info@freeairstreet-rentbike.com
 • Ubicación: Calle de la Playa, 22 - 29620 Torremolinos
-• Horario: Lunes a Domingo 9:00-20:00, Festivos 10:00-19:00
+• Horario: Lunes a Domingo 9:00-22:00, Festivos 10:00-19:00
 ```
 
 ## 3. Configuración en EmailJS Dashboard

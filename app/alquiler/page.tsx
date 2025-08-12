@@ -1482,7 +1482,7 @@ export default function AlquilerPage() {
                   <li>• Documento de identidad obligatorio</li>
                   <li>• Depósito de seguridad requerido</li>
                   <li>• Menores acompañados por adulto</li>
-                  <li>• Horario: 9:00 - 20:00 todos los días</li>
+                  <li>• Horario: 9:00 - 22:00 todos los días</li>
                   <li>• Reserva anticipada recomendada</li>
                 </ul>
               </div>

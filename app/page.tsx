@@ -19,6 +19,66 @@ export default function HomePage() {
   const [isQrModalOpen, setIsQrModalOpen] = useState(false)
   const { t } = useLanguage()
 
+  // Schema.org structured data
+  const schemaData = {
+    "@context": "https://schema.org",
+    "@type": "LocalBusiness",
+    "name": "Free Air Street",
+    "description": "Alquiler de bicicletas, patinetes eléctricos, motos, coches y tours guiados en Torremolinos",
+    "url": "https://www.freeairstreet.com",
+    "telephone": "+34655707412",
+    "email": "rentairstreet@gmail.com",
+    "address": {
+      "@type": "PostalAddress",
+      "streetAddress": "Calle de la Playa, 22",
+      "addressLocality": "Torremolinos",
+      "addressRegion": "Málaga",
+      "postalCode": "29620",
+      "addressCountry": "ES"
+    },
+    "geo": {
+      "@type": "GeoCoordinates",
+      "latitude": 36.6322,
+      "longitude": -4.4892
+    },
+    "openingHours": "Mo-Su 09:00-22:00",
+    "priceRange": "€€",
+    "image": "https://www.freeairstreet.com/hero.png",
+    "sameAs": [
+      "https://www.freeairstreet.com"
+    ],
+    "hasOfferCatalog": {
+      "@type": "OfferCatalog",
+      "name": "Servicios de Alquiler y Tours",
+      "itemListElement": [
+        {
+          "@type": "Offer",
+          "itemOffered": {
+            "@type": "Product",
+            "name": "Alquiler de Bicicletas",
+            "description": "Bicicletas urbanas, eléctricas y mountain bikes"
+          }
+        },
+        {
+          "@type": "Offer",
+          "itemOffered": {
+            "@type": "Product",
+            "name": "Tours en Quad",
+            "description": "Experiencias de aventura en quad por los alrededores de Málaga"
+          }
+        },
+        {
+          "@type": "Offer",
+          "itemOffered": {
+            "@type": "Product",
+            "name": "Patinetes Eléctricos",
+            "description": "Alquiler de patinetes eléctricos para movilidad urbana"
+          }
+        }
+      ]
+    }
+  }
+
   useEffect(() => {
     // Only run on client-side where window is defined
     if (typeof window === 'undefined') return;
@@ -131,7 +191,7 @@ export default function HomePage() {
             <Link href="/" className="flex items-center justify-center sm:justify-start leading-3 font-mono italic tracking-tighter space-x-4 sm:space-x-12 hover:opacity-80 transition-opacity cursor-pointer">
               <Image src="/icon/iconf.png" alt="Free Air Street Logo" width={64} height={64} className="rounded" />
               <div className="text-center sm:text-left" style={{marginLeft: '3px'}}>
-                <h1 className="text-3xl sm:text-4xl font-black text-blue-900 navbar-title birthstone-regular leading-tight whitespace-nowrap">Free Air Street</h1>
+                <div className="text-3xl sm:text-4xl font-black text-blue-900 navbar-title birthstone-regular leading-tight whitespace-nowrap">Free Air Street</div>
                 <p className="hidden sm:block text-2xl text-blue-800 navbar-subtitle birthstone-regular -mt-3">Rent & Tours</p>
               </div>
             </Link>
@@ -1079,6 +1139,13 @@ export default function HomePage() {
         </div>
       )}
       
+      {/* Schema.org structured data */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(schemaData),
+        }}
+      />
 
     </div>
   )
