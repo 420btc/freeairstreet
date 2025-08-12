@@ -13,10 +13,10 @@ import { Analytics } from "@vercel/analytics/react"
 const inter = Inter({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
-  title: "Free Air Street - Alquiler de Bicicletas, Tours y Aventuras",
+  title: "Free Air Street - Alquiler de Bicicletas, Scooters, Tours y Aventuras",
   description:
-    "Alquila bicicletas, patinetes eléctricos, motos, coches y únete a nuestras visitas guiadas en Torremolinos. La aventura te espera en cada rincón.",
-  keywords: "alquiler bicicletas, tours, patinetes eléctricos, motos, coches, visitas guiadas, Torremolinos, Málaga, aventura, quad tours",
+    "Alquila bicicletas, patinetes eléctricos, motos, coches y únete a nuestras visitas guiadas en Torremolinos. La aventura te espera en cada rincón de Málaga!.",
+  keywords: "alquiler bicicletas, tours, patinetes eléctricos, scooters, motos, coches, visitas guiadas, Torremolinos, Málaga, aventura, quad tours",
   authors: [{ name: "Free Air Street" }],
   creator: "Free Air Street",
   publisher: "Free Air Street",
@@ -32,9 +32,35 @@ export const metadata: Metadata = {
     },
   },
   icons: {
-    icon: '/icono.png',
+    icon: [
+      { url: '/icono.png', sizes: '32x32', type: 'image/png' },
+      { url: '/icono.png', sizes: '16x16', type: 'image/png' },
+      { url: '/icono.png', sizes: '192x192', type: 'image/png' },
+      { url: '/icono.png', sizes: '512x512', type: 'image/png' }
+    ],
     shortcut: '/icono.png',
-    apple: '/icono.png',
+    apple: [
+      { url: '/icono.png', sizes: '180x180', type: 'image/png' }
+    ],
+    other: [
+      {
+        rel: 'icon',
+        type: 'image/png',
+        sizes: '32x32',
+        url: '/icono.png',
+      },
+      {
+        rel: 'icon',
+        type: 'image/png', 
+        sizes: '16x16',
+        url: '/icono.png',
+      },
+      {
+        rel: 'apple-touch-icon',
+        sizes: '180x180',
+        url: '/icono.png',
+      }
+    ],
   },
   metadataBase: new URL('https://www.freeairstreet.com'),
   alternates: {
@@ -53,6 +79,12 @@ export const metadata: Metadata = {
     siteName: 'Free Air Street',
     images: [
       {
+        url: '/icono.png',
+        width: 512,
+        height: 512,
+        alt: 'Free Air Street Logo',
+      },
+      {
         url: '/hero.png',
         width: 1200,
         height: 630,
@@ -69,6 +101,7 @@ export const metadata: Metadata = {
   verification: {
     google: 'google-site-verification-code',
   },
+  manifest: '/manifest.json',
 }
 
 export default function RootLayout({
