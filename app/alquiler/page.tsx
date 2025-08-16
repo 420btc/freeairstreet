@@ -722,7 +722,9 @@ export default function AlquilerPage() {
               {/* Language Toggle and Theme Toggle */}
               <div className="flex items-center space-x-2">
                 <LanguageToggle />
-                <ThemeToggle />
+                <div className="hidden md:block">
+                  <ThemeToggle />
+                </div>
               </div>
 
              {/* Mobile Menu Button */}

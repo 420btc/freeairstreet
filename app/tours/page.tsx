@@ -356,7 +356,9 @@ export default function ToursPage() {
               {/* Language Toggle and Theme Toggle */}
               <div className="flex items-center space-x-2">
                 <LanguageToggle />
-                <ThemeToggle />
+                <div className="hidden md:block">
+                  <ThemeToggle />
+                </div>
               </div>
 
               <button className="md:hidden text-blue-900 navbar-mobile-button" onClick={() => setIsMenuOpen(!isMenuOpen)}>
