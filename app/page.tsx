@@ -14,10 +14,12 @@ import { LanguageToggle } from '../components/LanguageToggle'
 import { ThemeToggle } from '../components/ThemeToggle'
 
 
+
 export default function HomePage() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [isQrModalOpen, setIsQrModalOpen] = useState(false)
   const { t } = useLanguage()
+
 
   // Schema.org structured data
   const schemaData = {
@@ -147,6 +149,8 @@ export default function HomePage() {
       console.error('Error initializing map:', error);
     }
   }, [])
+
+
 
   const services = [
     {

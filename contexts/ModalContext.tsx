@@ -25,6 +25,8 @@ interface ModalContextType {
   reservationModalData: ReservationModalData
   openReservationModal: (data: ReservationModalData) => void
   closeReservationModal: () => void
+  showIntroVideo: boolean
+  setShowIntroVideo: (show: boolean) => void
 }
 
 const ModalContext = createContext<ModalContextType | undefined>(undefined)
@@ -32,6 +34,7 @@ const ModalContext = createContext<ModalContextType | undefined>(undefined)
 export function ModalProvider({ children }: { children: ReactNode }) {
   const [isReservationModalOpen, setIsReservationModalOpen] = useState(false)
   const [reservationModalData, setReservationModalData] = useState<ReservationModalData>({ type: 'rental' })
+  const [showIntroVideo, setShowIntroVideo] = useState(true)
 
   const openReservationModal = (data: ReservationModalData) => {
     setReservationModalData(data)
@@ -47,7 +50,9 @@ export function ModalProvider({ children }: { children: ReactNode }) {
       isReservationModalOpen,
       reservationModalData,
       openReservationModal,
-      closeReservationModal
+      closeReservationModal,
+      showIntroVideo,
+      setShowIntroVideo
     }}>
       {children}
     </ModalContext.Provider>
