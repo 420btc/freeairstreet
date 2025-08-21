@@ -40,7 +40,10 @@ export default function AirXChat() {
   const [inputMessage, setInputMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [conversationContext, setConversationContext] = useState<ConversationContext>({});
+  const [hasNewMessage, setHasNewMessage] = useState(false);
+  const [hasShownProactiveMessage, setHasShownProactiveMessage] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const pageLoadTimeRef = useRef<number>(Date.now());
 
   // Function to detect language from user message
   const detectLanguage = (message: string): 'es' | 'en' => {
@@ -120,6 +123,67 @@ export default function AirXChat() {
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
+
+  // Function to play notification sound
+  const playNotificationSound = () => {
+    try {
+      // Create audio context for better browser compatibility
+      const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
+      const oscillator = audioContext.createOscillator();
+      const gainNode = audioContext.createGain();
+      
+      oscillator.connect(gainNode);
+      gainNode.connect(audioContext.destination);
+      
+      // Configure notification sound (gentle chime)
+      oscillator.frequency.setValueAtTime(800, audioContext.currentTime);
+      oscillator.frequency.setValueAtTime(600, audioContext.currentTime + 0.1);
+      oscillator.frequency.setValueAtTime(800, audioContext.currentTime + 0.2);
+      
+      gainNode.gain.setValueAtTime(0, audioContext.currentTime);
+      gainNode.gain.linearRampToValueAtTime(0.3, audioContext.currentTime + 0.01);
+      gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.3);
+      
+      oscillator.start(audioContext.currentTime);
+      oscillator.stop(audioContext.currentTime + 0.3);
+    } catch (error) {
+      // Fallback: try to use a simple beep if Web Audio API fails
+      console.log('Web Audio API not available, using fallback');
+    }
+  };
+
+  // Proactive message timer - show message after 10 minutes
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (!hasShownProactiveMessage && !isOpen) {
+        const proactiveMessage: Message = {
+          id: `proactive-${Date.now()}`,
+          content: currentLanguage === 'en' 
+            ? 'Hi! 👋 I noticed you\'ve been browsing for a while. Is there anything I can help you with? I\'m here to assist you with rentals, tours, or any questions you might have! 😊'
+            : '¡Hola! 👋 Veo que llevas un rato navegando. ¿Hay algo en lo que pueda ayudarte? ¡Estoy aquí para asistirte con alquileres, tours o cualquier pregunta que tengas! 😊',
+          isUser: false,
+          timestamp: new Date(),
+          showTranslateButton: true
+        };
+        
+        setMessages(prev => [...prev, proactiveMessage]);
+        setHasNewMessage(true);
+        setHasShownProactiveMessage(true);
+        
+        // Play notification sound
+        playNotificationSound();
+      }
+    }, 10 * 60 * 1000); // 10 minutes
+
+    return () => clearTimeout(timer);
+  }, [hasShownProactiveMessage, isOpen, currentLanguage]);
+
+  // Clear notification when chat is opened
+  useEffect(() => {
+    if (isOpen) {
+      setHasNewMessage(false);
+    }
+  }, [isOpen]);
 
   // Function to extract context from user message
   const extractContext = (message: string) => {
@@ -415,7 +479,8 @@ export default function AirXChat() {
       {/* Chat Toggle Button */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="fixed bottom-6 right-6 z-50 bg-blue-600 hover:bg-blue-700 text-white p-4 rounded-full shadow-lg transition-all duration-300 transform hover:scale-110"
+        className="fixed bottom-6 right-6 z-[9999] bg-blue-600 hover:bg-blue-700 text-white p-4 rounded-full shadow-lg transition-all duration-300 transform hover:scale-110 relative"
+        style={{ zIndex: 9999, position: 'fixed' }}
         aria-label={currentLanguage === 'en' ? 'Open AirX chat' : 'Abrir chat AirX'}
       >
         {isOpen ? (
@@ -423,11 +488,15 @@ export default function AirXChat() {
         ) : (
           <MessageCircle className="h-6 w-6" />
         )}
+        {/* Notification indicator */}
+        {hasNewMessage && !isOpen && (
+          <div className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 rounded-full border-2 border-white animate-pulse" />
+        )}
       </button>
 
       {/* Chat Window */}
       {isOpen && (
-        <div className="fixed bottom-24 right-6 z-40 w-80 h-96 bg-white dark:bg-gray-800 rounded-lg shadow-2xl border border-gray-200 dark:border-gray-600 flex flex-col">
+        <div className="fixed bottom-24 right-6 z-[9998] w-80 h-96 bg-white dark:bg-gray-800 rounded-lg shadow-2xl border border-gray-200 dark:border-gray-600 flex flex-col" style={{ zIndex: 9998 }}>
           {/* Header */}
           <div className="bg-blue-600 text-white p-4 rounded-t-lg flex items-center justify-between">
             <div className="flex items-center space-x-2">
