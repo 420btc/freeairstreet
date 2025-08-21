@@ -71,7 +71,7 @@ export function IntroVideo({ onComplete }: IntroVideoProps) {
   }
 
   return (
-    <div className="fixed inset-0 z-50 bg-black flex items-center justify-center">
+    <div className="fixed inset-0 z-[9999] bg-black flex items-center justify-center" style={{ zIndex: 9999 }}>
       <div className="relative w-full h-full flex items-center justify-center">
         <video
           autoPlay

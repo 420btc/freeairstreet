@@ -9,6 +9,7 @@ import { InventoryProvider } from "../contexts/InventoryContext"
 import AirXChat from "../components/AirXChat"
 import { GlobalModals } from "../components/GlobalModals"
 import { Analytics } from "@vercel/analytics/react"
+import { LayoutContent } from "@/components/LayoutContent"
 
 const inter = Inter({ subsets: ["latin"] })
 
@@ -116,8 +117,10 @@ export default function RootLayout({
           <LanguageProvider>
             <InventoryProvider>
               <ModalProvider>
-                {children}
-                <AirXChat />
+                <LayoutContent>
+                  {children}
+                  <AirXChat />
+                </LayoutContent>
                 <GlobalModals />
                 <Analytics />
               </ModalProvider>

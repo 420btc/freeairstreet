@@ -15,6 +15,12 @@ export function GlobalModals() {
   
   return (
     <>
+      {showIntroVideo && (
+        <IntroVideo
+          onComplete={() => setShowIntroVideo(false)}
+        />
+      )}
+      
       <ReservationModal
         isOpen={isReservationModalOpen}
         onClose={closeReservationModal}
@@ -24,12 +30,6 @@ export function GlobalModals() {
         itemDuration={reservationModalData.itemDuration}
         prefillData={reservationModalData.prefillData}
       />
-      
-      {showIntroVideo && (
-        <IntroVideo
-          onComplete={() => setShowIntroVideo(false)}
-        />
-      )}
     </>
   )
 }
