@@ -18,6 +18,8 @@ import { ThemeToggle } from '../components/ThemeToggle'
 export default function HomePage() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [isQrModalOpen, setIsQrModalOpen] = useState(false)
+  const [isMapActive, setIsMapActive] = useState(false)
+  const [isMobile, setIsMobile] = useState(false)
   const { t } = useLanguage()
 
 
@@ -81,6 +83,18 @@ export default function HomePage() {
     }
   }
 
+  // Detect mobile device
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth <= 768 || /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent));
+    };
+    
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
   useEffect(() => {
     // Only run on client-side where window is defined
     if (typeof window === 'undefined') return;
@@ -100,6 +114,49 @@ export default function HomePage() {
         zoom: 1,
         projection: 'globe'
       });
+
+      // Disable map interactions on mobile until activated
+      if (isMobile) {
+        map.scrollZoom.disable();
+        map.boxZoom.disable();
+        map.dragRotate.disable();
+        map.dragPan.disable();
+        map.keyboard.disable();
+        map.doubleClickZoom.disable();
+        map.touchZoomRotate.disable();
+      }
+
+      // Handle double click to activate map on mobile
+      let clickCount = 0;
+      const mapContainer = document.getElementById('mapbox-container');
+      
+      if (isMobile && mapContainer) {
+        const handleMapClick = () => {
+          clickCount++;
+          
+          if (clickCount === 1) {
+            setTimeout(() => {
+              if (clickCount === 1) {
+                // Single click - do nothing
+                clickCount = 0;
+              }
+            }, 300);
+          } else if (clickCount === 2) {
+            // Double click - activate map
+            setIsMapActive(true);
+            map.scrollZoom.enable();
+            map.boxZoom.enable();
+            map.dragRotate.enable();
+            map.dragPan.enable();
+            map.keyboard.enable();
+            map.doubleClickZoom.enable();
+            map.touchZoomRotate.enable();
+            clickCount = 0;
+          }
+        };
+        
+        mapContainer.addEventListener('click', handleMapClick);
+      }
 
       map.on('load', () => {
         // Add atmosphere for globe effect
@@ -148,7 +205,7 @@ export default function HomePage() {
     } catch (error) {
       console.error('Error initializing map:', error);
     }
-  }, [])
+  }, [isMobile])
 
 
 
@@ -564,6 +621,21 @@ export default function HomePage() {
           
           <div className="relative w-full h-[400px] md:h-[500px] rounded-lg overflow-hidden shadow-lg">
             <div id="mapbox-container" className="w-full h-full"></div>
+            
+            {/* Mobile activation notice */}
+            {isMobile && !isMapActive && (
+              <div className="absolute bottom-2 right-2 bg-black bg-opacity-80 text-white px-2 py-1 rounded text-xs shadow-md z-10 pointer-events-none">
+                <span className="flex items-center gap-1">
+                  <span className="text-yellow-400 text-xs">👆</span>
+                  {t('map.doubleClickToActivate') || '2 toques para activar'}
+                </span>
+              </div>
+            )}
+            
+            {/* Overlay to prevent scrolling interference on mobile */}
+            {isMobile && !isMapActive && (
+              <div className="absolute inset-0 bg-transparent z-5"></div>
+            )}
           </div>
           
           <div className="mt-8">

@@ -291,6 +291,9 @@ const translations = {
     'quadTours.kidsTravel': 'NIÑOS VIAJAN GRATIS!',
     'quadTours.ageRange': '7 - 16 AÑOS',
     'quadTours.adventureForAll': '¡AVENTURA PARA TODOS!',
+    
+    // Map
+    'map.doubleClickToActivate': '2 toques para activar',
   },
   en: {
     // Header
@@ -571,6 +574,9 @@ const translations = {
     'quadTours.kidsTravel': 'KIDS TRAVEL FREE!',
     'quadTours.ageRange': '7 - 16 YEARS OLD',
     'quadTours.adventureForAll': 'ADVENTURE FOR ALL!',
+    
+    // Map
+    'map.doubleClickToActivate': '2 taps to activate',
   },
 }
 
