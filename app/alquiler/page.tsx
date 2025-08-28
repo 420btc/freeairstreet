@@ -856,6 +856,17 @@ export default function AlquilerPage() {
              </div>
           </div>
 
+          {/* Tours/Visitas Button */}
+          <div className="w-full mt-3 mb-3 sm:mt-6 sm:mb-8">
+            <Link href="/tours">
+              <Button className="w-full h-14 bg-gradient-to-r from-yellow-400 to-yellow-500 hover:from-yellow-500 hover:to-yellow-600 text-blue-900 font-bold text-lg shadow-md hover:shadow-lg transition-all duration-200 rounded-lg border border-yellow-300 hover:border-yellow-400">
+                <span className="mr-3 text-xl">🏛️</span>
+                Tours / Visitas
+                <span className="ml-3 text-xl">✨</span>
+              </Button>
+            </Link>
+          </div>
+
           {/* Bicicletas Tab */}
           <TabsContent value="bicicletas" className="sm:data-[state=active]:animate-none data-[state=active]:animate-in data-[state=active]:slide-in-from-right-4 data-[state=active]:duration-300">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">

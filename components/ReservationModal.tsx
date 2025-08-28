@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { X, Calendar, User, Mail, Phone, MapPin, Clock, Users, CheckCircle } from "lucide-react"
+import { X, Calendar, User, Mail, Phone, MapPin, Clock, Users, CheckCircle, Languages } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
@@ -62,6 +62,8 @@ export function ReservationModal({ isOpen, onClose, type, itemName, itemPrice, i
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [isSubmitted, setIsSubmitted] = useState(false)
   const [submitError, setSubmitError] = useState<string | null>(null)
+  const [isEnglish, setIsEnglish] = useState(false)
+  const [submittedInEnglish, setSubmittedInEnglish] = useState(false)
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -92,6 +94,8 @@ export function ReservationModal({ isOpen, onClose, type, itemName, itemPrice, i
           }
         }
         
+        // Guardar el idioma en el que se envió la reserva
+        setSubmittedInEnglish(isEnglish)
         setIsSubmitted(true)
         // Reset form after successful submission
         setFormData({
@@ -121,6 +125,7 @@ export function ReservationModal({ isOpen, onClose, type, itemName, itemPrice, i
   const handleClose = () => {
     setIsSubmitted(false)
     setSubmitError(null)
+    setSubmittedInEnglish(false)
     onClose()
   }
 
@@ -131,8 +136,120 @@ export function ReservationModal({ isOpen, onClose, type, itemName, itemPrice, i
   if (!isOpen) return null
 
   const isRental = type === "rental"
-  const title = isRental ? "Reservar Alquiler" : "Reservar Excursión"
-  const subtitle = isRental ? "Completa el formulario para alquilar" : "Completa el formulario para tu excursión"
+  
+  // Traducciones
+  const translations = {
+    es: {
+      title: isRental ? "Reservar Alquiler" : "Reservar Excursión",
+      subtitle: isRental ? "Completa el formulario para alquilar" : "Completa el formulario para tu excursión",
+      reservationSent: "¡Reserva Enviada!",
+      personalInfo: "Información Personal",
+      fullName: "Nombre completo *",
+      email: "Email *",
+      phone: "Teléfono *",
+      reservationDetails: "Detalles de la Reserva",
+      date: "Fecha *",
+      preferredTime: "Hora preferida (Opcional)",
+      selectTime: "Selecciona hora",
+      duration: "Duración *",
+      selectedDuration: "Duración seleccionada",
+      selectDuration: "Selecciona duración",
+      numberOfVehicles: "Número de vehículos",
+      numberOfParticipants: "Número de participantes",
+      pickupLocation: "Lugar de recogida preferido",
+      selectLocation: "Selecciona ubicación",
+      additionalComments: "Comentarios adicionales",
+      rentalPlaceholder: "Especifica detalles sobre la recogida, preferencias del vehículo, etc.",
+      tourPlaceholder: "Menciona cualquier requerimiento especial, alergias, etc.",
+      cancel: "Cancelar",
+      confirmRental: "Confirmar Alquiler",
+      confirmReservation: "Confirmar Reserva",
+      sending: "Enviando...",
+      close: "Cerrar",
+      reservationSentSuccess: "¡Reserva enviada exitosamente!",
+      reservationReceived: "Hemos recibido tu solicitud de",
+      rental: "alquiler",
+      tour: "excursión",
+      contactSoon: "Te contactaremos pronto para confirmar los detalles.",
+      videoNotSupported: "Tu navegador no soporta el elemento de video.",
+      durations: {
+        "1h": "1 hora",
+        "2h": "2 horas",
+        "3h": "3 horas",
+        "4h": "4 horas",
+        "6h": "6 horas",
+        "1d": "1 día completo",
+        "2d": "2 días",
+        "3d": "3 días",
+        "1w": "1 semana"
+      },
+      locations: {
+        tienda: "Nuestra tienda - Calle de la Playa 22, Torremolinos",
+        hotel: "Mi hotel (especificar en comentarios)",
+        aeropuerto: "Aeropuerto de Málaga",
+        estacion: "Estación de tren/autobús",
+        otro: "Otro lugar (especificar en comentarios)"
+      }
+    },
+    en: {
+      title: isRental ? "Book Rental" : "Book Tour",
+      subtitle: isRental ? "Complete the form to rent" : "Complete the form for your tour",
+      reservationSent: "Reservation Sent!",
+      personalInfo: "Personal Information",
+      fullName: "Full name *",
+      email: "Email *",
+      phone: "Phone *",
+      reservationDetails: "Reservation Details",
+      date: "Date *",
+      preferredTime: "Preferred time (Optional)",
+      selectTime: "Select time",
+      duration: "Duration *",
+      selectedDuration: "Selected duration",
+      selectDuration: "Select duration",
+      numberOfVehicles: "Number of vehicles",
+      numberOfParticipants: "Number of participants",
+      pickupLocation: "Preferred pickup location",
+      selectLocation: "Select location",
+      additionalComments: "Additional comments",
+      rentalPlaceholder: "Specify pickup details, vehicle preferences, etc.",
+      tourPlaceholder: "Mention any special requirements, allergies, etc.",
+      cancel: "Cancel",
+      confirmRental: "Confirm Rental",
+      confirmReservation: "Confirm Reservation",
+      sending: "Sending...",
+      close: "Close",
+      reservationSentSuccess: "Reservation sent successfully!",
+      reservationReceived: "We have received your",
+      rental: "rental",
+      tour: "tour",
+      contactSoon: "request. We will contact you soon to confirm the details.",
+      videoNotSupported: "Your browser does not support the video element.",
+      durations: {
+        "1h": "1 hour",
+        "2h": "2 hours",
+        "3h": "3 hours",
+        "4h": "4 hours",
+        "6h": "6 hours",
+        "1d": "1 full day",
+        "2d": "2 days",
+        "3d": "3 days",
+        "1w": "1 week"
+      },
+      locations: {
+        tienda: "Our store - Calle de la Playa 22, Torremolinos",
+        hotel: "My hotel (specify in comments)",
+        aeropuerto: "Málaga Airport",
+        estacion: "Train/bus station",
+        otro: "Other location (specify in comments)"
+      }
+    }
+  }
+  
+  // Usar el idioma de envío para la confirmación, o el idioma actual para el formulario
+  const currentLanguage = isSubmitted ? submittedInEnglish : isEnglish
+  const t = translations[currentLanguage ? 'en' : 'es']
+  const title = t.title
+  const subtitle = t.subtitle
 
   return (
     <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-start justify-center p-2 sm:p-4 overflow-y-auto">
@@ -141,7 +258,7 @@ export function ReservationModal({ isOpen, onClose, type, itemName, itemPrice, i
           <div className="flex justify-between items-start">
             <div className="flex-1 text-center">
               <CardTitle className="text-3xl font-bold mb-1">
-                {isSubmitted ? "¡Reserva Enviada!" : title}
+                {isSubmitted ? t.reservationSent : title}
               </CardTitle>
               {itemName && !isSubmitted && (
                 <div className="mt-1">
@@ -152,14 +269,25 @@ export function ReservationModal({ isOpen, onClose, type, itemName, itemPrice, i
                 </div>
               )}
             </div>
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={handleClose}
-              className="text-white hover:bg-white/20 h-8 w-8 sm:h-8 sm:w-8 md:h-8 md:w-8 p-0 ml-4 flex-shrink-0 absolute top-3 right-6"
-            >
-              <X className="h-5 w-5 sm:h-4 sm:w-4" />
-            </Button>
+            <div className="flex items-center gap-2 ml-4 flex-shrink-0 absolute top-3 right-6">
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setIsEnglish(!isEnglish)}
+                className="text-white hover:bg-white/20 h-8 w-8 p-0"
+                title={isEnglish ? "Cambiar a Español" : "Switch to English"}
+              >
+                <Languages className="h-4 w-4" />
+              </Button>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={handleClose}
+                className="text-white hover:bg-white/20 h-8 w-8 p-0"
+              >
+                <X className="h-4 w-4" />
+              </Button>
+            </div>
           </div>
         </CardHeader>
 
@@ -168,11 +296,10 @@ export function ReservationModal({ isOpen, onClose, type, itemName, itemPrice, i
             <div className="text-center py-8">
               <CheckCircle className="h-16 w-16 text-green-500 mx-auto mb-4" />
               <h3 className="text-xl font-semibold text-green-700 mb-2">
-                ¡Reserva enviada exitosamente!
+                {t.reservationSentSuccess}
               </h3>
               <p className="text-gray-600 mb-4">
-                Hemos recibido tu solicitud de {type === "rental" ? "alquiler" : "excursión"}.
-                Te contactaremos pronto para confirmar los detalles.
+                {t.reservationReceived} {type === "rental" ? t.rental : t.tour}{isEnglish ? " " + t.contactSoon : ". " + t.contactSoon}
               </p>
               
               {/* Video de confirmación */}
@@ -185,12 +312,12 @@ export function ReservationModal({ isOpen, onClose, type, itemName, itemPrice, i
                   className="rounded-lg shadow-lg max-w-md mx-auto"
                 >
                   <source src="/videopedido.mp4" type="video/mp4" />
-                  Tu navegador no soporta el elemento de video.
+                  {t.videoNotSupported}
                 </video>
               </div>
               
               <Button onClick={handleClose} className="mt-4">
-                Cerrar
+                {t.close}
               </Button>
             </div>
           ) : (
@@ -205,12 +332,12 @@ export function ReservationModal({ isOpen, onClose, type, itemName, itemPrice, i
             <div className="space-y-4">
               <h3 className="text-lg font-semibold text-gray-900 dark:text-white flex items-center">
                 <User className="h-5 w-5 mr-2 text-blue-600" />
-                Información Personal
+                {t.personalInfo}
               </h3>
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <Label htmlFor="name" className="text-gray-700 dark:text-gray-300">Nombre completo *</Label>
+                  <Label htmlFor="name" className="text-gray-700 dark:text-gray-300">{t.fullName}</Label>
                   <Input
                     id="name"
                     value={formData.name}
@@ -221,7 +348,7 @@ export function ReservationModal({ isOpen, onClose, type, itemName, itemPrice, i
                 </div>
                 
                 <div>
-                  <Label htmlFor="email" className="text-gray-700 dark:text-gray-300">Email *</Label>
+                  <Label htmlFor="email" className="text-gray-700 dark:text-gray-300">{t.email}</Label>
                   <Input
                     id="email"
                     type="email"
@@ -234,7 +361,7 @@ export function ReservationModal({ isOpen, onClose, type, itemName, itemPrice, i
               </div>
 
               <div>
-                <Label htmlFor="phone" className="text-gray-700 dark:text-gray-300">Teléfono *</Label>
+                <Label htmlFor="phone" className="text-gray-700 dark:text-gray-300">{t.phone}</Label>
                 <Input
                   id="phone"
                   type="tel"
@@ -250,12 +377,12 @@ export function ReservationModal({ isOpen, onClose, type, itemName, itemPrice, i
             <div className="space-y-4">
               <h3 className="text-lg font-semibold text-gray-900 dark:text-white flex items-center">
                 <Calendar className="h-5 w-5 mr-2 text-blue-600" />
-                Detalles de la Reserva
+                {t.reservationDetails}
               </h3>
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <Label htmlFor="date" className="text-gray-700 dark:text-gray-300">Fecha *</Label>
+                  <Label htmlFor="date" className="text-gray-700 dark:text-gray-300">{t.date}</Label>
                   <Input
                     id="date"
                     type="date"
@@ -268,10 +395,10 @@ export function ReservationModal({ isOpen, onClose, type, itemName, itemPrice, i
                 </div>
                 
                 <div>
-                  <Label htmlFor="time" className="text-gray-700 dark:text-gray-300">Hora preferida (Opcional)</Label>
+                  <Label htmlFor="time" className="text-gray-700 dark:text-gray-300">{t.preferredTime}</Label>
                   <Select onValueChange={(value) => handleInputChange("time", value)} value={formData.time}>
                     <SelectTrigger className="border-gray-300 focus:border-blue-500 dark:border-gray-600 dark:bg-gray-800">
-                      <SelectValue placeholder="Selecciona hora" />
+                      <SelectValue placeholder={t.selectTime} />
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="09:00">09:00</SelectItem>
@@ -292,30 +419,30 @@ export function ReservationModal({ isOpen, onClose, type, itemName, itemPrice, i
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {isRental && (
                   <div>
-                    <Label htmlFor="duration" className="text-gray-700 dark:text-gray-300">Duración *</Label>
+                    <Label htmlFor="duration" className="text-gray-700 dark:text-gray-300">{t.duration}</Label>
                     {itemDuration ? (
                       <Input
                         id="duration"
                         value={formData.duration}
                         onChange={(e) => handleInputChange("duration", e.target.value)}
                         className="border-gray-300 focus:border-blue-500 dark:border-gray-600 dark:bg-gray-800"
-                        placeholder="Duración seleccionada"
+                        placeholder={t.selectedDuration}
                       />
                     ) : (
                       <Select onValueChange={(value) => handleInputChange("duration", value)} value={formData.duration}>
                         <SelectTrigger className="border-gray-300 focus:border-blue-500 dark:border-gray-600 dark:bg-gray-800">
-                          <SelectValue placeholder="Selecciona duración" />
+                          <SelectValue placeholder={t.selectDuration} />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="1h">1 hora</SelectItem>
-                          <SelectItem value="2h">2 horas</SelectItem>
-                          <SelectItem value="3h">3 horas</SelectItem>
-                          <SelectItem value="4h">4 horas</SelectItem>
-                          <SelectItem value="6h">6 horas</SelectItem>
-                          <SelectItem value="1d">1 día completo</SelectItem>
-                          <SelectItem value="2d">2 días</SelectItem>
-                          <SelectItem value="3d">3 días</SelectItem>
-                          <SelectItem value="1w">1 semana</SelectItem>
+                          <SelectItem value="1h">{t.durations["1h"]}</SelectItem>
+                          <SelectItem value="2h">{t.durations["2h"]}</SelectItem>
+                          <SelectItem value="3h">{t.durations["3h"]}</SelectItem>
+                          <SelectItem value="4h">{t.durations["4h"]}</SelectItem>
+                          <SelectItem value="6h">{t.durations["6h"]}</SelectItem>
+                          <SelectItem value="1d">{t.durations["1d"]}</SelectItem>
+                          <SelectItem value="2d">{t.durations["2d"]}</SelectItem>
+                          <SelectItem value="3d">{t.durations["3d"]}</SelectItem>
+                          <SelectItem value="1w">{t.durations["1w"]}</SelectItem>
                         </SelectContent>
                       </Select>
                     )}
@@ -324,7 +451,7 @@ export function ReservationModal({ isOpen, onClose, type, itemName, itemPrice, i
                 
                 <div>
                   <Label htmlFor="participants" className="text-gray-700 dark:text-gray-300">
-                    {isRental ? "Número de vehículos" : "Número de participantes"} *
+                    {isRental ? t.numberOfVehicles : t.numberOfParticipants} *
                   </Label>
                   <Select onValueChange={(value) => handleInputChange("participants", value)} defaultValue="1">
                     <SelectTrigger className="border-gray-300 focus:border-blue-500 dark:border-gray-600 dark:bg-gray-800">
@@ -341,17 +468,17 @@ export function ReservationModal({ isOpen, onClose, type, itemName, itemPrice, i
 
               {isRental && (
                 <div>
-                  <Label htmlFor="pickupLocation" className="text-gray-700 dark:text-gray-300">Lugar de recogida preferido</Label>
+                  <Label htmlFor="pickupLocation" className="text-gray-700 dark:text-gray-300">{t.pickupLocation}</Label>
                   <Select onValueChange={(value) => handleInputChange("pickupLocation", value)} value={formData.pickupLocation}>
                     <SelectTrigger className="border-gray-300 focus:border-blue-500 dark:border-gray-600 dark:bg-gray-800">
-                      <SelectValue placeholder="Selecciona ubicación" />
+                      <SelectValue placeholder={t.selectLocation} />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="tienda">Nuestra tienda - Calle de la Playa 22, Torremolinos</SelectItem>
-                      <SelectItem value="hotel">Mi hotel (especificar en comentarios)</SelectItem>
-                      <SelectItem value="aeropuerto">Aeropuerto de Málaga</SelectItem>
-                      <SelectItem value="estacion">Estación de tren/autobús</SelectItem>
-                      <SelectItem value="otro">Otro lugar (especificar en comentarios)</SelectItem>
+                      <SelectItem value="tienda">{t.locations.tienda}</SelectItem>
+                      <SelectItem value="hotel">{t.locations.hotel}</SelectItem>
+                      <SelectItem value="aeropuerto">{t.locations.aeropuerto}</SelectItem>
+                      <SelectItem value="estacion">{t.locations.estacion}</SelectItem>
+                      <SelectItem value="otro">{t.locations.otro}</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
@@ -360,12 +487,12 @@ export function ReservationModal({ isOpen, onClose, type, itemName, itemPrice, i
 
             {/* Comentarios adicionales */}
             <div>
-              <Label htmlFor="comments" className="text-gray-700 dark:text-gray-300">Comentarios adicionales</Label>
+              <Label htmlFor="comments" className="text-gray-700 dark:text-gray-300">{t.additionalComments}</Label>
               <Textarea
                 id="comments"
                 value={formData.comments}
                 onChange={(e) => handleInputChange("comments", e.target.value)}
-                placeholder={isRental ? "Especifica detalles sobre la recogida, preferencias del vehículo, etc." : "Menciona cualquier requerimiento especial, alergias, etc."}
+                placeholder={isRental ? t.rentalPlaceholder : t.tourPlaceholder}
                 className="border-gray-300 focus:border-blue-500 dark:border-gray-600 dark:bg-gray-800 min-h-[100px]"
               />
             </div>
@@ -378,14 +505,14 @@ export function ReservationModal({ isOpen, onClose, type, itemName, itemPrice, i
                     onClick={handleClose}
                     className="flex-1 border-gray-300 text-gray-700 hover:bg-gray-50 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-800 font-medium py-3"
                   >
-                    Cancelar
+                    {t.cancel}
                   </Button>
                   <Button
                     type="submit"
                     disabled={isSubmitting}
                     className="flex-1 bg-yellow-400 hover:bg-yellow-500 text-black font-semibold shadow-lg py-3 disabled:opacity-50 disabled:cursor-not-allowed"
                   >
-                    {isSubmitting ? "Enviando..." : (isRental ? "Confirmar Alquiler" : "Confirmar Reserva")}
+                    {isSubmitting ? t.sending : (isRental ? t.confirmRental : t.confirmReservation)}
                   </Button>
                 </div>
               </form>
