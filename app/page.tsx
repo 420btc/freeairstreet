@@ -374,15 +374,57 @@ export default function HomePage() {
 
       {/* Hero Section */}
       <section className="relative py-32 md:py-56 overflow-hidden">
-        <div className="absolute inset-0 z-0">
+        <div 
+          className="absolute inset-0 z-0"
+          ref={(el) => {
+            if (el) {
+              const image = el.querySelector('img');
+              const video = el.querySelector('video');
+              let playCount = 0;
+              
+              // Mostrar imagen por 3 segundos
+              setTimeout(() => {
+                if (image && video) {
+                  image.style.opacity = '0';
+                  video.style.opacity = '1';
+                  video.play();
+                }
+              }, 3000);
+              
+              // Escuchar cuando el video termine
+              if (video) {
+                video.addEventListener('ended', () => {
+                  playCount++;
+                  if (playCount < 3) {
+                    video.play(); // Reproducir de nuevo
+                  } else {
+                    // Después de 3 reproducciones, volver a la imagen
+                    video.style.opacity = '0';
+                    if (image) {
+                      image.style.opacity = '1';
+                    }
+                  }
+                });
+              }
+            }
+          }}
+        >
           <Image 
             src="/hero.png" 
             alt="Hero background" 
             fill 
-            className="object-cover" 
-            style={{ filter: 'blur(1px)' }}
+            className="object-cover transition-opacity duration-1000" 
+            style={{ filter: 'blur(1px)', opacity: 1 }}
             priority
           />
+          <video
+            muted
+            playsInline
+            className="absolute inset-0 w-full h-full object-cover transition-opacity duration-1000"
+            style={{ filter: 'blur(1px)', opacity: 0 }}
+          >
+            <source src="/herov.mp4" type="video/mp4" />
+          </video>
           <div className="absolute inset-0 bg-black/30"></div>
         </div>
         <div className="container mx-auto px-4 text-center relative z-10">
