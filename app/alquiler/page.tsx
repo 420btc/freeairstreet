@@ -65,12 +65,6 @@ export default function AlquilerPage() {
 
   const handleReservation = (itemName: string, itemId: string) => {
     const selectedPrice = selectedPrices[itemName]
-    const availableStock = getAvailableStock(itemId)
-    
-    if (availableStock <= 0) {
-      alert('Lo siento, no hay stock disponible para este vehículo.')
-      return
-    }
     
     setSelectedItem({
       name: itemName, 
@@ -946,13 +940,11 @@ export default function AlquilerPage() {
                           : 'bg-blue-600 hover:bg-blue-700'
                       }`}
                       onClick={() => handleReservation(bike.name as string, bike.id)}
-                      disabled={!selectedPrices[bike.name as string] || getAvailableStock(bike.id) === 0}
+                      disabled={!selectedPrices[bike.name as string]}
                     >
-                      {getAvailableStock(bike.id) === 0 
-                        ? 'Sin Stock' 
-                        : selectedPrices[bike.name as string] 
-                          ? `${t('rental.reserve')} ${selectedPrices[bike.name as string].duration} ${t('rental.for')} ${selectedPrices[bike.name as string].price}` 
-                          : t('rental.selectPrice')
+                      {selectedPrices[bike.name as string] 
+                        ? `${t('rental.reserve')} ${selectedPrices[bike.name as string].duration} ${t('rental.for')} ${selectedPrices[bike.name as string].price}` 
+                        : t('rental.selectPrice')
                       }
                     </Button>
                   </CardContent>
@@ -1395,13 +1387,11 @@ export default function AlquilerPage() {
                             : 'bg-blue-600 hover:bg-blue-700'
                         }`}
                         onClick={() => handleReservation(scooter.name, scooter.id)}
-                        disabled={!selectedPrices[scooter.name] || getAvailableStock(scooter.id) === 0}
+                        disabled={!selectedPrices[scooter.name]}
                       >
-                        {getAvailableStock(scooter.id) === 0 
-                          ? 'Sin Stock' 
-                          : selectedPrices[scooter.name] 
-                            ? `${t('rental.reserve')} ${selectedPrices[scooter.name].duration} ${t('rental.for')} ${selectedPrices[scooter.name].price}` 
-                            : t('rental.selectPrice')
+                        {selectedPrices[scooter.name] 
+                          ? `${t('rental.reserve')} ${selectedPrices[scooter.name].duration} ${t('rental.for')} ${selectedPrices[scooter.name].price}` 
+                          : t('rental.selectPrice')
                         }
                       </Button>
                     </CardContent>
