@@ -12,6 +12,7 @@ import 'mapbox-gl/dist/mapbox-gl.css'
 import { useLanguage } from '../contexts/LanguageContext'
 import { LanguageToggle } from '../components/LanguageToggle'
 import { ThemeToggle } from '../components/ThemeToggle'
+import RoutesComponent from '../components/RoutesComponent'
 
 
 
@@ -159,6 +160,14 @@ export default function HomePage() {
       }
 
       map.on('load', () => {
+        // Make map globally accessible for routes component
+        (window as any).mapboxMap = map;
+        
+        // Force map resize to ensure it fills container properly
+        setTimeout(() => {
+          map.resize();
+        }, 100);
+        
         // Add atmosphere for globe effect
         map.setFog({
           'color': 'rgb(186, 210, 235)',
@@ -189,15 +198,35 @@ export default function HomePage() {
             markerElement.style.border = '1px solid #f59e0b';
             markerElement.style.boxShadow = '0 1px 4px rgba(0,0,0,0.3)';
 
-            new mapboxgl.Marker(markerElement)
+            const storeMarker = new mapboxgl.Marker(markerElement)
               .setLngLat([-4.489167162077166, 36.63222134109576])
               .addTo(map);
+            
+            // Add class to identify store marker
+            setTimeout(() => {
+              const markerEl = storeMarker.getElement();
+              if (markerEl) {
+                markerEl.classList.add('store-marker');
+              }
+            }, 100);
           }, 3200);
         }, 1000);
       });
 
+      // Handle window resize to ensure map stays properly sized
+      const handleResize = () => {
+        if (map) {
+          setTimeout(() => {
+            map.resize();
+          }, 100);
+        }
+      };
+      
+      window.addEventListener('resize', handleResize);
+
       // Cleanup
       return () => {
+        window.removeEventListener('resize', handleResize);
         if (map) {
           map.remove();
         }
@@ -636,6 +665,11 @@ export default function HomePage() {
             {isMobile && !isMapActive && (
               <div className="absolute inset-0 bg-transparent z-5"></div>
             )}
+          </div>
+          
+          {/* Routes Component */}
+          <div className="mt-8 mb-8">
+            <RoutesComponent />
           </div>
           
           <div className="mt-8">
