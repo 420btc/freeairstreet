@@ -878,18 +878,58 @@ export default function HomePage() {
             
             {/* Video Section - Right Side */}
              <div className="relative w-full max-w-xs md:max-w-sm lg:max-w-md">
-               <div className="relative w-full h-auto overflow-hidden rounded-lg shadow-lg mb-6">
-                 <video
-                   autoPlay
-                   loop
-                   muted
-                   playsInline
-                   className="w-full h-auto object-cover"
+               <div 
+                   className="relative w-full h-auto overflow-hidden rounded-lg shadow-lg mb-6"
+                   ref={(el) => {
+                     if (el) {
+                       const video = el.querySelector('video');
+                       const source = video?.querySelector('source');
+                       let isHighQuality = false;
+                       
+                       const observer = new IntersectionObserver(
+                         (entries) => {
+                           entries.forEach((entry) => {
+                             if (video && source) {
+                               if (entry.isIntersecting && !isHighQuality) {
+                                 // Usuario está viendo el video - cambiar a alta calidad
+                                 const currentTime = video.currentTime;
+                                 source.src = '/videoplayback.mp4';
+                                 video.load();
+                                 video.currentTime = currentTime;
+                                 video.play();
+                                 isHighQuality = true;
+                               } else if (!entry.isIntersecting && isHighQuality) {
+                                 // Usuario no está viendo el video - cambiar a baja calidad
+                                 const currentTime = video.currentTime;
+                                 source.src = '/videopedido.mp4'; // Video de menor calidad
+                                 video.load();
+                                 video.currentTime = currentTime;
+                                 video.play();
+                                 isHighQuality = false;
+                               }
+                             }
+                           });
+                         },
+                         { 
+                           threshold: 0.3,
+                           rootMargin: '-50px 0px -50px 0px'
+                         }
+                       );
+                       observer.observe(el);
+                     }
+                   }}
                  >
-                   <source src="/videoplayback.mp4" type="video/mp4" />
-                   Tu navegador no soporta el elemento de video.
-                 </video>
-               </div>
+                   <video
+                     autoPlay
+                     loop
+                     muted
+                     playsInline
+                     className="w-full h-auto object-cover transition-opacity duration-500 ease-in-out"
+                   >
+                     <source src="/videopedido.mp4" type="video/mp4" />
+                     Tu navegador no soporta el elemento de video.
+                   </video>
+                 </div>
                
                {/* Quad Tours Pricing Table */}
                <div className="bg-white rounded-lg shadow-lg p-4 border-2 border-gray-200">
