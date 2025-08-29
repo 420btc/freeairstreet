@@ -863,7 +863,7 @@ export default function HomePage() {
               
               <div className="space-y-4">
                 <div className="flex items-start space-x-3">
-                  <MapPin className="h-6 w-6 text-blue-600 mt-1 flex-shrink-0" />
+                  <MapPin className="h-6 w-6 text-red-600 mt-1 flex-shrink-0" />
                   <div>
                     <p className="text-lg font-semibold text-gray-900">{t('secondStore.secondLocation')}</p>
                     <p className="text-gray-700">{t('secondStore.address')}</p>
