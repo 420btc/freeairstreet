@@ -23,7 +23,9 @@ interface VehicleType {
 
 const QuickRentalSection: React.FC = () => {
   const { t } = useLanguage()
-  const [selectedVehicle, setSelectedVehicle] = useState<string>('bicycles')
+  const [selectedVehicle, setSelectedVehicle] = useState<string>('')
+  const [showMobileForm, setShowMobileForm] = useState(false)
+  const [showDesktopForm, setShowDesktopForm] = useState(false)
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -98,6 +100,17 @@ const QuickRentalSection: React.FC = () => {
   ]
 
   const selectedVehicleData = vehicles.find(v => v.id === selectedVehicle) || vehicles[0]
+
+  const handleVehicleSelection = (vehicleId: string) => {
+    setSelectedVehicle(vehicleId)
+    // En móvil, mostrar el formulario cuando se selecciona un vehículo
+    if (window.innerWidth < 768) {
+      setShowMobileForm(true)
+    } else {
+      // En desktop también mostrar el formulario
+      setShowDesktopForm(true)
+    }
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -210,105 +223,352 @@ const QuickRentalSection: React.FC = () => {
         <div className="max-w-6xl mx-auto">
           <Card className="overflow-hidden shadow-2xl border-0">
             <CardContent className="p-6 lg:p-8">
-              <form onSubmit={handleSubmit} className="space-y-6">
-                {/* Selección de vehículo */}
-                <div>
-                  <h3 className="text-xl font-semibold text-gray-900 mb-4">
-                    Tipo de Vehículo
-                  </h3>
-                  <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-4 mb-6">
-                     {vehicles.map((vehicle) => (
-                       <button
-                         key={vehicle.id}
-                         type="button"
-                         onClick={() => setSelectedVehicle(vehicle.id)}
-                         className={`group relative p-4 rounded-xl border-2 transition-all duration-300 hover:scale-105 hover:shadow-lg ${
-                           selectedVehicle === vehicle.id
-                             ? 'border-blue-500 bg-blue-50 shadow-lg ring-2 ring-blue-200'
-                             : 'border-gray-200 hover:border-blue-300 hover:bg-gray-50 shadow-md hover:shadow-xl'
-                         }`}
-                         style={{
-                           boxShadow: selectedVehicle === vehicle.id 
-                             ? '0 10px 25px -5px rgba(59, 130, 246, 0.3), 0 4px 6px -2px rgba(59, 130, 246, 0.1)'
-                             : '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)'
-                         }}
-                       >
-                         {/* Gradient overlay for selected state */}
-                         {selectedVehicle === vehicle.id && (
-                           <div className="absolute inset-0 bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl opacity-50"></div>
-                         )}
-                         
-                         <div className="relative z-10 text-center">
-                           <div className="text-2xl mb-2 transform group-hover:scale-110 transition-transform duration-200">
-                             {vehicle.icon}
-                           </div>
-                           <div className="text-sm font-semibold text-gray-900 mb-1 leading-tight">
-                             {vehicle.name}
-                           </div>
-                           <div className={`text-xs font-bold ${
-                             selectedVehicle === vehicle.id ? 'text-blue-700' : 'text-blue-600'
-                           }`}>
-                             {vehicle.priceFrom}
-                           </div>
-                         </div>
-                         
-                         {/* Selection indicator */}
-                         {selectedVehicle === vehicle.id && (
-                           <div className="absolute -top-1 -right-1 w-4 h-4 bg-blue-500 rounded-full flex items-center justify-center">
-                             <div className="w-2 h-2 bg-white rounded-full"></div>
-                           </div>
-                         )}
-                       </button>
-                     ))}
-                   </div>
-                </div>
+              {/* Vista móvil - Solo selector inicial */}
+              <div className="md:hidden">
+                {!showMobileForm ? (
+                  <div className="text-center">
+                    <h3 className="text-xl font-semibold text-gray-900 mb-6">
+                      Selecciona tu Vehículo
+                    </h3>
+                    <div className="grid grid-cols-2 gap-4">
+                      {vehicles.map((vehicle) => (
+                        <button
+                          key={vehicle.id}
+                          type="button"
+                          onClick={() => handleVehicleSelection(vehicle.id)}
+                          className="group relative p-6 rounded-xl border-2 transition-all duration-300 hover:scale-105 hover:shadow-lg border-gray-200 hover:border-blue-300 hover:bg-gray-50 shadow-md hover:shadow-xl"
+                          style={{
+                            boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)'
+                          }}
+                        >
+                          <div className="text-center">
+                            <div className="text-3xl mb-3 transform group-hover:scale-110 transition-transform duration-200">
+                              {vehicle.icon}
+                            </div>
+                            <div className="text-sm font-semibold text-gray-900 mb-2 leading-tight">
+                              {vehicle.name}
+                            </div>
+                            <div className="text-xs font-bold text-blue-600">
+                              {vehicle.priceFrom}
+                            </div>
+                          </div>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                ) : (
+                  <form onSubmit={handleSubmit} className="space-y-6">
+                    {/* Vehículo seleccionado - móvil */}
+                    <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-3">
+                          <span className="text-2xl">{selectedVehicleData.icon}</span>
+                          <div>
+                            <h4 className="font-semibold text-gray-900">{selectedVehicleData.name}</h4>
+                            <p className="text-sm text-blue-600 font-medium">{selectedVehicleData.priceFrom}</p>
+                          </div>
+                        </div>
+                        <button
+                          type="button"
+                          onClick={() => setShowMobileForm(false)}
+                          className="text-gray-500 hover:text-gray-700"
+                        >
+                          Cambiar
+                        </button>
+                      </div>
+                    </div>
 
-                {/* Información personal */}
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                  <div>
-                    <Label htmlFor="name" className="flex items-center gap-1 mb-2">
-                      <User className="h-4 w-4" />
-                      Nombre completo *
-                    </Label>
-                    <Input
-                      id="name"
-                      value={formData.name}
-                      onChange={(e) => handleInputChange('name', e.target.value)}
-                      placeholder="Tu nombre completo"
-                      required
-                    />
-                  </div>
-                  <div>
-                    <Label htmlFor="email" className="flex items-center gap-1 mb-2">
-                      <Mail className="h-4 w-4" />
-                      Email *
-                    </Label>
-                    <Input
-                      id="email"
-                      type="email"
-                      value={formData.email}
-                      onChange={(e) => handleInputChange('email', e.target.value)}
-                      placeholder="tu@email.com"
-                      required
-                    />
-                  </div>
-                  <div>
-                    <Label htmlFor="phone" className="flex items-center gap-1 mb-2">
-                      <Phone className="h-4 w-4" />
-                      Teléfono *
-                    </Label>
-                    <Input
-                      id="phone"
-                      value={formData.phone}
-                      onChange={(e) => handleInputChange('phone', e.target.value)}
-                      placeholder="+34 XXX XXX XXX"
-                      required
-                    />
-                  </div>
-                </div>
+                    {/* Formulario móvil */}
+                    <div className="space-y-4">
+                      {/* Información personal */}
+                      <div className="space-y-4">
+                        <div>
+                          <Label htmlFor="name-mobile" className="flex items-center gap-1 mb-2">
+                            <User className="h-4 w-4" />
+                            Nombre completo *
+                          </Label>
+                          <Input
+                            id="name-mobile"
+                            value={formData.name}
+                            onChange={(e) => handleInputChange('name', e.target.value)}
+                            placeholder="Tu nombre completo"
+                            required
+                          />
+                        </div>
+                        <div>
+                          <Label htmlFor="email-mobile" className="flex items-center gap-1 mb-2">
+                            <Mail className="h-4 w-4" />
+                            Email *
+                          </Label>
+                          <Input
+                            id="email-mobile"
+                            type="email"
+                            value={formData.email}
+                            onChange={(e) => handleInputChange('email', e.target.value)}
+                            placeholder="tu@email.com"
+                            required
+                          />
+                        </div>
+                        <div>
+                          <Label htmlFor="phone-mobile" className="flex items-center gap-1 mb-2">
+                            <Phone className="h-4 w-4" />
+                            Teléfono *
+                          </Label>
+                          <Input
+                            id="phone-mobile"
+                            value={formData.phone}
+                            onChange={(e) => handleInputChange('phone', e.target.value)}
+                            placeholder="+34 XXX XXX XXX"
+                            required
+                          />
+                        </div>
+                      </div>
 
-                {/* Detalles de la reserva */}
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                      {/* Detalles de la reserva */}
+                      <div className="grid grid-cols-2 gap-4">
+                        <div>
+                          <Label htmlFor="date-mobile" className="flex items-center gap-1 mb-2">
+                            <Calendar className="h-4 w-4" />
+                            Fecha *
+                          </Label>
+                          <Input
+                            id="date-mobile"
+                            type="date"
+                            value={formData.date}
+                            onChange={(e) => handleInputChange('date', e.target.value)}
+                            min={new Date().toISOString().split('T')[0]}
+                            required
+                          />
+                        </div>
+                        <div>
+                          <Label htmlFor="time-mobile" className="flex items-center gap-1 mb-2">
+                            <Clock className="h-4 w-4" />
+                            Hora *
+                          </Label>
+                          <Select value={formData.time} onValueChange={(value) => handleInputChange('time', value)}>
+                            <SelectTrigger>
+                              <SelectValue placeholder="Hora" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              {Array.from({ length: 14 }, (_, i) => {
+                                const hour = 9 + i
+                                return (
+                                  <SelectItem key={hour} value={`${hour}:00`}>
+                                    {hour}:00
+                                  </SelectItem>
+                                )
+                              })}
+                            </SelectContent>
+                          </Select>
+                        </div>
+                      </div>
+
+                      <div className="grid grid-cols-2 gap-4">
+                        <div>
+                          <Label htmlFor="duration-mobile" className="mb-2 block">
+                            Duración
+                          </Label>
+                          <Select value={formData.duration} onValueChange={(value) => handleInputChange('duration', value)}>
+                            <SelectTrigger>
+                              <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="1">1 día</SelectItem>
+                              <SelectItem value="2">2 días</SelectItem>
+                              <SelectItem value="3">3 días</SelectItem>
+                              <SelectItem value="7">1 semana</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
+                        <div>
+                          <Label htmlFor="participants-mobile" className="mb-2 block">
+                            Participantes
+                          </Label>
+                          <Select value={formData.participants} onValueChange={(value) => handleInputChange('participants', value)}>
+                            <SelectTrigger>
+                              <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent>
+                              {Array.from({ length: 10 }, (_, i) => (
+                                <SelectItem key={i + 1} value={String(i + 1)}>
+                                  {i + 1} {i === 0 ? 'persona' : 'personas'}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                        </div>
+                      </div>
+
+                      <div>
+                        <Label htmlFor="comments-mobile" className="mb-2 block">
+                          Comentarios adicionales
+                        </Label>
+                        <Textarea
+                          id="comments-mobile"
+                          value={formData.comments}
+                          onChange={(e) => handleInputChange('comments', e.target.value)}
+                          placeholder="Cualquier información adicional..."
+                          rows={3}
+                        />
+                      </div>
+
+                      {/* Confirmaciones móvil */}
+                      <div className="space-y-3 border-t pt-4">
+                        <div className="flex items-start space-x-2">
+                          <Checkbox
+                            id="purchaseInfo-mobile"
+                            checked={confirmations.purchaseInfo}
+                            onCheckedChange={(checked) => handleConfirmationChange('purchaseInfo', checked as boolean)}
+                          />
+                          <Label htmlFor="purchaseInfo-mobile" className="text-sm leading-relaxed">
+                            Acepto las condiciones de alquiler.
+                          </Label>
+                        </div>
+                        <div className="flex items-start space-x-2">
+                          <Checkbox
+                            id="dniRequired-mobile"
+                            checked={confirmations.dniRequired}
+                            onCheckedChange={(checked) => handleConfirmationChange('dniRequired', checked as boolean)}
+                          />
+                          <Label htmlFor="dniRequired-mobile" className="text-sm leading-relaxed">
+                            Presentaré documento de identidad válido.
+                          </Label>
+                        </div>
+                        <div className="flex items-start space-x-2">
+                          <Checkbox
+                            id="dataPolicy-mobile"
+                            checked={confirmations.dataPolicy}
+                            onCheckedChange={(checked) => handleConfirmationChange('dataPolicy', checked as boolean)}
+                          />
+                          <Label htmlFor="dataPolicy-mobile" className="text-sm leading-relaxed">
+                            Acepto la política de privacidad.
+                          </Label>
+                        </div>
+                      </div>
+
+                      {/* Error message móvil */}
+                      {submitError && (
+                        <div className="bg-red-50 border border-red-200 rounded-lg p-3">
+                          <p className="text-red-700 text-sm">{submitError}</p>
+                        </div>
+                      )}
+
+                      {/* Botón enviar móvil */}
+                      <Button
+                        type="submit"
+                        className="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 text-lg font-semibold"
+                        disabled={isSubmitting}
+                      >
+                        {isSubmitting ? 'Enviando...' : 'Enviar Reserva'}
+                      </Button>
+                    </div>
+                  </form>
+                )}
+              </div>
+
+              {/* Vista desktop */}
+              <div className="hidden md:block">
+                {!showDesktopForm ? (
+                  <div className="text-center">
+                    <h3 className="text-3xl font-bold text-gray-900 mb-8">
+                      Selecciona tu Vehículo
+                    </h3>
+                    <div className="grid grid-cols-4 lg:grid-cols-7 gap-6">
+                      {vehicles.map((vehicle) => (
+                        <button
+                          key={vehicle.id}
+                          type="button"
+                          onClick={() => handleVehicleSelection(vehicle.id)}
+                          className="group relative p-6 rounded-xl border-2 transition-all duration-300 hover:scale-105 hover:shadow-lg border-gray-200 hover:border-blue-300 hover:bg-gray-50 shadow-md hover:shadow-xl"
+                          style={{
+                            boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)'
+                          }}
+                        >
+                          <div className="text-center">
+                            <div className="text-4xl mb-4 transform group-hover:scale-110 transition-transform duration-200">
+                              {vehicle.icon}
+                            </div>
+                            <div className="text-base font-semibold text-gray-900 mb-2 leading-tight">
+                              {vehicle.name}
+                            </div>
+                            <div className="text-sm font-bold text-blue-600">
+                              {vehicle.priceFrom}
+                            </div>
+                          </div>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                ) : (
+                  <form onSubmit={handleSubmit} className="space-y-6">
+                    {/* Vehículo seleccionado - desktop */}
+                    <div className="bg-blue-50 p-6 rounded-lg border border-blue-200">
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-4">
+                          <span className="text-3xl">{selectedVehicleData.icon}</span>
+                          <div>
+                            <h4 className="text-xl font-semibold text-gray-900">{selectedVehicleData.name}</h4>
+                            <p className="text-lg text-blue-600 font-medium">{selectedVehicleData.priceFrom}</p>
+                          </div>
+                        </div>
+                        <button
+                          type="button"
+                          onClick={() => setShowDesktopForm(false)}
+                          className="text-gray-500 hover:text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-100"
+                        >
+                          Cambiar Vehículo
+                        </button>
+                      </div>
+                    </div>
+
+                    {/* Formulario desktop */}
+                    <div className="space-y-6">
+                      {/* Información personal */}
+                      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                        <div>
+                          <Label htmlFor="name" className="flex items-center gap-1 mb-2">
+                            <User className="h-4 w-4" />
+                            Nombre completo *
+                          </Label>
+                          <Input
+                            id="name"
+                            value={formData.name}
+                            onChange={(e) => handleInputChange('name', e.target.value)}
+                            placeholder="Tu nombre completo"
+                            required
+                          />
+                        </div>
+                        <div>
+                          <Label htmlFor="email" className="flex items-center gap-1 mb-2">
+                            <Mail className="h-4 w-4" />
+                            Email *
+                          </Label>
+                          <Input
+                            id="email"
+                            type="email"
+                            value={formData.email}
+                            onChange={(e) => handleInputChange('email', e.target.value)}
+                            placeholder="tu@email.com"
+                            required
+                          />
+                        </div>
+                        <div>
+                          <Label htmlFor="phone" className="flex items-center gap-1 mb-2">
+                            <Phone className="h-4 w-4" />
+                            Teléfono *
+                          </Label>
+                          <Input
+                            id="phone"
+                            value={formData.phone}
+                            onChange={(e) => handleInputChange('phone', e.target.value)}
+                            placeholder="+34 XXX XXX XXX"
+                            required
+                          />
+                        </div>
+                      </div>
+
+                      {/* Detalles de la reserva */}
+                      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                   <div>
                     <Label htmlFor="date" className="flex items-center gap-1 mb-2">
                       <Calendar className="h-4 w-4" />
@@ -378,10 +638,10 @@ const QuickRentalSection: React.FC = () => {
                       </SelectContent>
                     </Select>
                   </div>
-                </div>
+                      </div>
 
-                {/* Información adicional */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      {/* Información adicional */}
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
                     <Label htmlFor="pickupLocation" className="flex items-center gap-1 mb-2">
                       <MapPin className="h-4 w-4" />
@@ -405,23 +665,23 @@ const QuickRentalSection: React.FC = () => {
                       placeholder="Documento de identidad"
                     />
                   </div>
-                </div>
+                      </div>
 
-                <div>
-                  <Label htmlFor="comments" className="mb-2 block">
-                    Comentarios adicionales
-                  </Label>
-                  <Textarea
-                    id="comments"
-                    value={formData.comments}
-                    onChange={(e) => handleInputChange('comments', e.target.value)}
-                    placeholder="Cualquier información adicional..."
-                    rows={3}
-                  />
-                </div>
+                      <div>
+                        <Label htmlFor="comments" className="mb-2 block">
+                          Comentarios adicionales
+                        </Label>
+                        <Textarea
+                          id="comments"
+                          value={formData.comments}
+                          onChange={(e) => handleInputChange('comments', e.target.value)}
+                          placeholder="Cualquier información adicional..."
+                          rows={3}
+                        />
+                      </div>
 
-                {/* Confirmaciones */}
-                <div className="space-y-3 border-t pt-4">
+                      {/* Confirmaciones */}
+                      <div className="space-y-3 border-t pt-4">
                   <div className="flex items-start space-x-2">
                     <Checkbox
                       id="purchaseInfo"
@@ -452,17 +712,17 @@ const QuickRentalSection: React.FC = () => {
                       Acepto la política de privacidad y el tratamiento de mis datos personales.
                     </Label>
                   </div>
-                </div>
+                      </div>
 
-                {/* Error message */}
-                {submitError && (
-                  <div className="bg-red-50 border border-red-200 rounded-lg p-3">
-                    <p className="text-red-700 text-sm">{submitError}</p>
-                  </div>
-                )}
+                      {/* Error message */}
+                      {submitError && (
+                        <div className="bg-red-50 border border-red-200 rounded-lg p-3">
+                          <p className="text-red-700 text-sm">{submitError}</p>
+                        </div>
+                      )}
 
-                {/* Botones */}
-                <div className="flex flex-col sm:flex-row gap-3 pt-4">
+                      {/* Botones */}
+                      <div className="flex flex-col sm:flex-row gap-3 pt-4">
                   <Button
                     type="submit"
                     className="flex-1 bg-blue-600 hover:bg-blue-700 text-white py-3 text-lg font-semibold"
@@ -478,9 +738,12 @@ const QuickRentalSection: React.FC = () => {
                     >
                       Ver Todos los Precios
                     </Button>
-                  </Link>
-                </div>
-              </form>
+                        </Link>
+                      </div>
+                    </div>
+                  </form>
+                )}
+              </div>
             </CardContent>
           </Card>
         </div>
