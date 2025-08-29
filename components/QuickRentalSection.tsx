@@ -19,13 +19,26 @@ interface VehicleType {
   icon: string
   image: string
   priceFrom: string
+  prices: Array<{
+    duration: string
+    price: string
+    featured?: boolean
+  }>
+}
+
+interface SelectedPriceType {
+  duration: string
+  price: string
 }
 
 const QuickRentalSection: React.FC = () => {
   const { t } = useLanguage()
   const [selectedVehicle, setSelectedVehicle] = useState<string>('')
+  const [selectedPrice, setSelectedPrice] = useState<SelectedPriceType | null>(null)
   const [showMobileForm, setShowMobileForm] = useState(false)
   const [showDesktopForm, setShowDesktopForm] = useState(false)
+  const [showMobilePrices, setShowMobilePrices] = useState(false)
+  const [showDesktopPrices, setShowDesktopPrices] = useState(false)
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -53,49 +66,95 @@ const QuickRentalSection: React.FC = () => {
       name: 'Bicicleta',
       icon: '🚲',
       image: '/urban-bicycle.png',
-      priceFrom: '3€/h'
+      priceFrom: 'Desde 3€',
+      prices: [
+        { duration: "1h", price: "3€" },
+        { duration: "2h", price: "5€" },
+        { duration: "3h", price: "6€" },
+        { duration: "4h", price: "7€" },
+        { duration: "Todo el día", price: "13€", featured: true },
+      ]
     },
     {
       id: 'electric-bikes',
       name: 'E-Bike',
       icon: '⚡',
       image: '/modern-electric-bike.png',
-      priceFrom: '10€/h'
+      priceFrom: 'Desde 10€',
+      prices: [
+        { duration: "1h", price: "10€" },
+        { duration: "2h", price: "18€" },
+        { duration: "3h", price: "25€" },
+        { duration: "4h", price: "30€" },
+        { duration: "Todo el día", price: "35€", featured: true },
+      ]
     },
     {
       id: 'fat-bikes',
       name: 'Fat Bike',
       icon: '🚵',
       image: '/fat-bike-electric-wide-tires.png',
-      priceFrom: '10€/h'
+      priceFrom: 'Desde 10€',
+      prices: [
+        { duration: "1h", price: "10€" },
+        { duration: "2h", price: "18€" },
+        { duration: "3h", price: "25€" },
+        { duration: "4h", price: "30€" },
+        { duration: "Todo el día", price: "35€", featured: true },
+      ]
     },
     {
       id: 'scooters',
       name: 'Patinete',
       icon: '🛴',
       image: '/patinelectrico.jpg',
-      priceFrom: '10€/30min'
+      priceFrom: 'Desde 10€',
+      prices: [
+        { duration: "30 min", price: "10€" },
+        { duration: "1h", price: "15€", featured: true },
+      ]
     },
     {
       id: 'motorcycles',
       name: 'Moto',
       icon: '🏍️',
       image: '/motos/motobike.jpeg',
-      priceFrom: '15€/h'
+      priceFrom: 'Desde 15€',
+      prices: [
+        { duration: "1h", price: "15€" },
+        { duration: "2h", price: "25€", featured: true },
+        { duration: "1 día", price: "40€" },
+        { duration: "2 días", price: "65€" },
+        { duration: "3 días", price: "85€" },
+        { duration: "7 días", price: "155€" },
+      ]
     },
     {
       id: 'quads',
       name: 'Quad',
       icon: '🏎️',
       image: '/quad.jpeg',
-      priceFrom: '30€/h'
+      priceFrom: 'Desde 30€',
+      prices: [
+        { duration: "1 hora", price: "30€", featured: true },
+        { duration: "2 horas", price: "50€", featured: true },
+      ]
     },
     {
       id: 'cars',
       name: 'Coche',
       icon: '🚗',
       image: '/coches/toyotaaygo.png',
-      priceFrom: '54€/día'
+      priceFrom: 'Desde 54€',
+      prices: [
+        { duration: "1 día", price: "54€", featured: true },
+        { duration: "2 días", price: "94€" },
+        { duration: "3 días", price: "118€" },
+        { duration: "4 días", price: "149€" },
+        { duration: "5 días", price: "172€" },
+        { duration: "6 días", price: "186€" },
+        { duration: "7 días", price: "196€" },
+      ]
     }
   ]
 
@@ -103,12 +162,66 @@ const QuickRentalSection: React.FC = () => {
 
   const handleVehicleSelection = (vehicleId: string) => {
     setSelectedVehicle(vehicleId)
-    // En móvil, mostrar el formulario cuando se selecciona un vehículo
+    setSelectedPrice(null)
+    // En móvil, mostrar la selección de precios
+    if (window.innerWidth < 768) {
+      setShowMobilePrices(true)
+      setShowMobileForm(false)
+    } else {
+      // En desktop también mostrar la selección de precios
+      setShowDesktopPrices(true)
+      setShowDesktopForm(false)
+    }
+  }
+
+  const handlePriceSelection = (duration: string, price: string) => {
+    setSelectedPrice({ duration, price })
+    
+    // Auto-rellenar la duración en el formulario basado en la selección
+    let formDuration = '1'
+    if (duration.includes('2h') || duration.includes('2 h')) formDuration = '2h'
+    else if (duration.includes('3h') || duration.includes('3 h')) formDuration = '3h'
+    else if (duration.includes('4h') || duration.includes('4 h')) formDuration = '4h'
+    else if (duration.includes('30 min')) formDuration = '30min'
+    else if (duration.includes('1h') || duration.includes('1 h')) formDuration = '1h'
+    else if (duration.includes('Todo el día') || duration.includes('día completo')) formDuration = 'fullday'
+    else if (duration.includes('1 día') || duration.includes('1D')) formDuration = '1'
+    else if (duration.includes('2 días') || duration.includes('2D')) formDuration = '2'
+    else if (duration.includes('3 días') || duration.includes('3D')) formDuration = '3'
+    else if (duration.includes('4 días') || duration.includes('4D')) formDuration = '4'
+    else if (duration.includes('5 días') || duration.includes('5D')) formDuration = '5'
+    else if (duration.includes('6 días') || duration.includes('6D')) formDuration = '6'
+    else if (duration.includes('7 días') || duration.includes('7D') || duration.includes('1 semana')) formDuration = '7'
+    else if (duration.includes('1 hora')) formDuration = '1h'
+    else if (duration.includes('2 horas')) formDuration = '2h'
+    
+    setFormData(prev => ({ ...prev, duration: formDuration }))
+    
+    // Mostrar el formulario después de seleccionar precio
     if (window.innerWidth < 768) {
       setShowMobileForm(true)
     } else {
-      // En desktop también mostrar el formulario
       setShowDesktopForm(true)
+    }
+  }
+
+  const handleBackToVehicles = () => {
+    setSelectedVehicle('')
+    setSelectedPrice(null)
+    setShowMobilePrices(false)
+    setShowDesktopPrices(false)
+    setShowMobileForm(false)
+    setShowDesktopForm(false)
+  }
+
+  const handleBackToPrices = () => {
+    setSelectedPrice(null)
+    setShowMobileForm(false)
+    setShowDesktopForm(false)
+    if (window.innerWidth < 768) {
+      setShowMobilePrices(true)
+    } else {
+      setShowDesktopPrices(true)
     }
   }
 
@@ -135,8 +248,8 @@ const QuickRentalSection: React.FC = () => {
       const reservationData: ReservationFormData = {
         ...formData,
         type: 'rental',
-        itemName: selectedVehicleData.name,
-        itemPrice: selectedVehicleData.priceFrom
+        itemName: `${selectedVehicleData.name} - ${selectedPrice?.duration}`,
+        itemPrice: selectedPrice?.price || 'No especificado'
       }
 
       const result = await sendReservationEmail(reservationData)
@@ -161,6 +274,13 @@ const QuickRentalSection: React.FC = () => {
           dniRequired: false,
           dataPolicy: false
         })
+        // Reset navigation states
+        setSelectedVehicle('')
+        setSelectedPrice(null)
+        setShowMobilePrices(false)
+        setShowDesktopPrices(false)
+        setShowMobileForm(false)
+        setShowDesktopForm(false)
       } else {
         setSubmitError(result.error || 'Error al enviar la reserva. Por favor, inténtalo de nuevo.')
       }
@@ -195,7 +315,15 @@ const QuickRentalSection: React.FC = () => {
                   Hemos recibido tu solicitud de reserva. Te contactaremos pronto para confirmar los detalles.
                 </p>
                 <Button
-                  onClick={() => setIsSubmitted(false)}
+                  onClick={() => {
+                    setIsSubmitted(false)
+                    setSelectedVehicle('')
+                    setSelectedPrice(null)
+                    setShowMobilePrices(false)
+                    setShowDesktopPrices(false)
+                    setShowMobileForm(false)
+                    setShowDesktopForm(false)
+                  }}
                   className="bg-blue-600 hover:bg-blue-700"
                 >
                   Hacer Otra Reserva
@@ -223,13 +351,13 @@ const QuickRentalSection: React.FC = () => {
         <div className="max-w-6xl mx-auto">
           <Card className="overflow-hidden shadow-2xl border-0">
             <CardContent className="p-6 lg:p-8">
-              {/* Vista móvil - Solo selector inicial */}
+              {/* Vista móvil - Sistema de 3 pasos */}
               <div className="md:hidden">
-                {!showMobileForm ? (
+                {!showMobilePrices && !showMobileForm ? (
                   <div className="text-center">
                     <h3 className="text-xl font-semibold text-gray-900 mb-6">
-                      Selecciona tu Vehículo
-                    </h3>
+                       Selecciona tu Vehículo
+                     </h3>
                     <div className="grid grid-cols-2 gap-4">
                       {vehicles.map((vehicle) => (
                         <button
@@ -256,27 +384,86 @@ const QuickRentalSection: React.FC = () => {
                       ))}
                     </div>
                   </div>
-                ) : (
-                  <form onSubmit={handleSubmit} className="space-y-6">
-                    {/* Vehículo seleccionado - móvil */}
-                    <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-3">
-                          <span className="text-2xl">{selectedVehicleData.icon}</span>
-                          <div>
-                            <h4 className="font-semibold text-gray-900">{selectedVehicleData.name}</h4>
-                            <p className="text-sm text-blue-600 font-medium">{selectedVehicleData.priceFrom}</p>
-                          </div>
+                ) : showMobilePrices && !showMobileForm ? (
+                  <div className="text-center">
+                    <div className="flex items-center justify-between mb-6">
+                      <button
+                        onClick={handleBackToVehicles}
+                        className="text-gray-500 hover:text-gray-700 flex items-center gap-2"
+                      >
+                        ← Volver
+                      </button>
+                      <h3 className="text-xl font-semibold text-gray-900">
+                         Selecciona Duración
+                       </h3>
+                      <div></div>
+                    </div>
+                    
+                    {/* Vehículo seleccionado */}
+                    <div className="bg-blue-50 p-4 rounded-lg border border-blue-200 mb-6">
+                      <div className="flex items-center justify-center gap-3">
+                        <span className="text-2xl">{selectedVehicleData.icon}</span>
+                        <div>
+                          <h4 className="font-semibold text-gray-900">{selectedVehicleData.name}</h4>
+                          <p className="text-sm text-blue-600">{selectedVehicleData.priceFrom}</p>
                         </div>
-                        <button
-                          type="button"
-                          onClick={() => setShowMobileForm(false)}
-                          className="text-gray-500 hover:text-gray-700"
-                        >
-                          Cambiar
-                        </button>
                       </div>
                     </div>
+
+                    {/* Opciones de precio */}
+                    <div className="grid grid-cols-1 gap-3">
+                      {selectedVehicleData.prices.map((priceOption, index) => (
+                        <button
+                          key={index}
+                          onClick={() => handlePriceSelection(priceOption.duration, priceOption.price)}
+                          className={`p-4 rounded-xl border-2 transition-all duration-200 hover:scale-105 ${
+                            priceOption.featured
+                              ? 'border-blue-500 bg-blue-50 shadow-lg'
+                              : 'border-gray-200 hover:border-blue-300 hover:bg-gray-50'
+                          }`}
+                        >
+                          <div className="flex justify-between items-center">
+                            <div className="text-left">
+                              <div className="font-semibold text-gray-900">{priceOption.duration}</div>
+                              {priceOption.featured && (
+                                <div className="text-xs text-blue-600 font-medium">Más popular</div>
+                              )}
+                            </div>
+                            <div className="text-xl font-bold text-blue-600">{priceOption.price}</div>
+                          </div>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                ) : (
+                   <form onSubmit={handleSubmit} className="space-y-6">
+                     {/* Header paso 3 */}
+                     <div className="flex items-center justify-between mb-6">
+                       <button
+                         type="button"
+                         onClick={handleBackToPrices}
+                         className="text-gray-500 hover:text-gray-700 flex items-center gap-2"
+                       >
+                         ← Volver
+                       </button>
+                       <h3 className="text-xl font-semibold text-gray-900">
+                          Datos de Reserva
+                        </h3>
+                       <div></div>
+                     </div>
+
+                     {/* Resumen de selección - móvil */}
+                     <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">
+                       <div className="text-center">
+                         <div className="flex items-center justify-center gap-3 mb-2">
+                           <span className="text-2xl">{selectedVehicleData.icon}</span>
+                           <div>
+                             <h4 className="font-semibold text-gray-900">{selectedVehicleData.name}</h4>
+                             <p className="text-sm text-blue-600 font-medium">{selectedPrice?.duration} - {selectedPrice?.price}</p>
+                           </div>
+                         </div>
+                       </div>
+                     </div>
 
                     {/* Formulario móvil */}
                     <div className="space-y-4">
@@ -366,19 +553,16 @@ const QuickRentalSection: React.FC = () => {
                       <div className="grid grid-cols-2 gap-4">
                         <div>
                           <Label htmlFor="duration-mobile" className="mb-2 block">
-                            Duración
+                            Duración Seleccionada
                           </Label>
-                          <Select value={formData.duration} onValueChange={(value) => handleInputChange('duration', value)}>
-                            <SelectTrigger>
-                              <SelectValue />
-                            </SelectTrigger>
-                            <SelectContent>
-                              <SelectItem value="1">1 día</SelectItem>
-                              <SelectItem value="2">2 días</SelectItem>
-                              <SelectItem value="3">3 días</SelectItem>
-                              <SelectItem value="7">1 semana</SelectItem>
-                            </SelectContent>
-                          </Select>
+                          <div className="p-3 bg-gray-50 rounded-lg border">
+                            <div className="text-sm font-medium text-gray-900">
+                              {selectedPrice?.duration}
+                            </div>
+                            <div className="text-xs text-gray-600">
+                              Precio: {selectedPrice?.price}
+                            </div>
+                          </div>
                         </div>
                         <div>
                           <Label htmlFor="participants-mobile" className="mb-2 block">
@@ -466,13 +650,13 @@ const QuickRentalSection: React.FC = () => {
                 )}
               </div>
 
-              {/* Vista desktop */}
+              {/* Vista desktop - Sistema de 3 pasos */}
               <div className="hidden md:block">
-                {!showDesktopForm ? (
+                {!showDesktopPrices && !showDesktopForm ? (
                   <div className="text-center">
                     <h3 className="text-3xl font-bold text-gray-900 mb-8">
-                      Selecciona tu Vehículo
-                    </h3>
+                       Selecciona tu Vehículo
+                     </h3>
                     <div className="grid grid-cols-4 lg:grid-cols-7 gap-6">
                       {vehicles.map((vehicle) => (
                         <button
@@ -499,27 +683,87 @@ const QuickRentalSection: React.FC = () => {
                       ))}
                     </div>
                   </div>
-                ) : (
-                  <form onSubmit={handleSubmit} className="space-y-6">
+                ) : showDesktopPrices && !showDesktopForm ? (
+                  <div>
+                    <div className="flex items-center justify-between mb-8">
+                      <button
+                        onClick={handleBackToVehicles}
+                        className="text-gray-500 hover:text-gray-700 flex items-center gap-2 text-lg"
+                      >
+                        ← Volver a Vehículos
+                      </button>
+                      <h3 className="text-3xl font-bold text-gray-900">
+                         Selecciona Duración y Precio
+                       </h3>
+                      <div></div>
+                    </div>
+                    
                     {/* Vehículo seleccionado - desktop */}
-                    <div className="bg-blue-50 p-6 rounded-lg border border-blue-200">
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-4">
-                          <span className="text-3xl">{selectedVehicleData.icon}</span>
-                          <div>
-                            <h4 className="text-xl font-semibold text-gray-900">{selectedVehicleData.name}</h4>
-                            <p className="text-lg text-blue-600 font-medium">{selectedVehicleData.priceFrom}</p>
-                          </div>
+                    <div className="bg-blue-50 p-6 rounded-lg border border-blue-200 mb-8">
+                      <div className="flex items-center justify-center gap-4">
+                        <span className="text-4xl">{selectedVehicleData.icon}</span>
+                        <div className="text-center">
+                          <h4 className="text-2xl font-semibold text-gray-900">{selectedVehicleData.name}</h4>
+                          <p className="text-lg text-blue-600">{selectedVehicleData.priceFrom}</p>
                         </div>
-                        <button
-                          type="button"
-                          onClick={() => setShowDesktopForm(false)}
-                          className="text-gray-500 hover:text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-100"
-                        >
-                          Cambiar Vehículo
-                        </button>
                       </div>
                     </div>
+
+                    {/* Opciones de precio - desktop */}
+                    <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                      {selectedVehicleData.prices.map((priceOption, index) => (
+                        <button
+                          key={index}
+                          onClick={() => handlePriceSelection(priceOption.duration, priceOption.price)}
+                          className={`p-6 rounded-xl border-2 transition-all duration-200 hover:scale-105 ${
+                            priceOption.featured
+                              ? 'border-blue-500 bg-blue-50 shadow-lg ring-2 ring-blue-200'
+                              : 'border-gray-200 hover:border-blue-300 hover:bg-gray-50 shadow-md hover:shadow-xl'
+                          }`}
+                          style={{
+                            boxShadow: priceOption.featured 
+                              ? '0 10px 25px -5px rgba(59, 130, 246, 0.3), 0 4px 6px -2px rgba(59, 130, 246, 0.1)'
+                              : '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)'
+                          }}
+                        >
+                          <div className="text-center">
+                            <div className="text-lg font-semibold text-gray-900 mb-2">{priceOption.duration}</div>
+                            {priceOption.featured && (
+                              <div className="text-sm text-blue-600 font-medium mb-2">⭐ Más popular</div>
+                            )}
+                            <div className="text-2xl font-bold text-blue-600">{priceOption.price}</div>
+                          </div>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                ) : (
+                   <form onSubmit={handleSubmit} className="space-y-6">
+                     {/* Header paso 3 - desktop */}
+                     <div className="flex items-center justify-between mb-8">
+                       <button
+                         type="button"
+                         onClick={handleBackToPrices}
+                         className="text-gray-500 hover:text-gray-700 flex items-center gap-2 text-lg"
+                       >
+                         ← Volver a Precios
+                       </button>
+                       <h3 className="text-3xl font-bold text-gray-900">
+                          Completa tu Reserva
+                        </h3>
+                       <div></div>
+                     </div>
+
+                     {/* Resumen de selección - desktop */}
+                     <div className="bg-blue-50 p-6 rounded-lg border border-blue-200">
+                       <div className="flex items-center justify-center gap-4">
+                         <span className="text-3xl">{selectedVehicleData.icon}</span>
+                         <div className="text-center">
+                           <h4 className="text-xl font-semibold text-gray-900">{selectedVehicleData.name}</h4>
+                           <p className="text-lg text-blue-600 font-medium">{selectedPrice?.duration} - {selectedPrice?.price}</p>
+                         </div>
+                       </div>
+                     </div>
 
                     {/* Formulario desktop */}
                     <div className="space-y-6">
@@ -605,22 +849,18 @@ const QuickRentalSection: React.FC = () => {
                     </Select>
                   </div>
                   <div>
-                    <Label htmlFor="duration" className="mb-2 block">
-                      Duración
-                    </Label>
-                    <Select value={formData.duration} onValueChange={(value) => handleInputChange('duration', value)}>
-                      <SelectTrigger>
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="1">1 día</SelectItem>
-                        <SelectItem value="2">2 días</SelectItem>
-                        <SelectItem value="3">3 días</SelectItem>
-                        <SelectItem value="7">1 semana</SelectItem>
-                        <SelectItem value="custom">Personalizado</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
+                        <Label htmlFor="duration" className="mb-2 block">
+                          Duración Seleccionada
+                        </Label>
+                        <div className="p-3 bg-gray-50 rounded-lg border">
+                          <div className="text-sm font-medium text-gray-900">
+                            {selectedPrice?.duration}
+                          </div>
+                          <div className="text-xs text-gray-600">
+                            Precio: {selectedPrice?.price}
+                          </div>
+                        </div>
+                      </div>
                   <div>
                     <Label htmlFor="participants" className="mb-2 block">
                       Participantes
