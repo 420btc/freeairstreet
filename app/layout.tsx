@@ -6,8 +6,10 @@ import { LanguageProvider } from "../contexts/LanguageContext"
 import { ThemeProvider } from "../contexts/ThemeContext"
 import { ModalProvider } from "../contexts/ModalContext"
 import { InventoryProvider } from "../contexts/InventoryContext"
+import { CookieConsentProvider } from "../contexts/CookieConsentContext"
 import AirXChat from "../components/AirXChat"
 import { GlobalModals } from "../components/GlobalModals"
+import CookieConsentBanner from "../components/CookieConsentBanner"
 import { Analytics } from "@vercel/analytics/react"
 import { LayoutContent } from "@/components/LayoutContent"
 
@@ -115,16 +117,19 @@ export default function RootLayout({
       <body className={inter.className}>
         <ThemeProvider>
           <LanguageProvider>
-            <InventoryProvider>
-              <ModalProvider>
-                <LayoutContent>
-                  {children}
-                  <AirXChat />
-                </LayoutContent>
-                <GlobalModals />
-                <Analytics />
-              </ModalProvider>
-            </InventoryProvider>
+            <CookieConsentProvider>
+              <InventoryProvider>
+                <ModalProvider>
+                  <LayoutContent>
+                    {children}
+                    <AirXChat />
+                  </LayoutContent>
+                  <GlobalModals />
+                  <CookieConsentBanner />
+                  <Analytics />
+                </ModalProvider>
+              </InventoryProvider>
+            </CookieConsentProvider>
           </LanguageProvider>
         </ThemeProvider>
       </body>

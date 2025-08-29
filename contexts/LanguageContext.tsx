@@ -53,7 +53,7 @@ const translations = {
     'location.description': 'Visítanos en nuestra ubicación privilegiada a orillas del mar mediterráneo en Torremolinos donde podrás encontrar todo lo que necesitas para tu aventura.',
     'location.ourLocation': 'Nuestra Ubicación',
     'location.address': 'Calle de la Playa, 22',
-    'location.city': '29620 Torremolinos, Málaga',
+    'location.city': '29620 Torremolinos, Málaga, La Colina',
     'location.country': 'España',
     'location.phone': '+34 655 707 412',
     'location.email': 'rentairstreet@gmail.com',
@@ -304,6 +304,17 @@ const translations = {
     
     // Map
     'map.doubleClickToActivate': '2 toques para activar',
+    
+    // Cookie Consent
+    'cookies.title': 'Gestionar el consentimiento de cookies',
+    'cookies.description': 'Para ofrecerle la mejor experiencia, utilizamos tecnologías como las cookies para almacenar información en su dispositivo o acceder a ella. El consentimiento a estas tecnologías nos permitirá procesar datos como el comportamiento de navegación o identificadores únicos en este sitio. La falta de consentimiento o la retirada del mismo puede afectar negativamente a determinadas características y funciones.',
+    'cookies.accept': 'Aceptar',
+    'cookies.deny': 'Denegar',
+    'cookies.preferences': 'Ver Preferencias',
+    'cookies.cookiePolicy': 'Política de Cookies',
+    'cookies.privacyPolicy': 'Política de Privacidad',
+    'cookies.legalNotice': 'Aviso legal',
+    'cookies.shortDescription': 'Utilizamos cookies para mejorar su experiencia',
   },
   en: {
     // Header
@@ -345,7 +356,7 @@ const translations = {
     'location.description': 'Visit us at our privileged location on the shores of the Mediterranean Sea in Torremolinos where you can find everything you need for your adventure.',
     'location.ourLocation': 'Our Location',
     'location.address': 'Calle de la Playa, 22',
-    'location.city': '29620 Torremolinos, Málaga',
+    'location.city': '29620 Torremolinos, Málaga, La Colina',
     'location.country': 'Spain',
     'location.phone': '+34 655 707 412',
     'location.email': 'rentairstreet@gmail.com',
@@ -597,6 +608,17 @@ const translations = {
     
     // Map
     'map.doubleClickToActivate': '2 taps to activate',
+    
+    // Cookie Consent
+    'cookies.title': 'Manage cookie consent',
+    'cookies.description': 'To provide you with the best experience, we use technologies such as cookies to store information on your device or access it. Consent to these technologies will allow us to process data such as browsing behavior or unique identifiers on this site. Lack of consent or withdrawal of consent may negatively affect certain features and functions.',
+    'cookies.accept': 'Accept',
+    'cookies.deny': 'Deny',
+    'cookies.preferences': 'View Preferences',
+    'cookies.cookiePolicy': 'Cookie Policy',
+    'cookies.privacyPolicy': 'Privacy Policy',
+    'cookies.legalNotice': 'Legal Notice',
+    'cookies.shortDescription': 'We use cookies to improve your experience',
   },
 }
 
