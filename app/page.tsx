@@ -982,6 +982,37 @@ export default function HomePage() {
 
 
           </div>
+          
+          {/* Scooter Promotion Section */}
+          <div className="mt-12 max-w-4xl mx-auto">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+              {/* Image */}
+              <div className="relative">
+                <Image 
+                  src="/patinetex.png" 
+                  alt="Patinete eléctrico" 
+                  width={400}
+                  height={300}
+                  className="w-full h-auto object-contain"
+                />
+              </div>
+              
+              {/* Content */}
+              <div className="text-center lg:text-left space-y-6">
+                <h3 className="text-2xl md:text-3xl font-bold text-blue-900">
+                  ¡Descubre nuestros patinetes eléctricos!
+                </h3>
+                <p className="text-lg text-gray-700">
+                  La forma más divertida y ecológica de moverte por Torremolinos.
+                </p>
+                <Link href="/alquiler?tab=scooters">
+                  <Button className="bg-yellow-400 hover:bg-yellow-500 text-blue-900 font-bold px-8 py-3 text-lg shadow-lg">
+                    Reservar Patinete
+                  </Button>
+                </Link>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 
