@@ -301,9 +301,36 @@ export default function ContactoPage() {
           <h1 className="text-4xl md:text-5xl font-bold text-black mb-4">
             {t('contact.title')}
           </h1>
-          <p className="text-lg md:text-xl text-gray-700 max-w-3xl mx-auto">
+          <p className="text-lg md:text-xl text-gray-700 max-w-3xl mx-auto mb-8">
             {t('contact.subtitle')}
           </p>
+          
+          {/* Imagen Banana World y Texto */}
+          <div className="flex flex-col lg:flex-row items-center gap-8 mb-8">
+            {/* Imagen a la izquierda en desktop */}
+            <div className="lg:w-1/2">
+              <Image 
+                src="/banana-world-hero.png" 
+                alt="Banana World" 
+                width={800} 
+                height={400} 
+                className="max-w-full h-auto"
+                priority
+              />
+            </div>
+            
+            {/* Texto a la derecha en desktop */}
+            <div className="lg:w-1/2 text-center lg:text-left">
+              <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-4">
+                 Únete a nosotros para vivir la aventura perfecta
+               </h2>
+              <p className="text-lg md:text-xl text-gray-600 leading-relaxed">
+                Descubre Málaga de una forma única con nuestros vehículos de alquiler. 
+                Desde bicicletas eléctricas hasta quads, tenemos todo lo que necesitas 
+                para explorar la ciudad y sus alrededores con total libertad.
+              </p>
+            </div>
+          </div>
         </div>
 
         <div className="grid grid-cols-1 xl:grid-cols-4 lg:grid-cols-3 gap-6">
