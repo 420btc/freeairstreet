@@ -13,6 +13,7 @@ import { useLanguage } from '../contexts/LanguageContext'
 import { LanguageToggle } from '../components/LanguageToggle'
 import { ThemeToggle } from '../components/ThemeToggle'
 import RoutesComponent from '../components/RoutesComponent'
+import QuickRentalSection from '../components/QuickRentalSection'
 
 
 
@@ -516,6 +517,9 @@ export default function HomePage() {
           </div>
         </div>
       </section>
+
+      {/* Quick Rental Section */}
+      <QuickRentalSection />
 
       {/* Services Section */}
       <section id="servicios" className="py-16 bg-gray-50">
