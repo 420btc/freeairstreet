@@ -346,7 +346,7 @@ export function ReservationModal({ isOpen, onClose, type, itemName, itemPrice, i
 
   return (
     <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-start justify-center p-2 sm:p-4 overflow-y-auto">
-      <Card className="w-full max-w-lg my-4 sm:my-8 bg-gradient-to-br from-yellow-50 via-white to-blue-50 dark:from-gray-900 dark:via-gray-800 dark:to-blue-900 border-2 border-blue-600 shadow-2xl overflow-hidden">
+      <Card className="w-full max-w-lg max-h-[90vh] my-4 sm:my-8 bg-gradient-to-br from-yellow-50 via-white to-blue-50 dark:from-gray-900 dark:via-gray-800 dark:to-blue-900 border-2 border-blue-600 shadow-2xl overflow-hidden flex flex-col">
         <CardHeader className="bg-blue-600 text-white relative -m-6 mb-0 p-6 rounded-t-lg">
           <div className="flex justify-between items-start">
             <div className="flex-1 text-center">
@@ -384,7 +384,7 @@ export function ReservationModal({ isOpen, onClose, type, itemName, itemPrice, i
           </div>
         </CardHeader>
 
-        <CardContent className="p-6 pt-4">
+        <CardContent className="p-6 pt-4 overflow-y-auto flex-1">
           {isSubmitted ? (
             <div className="text-center py-8">
               <CheckCircle className="h-16 w-16 text-green-500 mx-auto mb-4" />
