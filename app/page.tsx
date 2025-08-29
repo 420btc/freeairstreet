@@ -752,12 +752,39 @@ export default function HomePage() {
       <section className="pt-8 pb-16 bg-white">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">{t('location.title')}</h2>
-            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+            <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-4">{t('location.title')}</h2>
+            <p className="text-lg text-gray-600 max-w-2xl mx-auto mb-8">
               {t('location.description.before')}
               <Badge className="bg-yellow-400 text-blue-600 hover:bg-yellow-500 text-lg">Torremolinos</Badge>
               {t('location.description.after')}
             </p>
+            
+            {/* Imagen Banana World y Texto */}
+            <div className="flex flex-col lg:flex-row items-center gap-8 mb-12">
+              {/* Imagen a la izquierda en desktop */}
+              <div className="lg:w-1/2">
+                <Image 
+                  src="/banana-world-hero.png" 
+                  alt="Banana World" 
+                  width={800} 
+                  height={400} 
+                  className="max-w-full h-auto"
+                  priority
+                />
+              </div>
+              
+              {/* Texto a la derecha en desktop */}
+              <div className="lg:w-1/2 text-center lg:text-left">
+                <h3 className="text-2xl md:text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
+                   Descubre nuestra ubicación privilegiada
+                 </h3>
+                <p className="text-lg md:text-xl text-gray-600 leading-relaxed">
+                  Estamos estratégicamente ubicados en el corazón de Torremolinos, 
+                  el punto perfecto para comenzar tu aventura por la Costa del Sol. 
+                  Desde aquí podrás explorar playas, montañas y pueblos con total comodidad.
+                </p>
+              </div>
+            </div>
           </div>
           
           <div className="relative w-full h-[400px] md:h-[500px] rounded-lg overflow-hidden shadow-lg">
