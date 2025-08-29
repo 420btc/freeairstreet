@@ -1,13 +1,14 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { X, Calendar, User, Mail, Phone, MapPin, Clock, Users, CheckCircle, Languages } from "lucide-react"
+import { X, Calendar, User, Mail, Phone, MapPin, Clock, Users, CheckCircle, Languages, Eye, EyeOff } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { Checkbox } from "@/components/ui/checkbox"
 import { sendReservationEmail, type ReservationFormData } from "@/lib/emailjs"
 import { useInventory } from "@/contexts/InventoryContext"
 
@@ -42,8 +43,18 @@ export function ReservationModal({ isOpen, onClose, type, itemName, itemPrice, i
     duration: itemDuration || "",
     participants: prefillData?.participants || "1",
     pickupLocation: prefillData?.pickupLocation || "",
-    comments: prefillData?.comments || ""
+    comments: prefillData?.comments || "",
+    dni: ""
   })
+  
+  const [confirmations, setConfirmations] = useState({
+    purchaseInfo: false,
+    dniRequired: false,
+    dataPolicy: false
+  })
+  
+  const [showDataPolicy, setShowDataPolicy] = useState(false)
+  const [dniError, setDniError] = useState("")
 
   // Update form data when props change
   useEffect(() => {
@@ -56,7 +67,8 @@ export function ReservationModal({ isOpen, onClose, type, itemName, itemPrice, i
       duration: itemDuration || "",
       participants: prefillData?.participants || "1",
       pickupLocation: prefillData?.pickupLocation || "",
-      comments: prefillData?.comments || ""
+      comments: prefillData?.comments || "",
+      dni: ""
     })
   }, [itemDuration, prefillData])
   const [isSubmitting, setIsSubmitting] = useState(false)
@@ -65,10 +77,59 @@ export function ReservationModal({ isOpen, onClose, type, itemName, itemPrice, i
   const [isEnglish, setIsEnglish] = useState(false)
   const [submittedInEnglish, setSubmittedInEnglish] = useState(false)
 
+  // Función para validar DNI español
+  const validateDNI = (dni: string): boolean => {
+    // Limpiar espacios y convertir a mayúsculas
+    const cleanDNI = dni.replace(/\s/g, '').toUpperCase()
+    
+    // Patrones válidos: 12345678A, A12345678, 12345678 A
+    const dniPattern = /^([0-9]{8}[A-Z]|[A-Z][0-9]{8}|[0-9]{8}\s[A-Z])$/
+    
+    if (!dniPattern.test(cleanDNI)) {
+      return false
+    }
+    
+    // Extraer números y letra
+    let numbers = ''
+    let letter = ''
+    
+    if (/^[0-9]{8}[A-Z]$/.test(cleanDNI)) {
+      numbers = cleanDNI.substring(0, 8)
+      letter = cleanDNI.substring(8, 9)
+    } else if (/^[A-Z][0-9]{8}$/.test(cleanDNI)) {
+      letter = cleanDNI.substring(0, 1)
+      numbers = cleanDNI.substring(1, 9)
+    } else {
+      numbers = cleanDNI.substring(0, 8)
+      letter = cleanDNI.substring(9, 10)
+    }
+    
+    // Validar letra de control
+    const letters = 'TRWAGMYFPDXBNJZSQVHLCKE'
+    const expectedLetter = letters[parseInt(numbers) % 23]
+    
+    return letter === expectedLetter
+  }
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsSubmitting(true)
     setSubmitError(null)
+    setDniError("")
+    
+    // Validar DNI (solo para formatos españoles, otros países pueden usar cualquier formato)
+     if (formData.dni.length < 5) {
+       setDniError("Por favor, introduce un documento de identidad válido")
+       setIsSubmitting(false)
+       return
+     }
+    
+    // Validar confirmaciones
+    if (!confirmations.purchaseInfo || !confirmations.dniRequired || !confirmations.dataPolicy) {
+      setSubmitError("Debes aceptar todas las condiciones para continuar.")
+      setIsSubmitting(false)
+      return
+    }
 
     try {
       const reservationData: ReservationFormData = {
@@ -107,8 +168,15 @@ export function ReservationModal({ isOpen, onClose, type, itemName, itemPrice, i
           duration: "",
           participants: "1",
           pickupLocation: "",
-          comments: ""
+          comments: "",
+          dni: ""
         })
+        setConfirmations({
+          purchaseInfo: false,
+          dniRequired: false,
+          dataPolicy: false
+        })
+        setDniError("")
       } else {
         const errorMsg = result.error || 'Error al enviar la reserva. Por favor, inténtalo de nuevo.'
         setSubmitError(errorMsg)
@@ -126,6 +194,13 @@ export function ReservationModal({ isOpen, onClose, type, itemName, itemPrice, i
     setIsSubmitted(false)
     setSubmitError(null)
     setSubmittedInEnglish(false)
+    setConfirmations({
+      purchaseInfo: false,
+      dniRequired: false,
+      dataPolicy: false
+    })
+    setDniError("")
+    setShowDataPolicy(false)
     onClose()
   }
 
@@ -147,6 +222,7 @@ export function ReservationModal({ isOpen, onClose, type, itemName, itemPrice, i
       fullName: "Nombre completo *",
       email: "Email *",
       phone: "Teléfono *",
+      dni: "DNI / ID *",
       reservationDetails: "Detalles de la Reserva",
       date: "Fecha *",
       preferredTime: "Hora preferida (Opcional)",
@@ -189,6 +265,14 @@ export function ReservationModal({ isOpen, onClose, type, itemName, itemPrice, i
         aeropuerto: "Aeropuerto de Málaga",
         estacion: "Estación de tren/autobús",
         otro: "Otro lugar (especificar en comentarios)"
+      },
+      confirmations: {
+        purchaseInfo: "Confirmo que estoy realizando la reserva de",
+        dniRequired: "Entiendo que debo presentar mi DNI antes de recoger el vehículo/iniciar la excursión",
+        dataPolicy: "Acepto la política de protección de datos",
+        seeMore: "Ver más",
+        dataProtectionTitle: "Política de Protección de Datos",
+        dataProtectionText: "De conformidad con la Ley Orgánica 3/2018, de 5 de diciembre, de Protección de Datos Personales y garantía de los derechos digitales (LOPDGDD) y el Reglamento (UE) 2016/679 del Parlamento Europeo y del Consejo de 27 de abril de 2016 (RGPD), le informamos que sus datos personales serán tratados por Free Air Street con la finalidad de gestionar su reserva y prestar el servicio solicitado. Sus datos se conservarán durante el tiempo necesario para cumplir con la finalidad para la que se recabaron y para determinar las posibles responsabilidades que se pudieran derivar de dicha finalidad. No se cederán datos a terceros, salvo obligación legal. Puede ejercer sus derechos de acceso, rectificación, supresión, portabilidad, limitación y oposición dirigiéndose a nuestras oficinas o enviando un correo electrónico a protecciondatos@freeairstreet.com junto con copia de su DNI."
       }
     },
     en: {
@@ -199,6 +283,7 @@ export function ReservationModal({ isOpen, onClose, type, itemName, itemPrice, i
       fullName: "Full name *",
       email: "Email *",
       phone: "Phone *",
+      dni: "DNI / ID *",
       reservationDetails: "Reservation Details",
       date: "Date *",
       preferredTime: "Preferred time (Optional)",
@@ -241,6 +326,14 @@ export function ReservationModal({ isOpen, onClose, type, itemName, itemPrice, i
         aeropuerto: "Málaga Airport",
         estacion: "Train/bus station",
         otro: "Other location (specify in comments)"
+      },
+      confirmations: {
+        purchaseInfo: "I confirm that I am making a reservation for",
+        dniRequired: "I understand that I must present my ID document before picking up the vehicle/starting the tour",
+        dataPolicy: "I accept the data protection policy",
+        seeMore: "See more",
+        dataProtectionTitle: "Data Protection Policy",
+        dataProtectionText: "In accordance with Organic Law 3/2018, of December 5, on Personal Data Protection and guarantee of digital rights (LOPDGDD) and Regulation (EU) 2016/679 of the European Parliament and of the Council of April 27, 2016 (GDPR), we inform you that your personal data will be processed by Free Air Street for the purpose of managing your reservation and providing the requested service. Your data will be kept for the time necessary to fulfill the purpose for which it was collected and to determine any possible responsibilities that may arise from said purpose. Data will not be transferred to third parties, except legal obligation. You can exercise your rights of access, rectification, deletion, portability, limitation and opposition by contacting our offices or sending an email to protecciondatos@freeairstreet.com along with a copy of your ID."
       }
     }
   }
@@ -371,6 +464,27 @@ export function ReservationModal({ isOpen, onClose, type, itemName, itemPrice, i
                   className="border-gray-300 focus:border-blue-500 dark:border-gray-600 dark:bg-gray-800"
                 />
               </div>
+              
+              <div>
+                <Label htmlFor="dni" className="text-gray-700 dark:text-gray-300">{t.dni}</Label>
+                <Input
+                  id="dni"
+                  type="text"
+                  value={formData.dni}
+                  onChange={(e) => {
+                    handleInputChange("dni", e.target.value)
+                    setDniError("")
+                  }}
+                  required
+                  placeholder="DNI, ID, Passport..."
+                  className={`border-gray-300 focus:border-blue-500 dark:border-gray-600 dark:bg-gray-800 ${
+                    dniError ? 'border-red-500' : ''
+                  }`}
+                />
+                {dniError && (
+                  <p className="text-red-500 text-sm mt-1">{dniError}</p>
+                )}
+              </div>
             </div>
 
             {/* Detalles de la Reserva */}
@@ -497,6 +611,103 @@ export function ReservationModal({ isOpen, onClose, type, itemName, itemPrice, i
               />
             </div>
 
+            {/* Casillas de Confirmación */}
+            <div className="space-y-3 pt-3 border-t border-gray-200">
+              <h4 className="text-sm font-medium text-gray-800 dark:text-white">Confirmaciones requeridas</h4>
+              
+              {/* Confirmación de compra */}
+               <div className="flex items-start space-x-2">
+                 <Checkbox
+                   id="purchaseInfo"
+                   checked={confirmations.purchaseInfo}
+                   onCheckedChange={(checked) => 
+                     setConfirmations(prev => ({ ...prev, purchaseInfo: !!checked }))
+                   }
+                   className="mt-0.5"
+                 />
+                 <div className="flex-1">
+                   <Label htmlFor="purchaseInfo" className="text-xs text-gray-600 dark:text-gray-400 leading-tight cursor-pointer">
+                     {t.confirmations.purchaseInfo} <strong>{itemName}</strong> {itemPrice && `por ${itemPrice}`} {itemDuration && `durante ${itemDuration}`}.
+                   </Label>
+                 </div>
+               </div>
+               
+               {/* Confirmación DNI */}
+               <div className="flex items-start space-x-2">
+                 <Checkbox
+                   id="dniRequired"
+                   checked={confirmations.dniRequired}
+                   onCheckedChange={(checked) => 
+                     setConfirmations(prev => ({ ...prev, dniRequired: !!checked }))
+                   }
+                   className="mt-0.5"
+                 />
+                 <div className="flex-1">
+                   <Label htmlFor="dniRequired" className="text-xs text-gray-700 dark:text-gray-300 leading-tight cursor-pointer">
+                     {t.confirmations.dniRequired}
+                   </Label>
+                 </div>
+               </div>
+               
+               {/* Política de datos */}
+               <div className="flex items-start space-x-2">
+                 <Checkbox
+                   id="dataPolicy"
+                   checked={confirmations.dataPolicy}
+                   onCheckedChange={(checked) => 
+                     setConfirmations(prev => ({ ...prev, dataPolicy: !!checked }))
+                   }
+                   className="mt-0.5"
+                 />
+                 <div className="flex-1">
+                   <Label htmlFor="dataPolicy" className="text-xs text-gray-700 dark:text-gray-300 leading-tight cursor-pointer">
+                     {t.confirmations.dataPolicy}
+                   </Label>
+                   <Button
+                     type="button"
+                     variant="link"
+                     onClick={() => setShowDataPolicy(true)}
+                     className="text-blue-600 hover:text-blue-800 p-0 h-auto text-xs underline ml-1"
+                   >
+                     {t.confirmations.seeMore}
+                   </Button>
+                 </div>
+               </div>
+            </div>
+
+            {/* Modal de Política de Datos */}
+            {showDataPolicy && (
+              <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+                <div className="bg-white dark:bg-gray-800 rounded-lg max-w-2xl max-h-[80vh] overflow-y-auto p-6">
+                  <div className="flex justify-between items-center mb-4">
+                    <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+                      {t.confirmations.dataProtectionTitle}
+                    </h3>
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      onClick={() => setShowDataPolicy(false)}
+                      className="p-2"
+                    >
+                      <X className="h-4 w-4" />
+                    </Button>
+                  </div>
+                  <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">
+                    {t.confirmations.dataProtectionText}
+                  </p>
+                  <div className="mt-6 flex justify-end">
+                    <Button
+                      type="button"
+                      onClick={() => setShowDataPolicy(false)}
+                      className="bg-blue-600 hover:bg-blue-700 text-white"
+                    >
+                      Cerrar
+                    </Button>
+                  </div>
+                </div>
+              </div>
+            )}
+
                 {/* Botones */}
                 <div className="flex flex-col sm:flex-row gap-4 pt-6">
                   <Button
@@ -509,7 +720,7 @@ export function ReservationModal({ isOpen, onClose, type, itemName, itemPrice, i
                   </Button>
                   <Button
                     type="submit"
-                    disabled={isSubmitting}
+                    disabled={isSubmitting || !confirmations.purchaseInfo || !confirmations.dniRequired || !confirmations.dataPolicy}
                     className="flex-1 bg-yellow-400 hover:bg-yellow-500 text-black font-semibold shadow-lg py-3 disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     {isSubmitting ? t.sending : (isRental ? t.confirmRental : t.confirmReservation)}
