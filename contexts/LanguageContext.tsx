@@ -60,6 +60,16 @@ const translations = {
     'location.hours': 'Lunes a Domingo: 9:00 - 22:00',
     'location.streetView': 'Ver en Street View',
     
+    // Second Store Section
+    'secondStore.title': 'Puedes dejar la bicicleta en nuestra',
+    'secondStore.otherStore': 'otra tienda',
+    'secondStore.available': 'disponible',
+    'secondStore.secondLocation': 'Segunda ubicación',
+    'secondStore.address': 'Calle Obispo Juan Alonso 8',
+    'secondStore.city': 'Los Álamos, Torremolinos',
+    'secondStore.description': 'Para tu comodidad, también puedes devolver tu bicicleta en nuestra segunda tienda. Perfecta para rutas que terminen en esa zona de Torremolinos.',
+    'secondStore.viewOnMaps': 'Ver en Google Maps',
+    
     // Prices Section
     'prices.title': 'Precios Destacados',
     'prices.subtitle': 'Algunas de nuestras ofertas más populares',
@@ -340,7 +350,17 @@ const translations = {
     'location.phone': '+34 655 707 412',
     'location.email': 'rentairstreet@gmail.com',
     'location.hours': 'Monday to Sunday: 9:00 - 22:00',
-    'location.streetView': 'View in Street View',
+    'location.streetView': 'View on Street View',
+    
+    // Second Store Section
+    'secondStore.title': 'You can return the bike at our',
+    'secondStore.otherStore': 'other store',
+    'secondStore.available': 'available',
+    'secondStore.secondLocation': 'Second location',
+    'secondStore.address': 'Calle Obispo Juan Alonso 8',
+    'secondStore.city': 'Los Álamos, Torremolinos',
+    'secondStore.description': 'For your convenience, you can also return your bike at our second store. Perfect for routes that end in that area of Torremolinos.',
+    'secondStore.viewOnMaps': 'View on Google Maps',
     
     // Prices Section
     'prices.title': 'Featured Prices',

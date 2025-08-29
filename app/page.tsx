@@ -198,8 +198,22 @@ export default function HomePage() {
             markerElement.style.border = '1px solid #f59e0b';
             markerElement.style.boxShadow = '0 1px 4px rgba(0,0,0,0.3)';
 
+            // Create popup for main store
+            const mainStorePopup = new mapboxgl.Popup({
+              offset: 25,
+              closeButton: false,
+              closeOnClick: false
+            }).setHTML(`
+              <div class="p-3 text-center">
+                <h3 class="font-bold text-sm text-gray-900 mb-1">Tienda Principal</h3>
+                <p class="text-xs text-gray-600">Calle de la Playa, 22</p>
+                <p class="text-xs text-gray-600">29620 Torremolinos</p>
+              </div>
+            `);
+
             const storeMarker = new mapboxgl.Marker(markerElement)
               .setLngLat([-4.489167162077166, 36.63222134109576])
+              .setPopup(mainStorePopup)
               .addTo(map);
             
             // Add class to identify store marker
@@ -207,8 +221,60 @@ export default function HomePage() {
               const markerEl = storeMarker.getElement();
               if (markerEl) {
                 markerEl.classList.add('store-marker');
+                
+                // Add hover events for desktop
+                markerEl.addEventListener('mouseenter', () => {
+                  mainStorePopup.addTo(map);
+                });
+                markerEl.addEventListener('mouseleave', () => {
+                  mainStorePopup.remove();
+                });
               }
             }, 100);
+            
+            // Add second store marker (red scooter)
+             const secondMarkerElement = document.createElement('div');
+             secondMarkerElement.innerHTML = '🛴';
+             secondMarkerElement.style.fontSize = '12px';
+             secondMarkerElement.style.backgroundColor = '#ef4444';
+             secondMarkerElement.style.borderRadius = '50%';
+             secondMarkerElement.style.padding = '4px';
+             secondMarkerElement.style.border = '1px solid #dc2626';
+             secondMarkerElement.style.boxShadow = '0 1px 4px rgba(0,0,0,0.3)';
+
+             // Create popup for second store
+             const secondStorePopup = new mapboxgl.Popup({
+               offset: 25,
+               closeButton: false,
+               closeOnClick: false
+             }).setHTML(`
+               <div class="p-3 text-center">
+                 <h3 class="font-bold text-sm text-gray-900 mb-1">Segunda Tienda</h3>
+                 <p class="text-xs text-gray-600">Calle Obispo Juan Alonso, 8</p>
+                 <p class="text-xs text-gray-600">Los Álamos, Torremolinos</p>
+               </div>
+             `);
+
+             const secondStoreMarker = new mapboxgl.Marker(secondMarkerElement)
+               .setLngLat([-4.487738, 36.635466])
+               .setPopup(secondStorePopup)
+               .addTo(map);
+             
+             // Add class to identify second store marker
+             setTimeout(() => {
+               const secondMarkerEl = secondStoreMarker.getElement();
+               if (secondMarkerEl) {
+                 secondMarkerEl.classList.add('store-marker');
+                 
+                 // Add hover events for desktop
+                 secondMarkerEl.addEventListener('mouseenter', () => {
+                   secondStorePopup.addTo(map);
+                 });
+                 secondMarkerEl.addEventListener('mouseleave', () => {
+                   secondStorePopup.remove();
+                 });
+               }
+             }, 100);
           }, 3200);
         }, 1000);
       });
@@ -769,6 +835,59 @@ export default function HomePage() {
                   </div>
                 </div>
               </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Second Store Section */}
+      <section className="py-16 bg-white">
+        <div className="container mx-auto px-4">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center max-w-6xl mx-auto">
+            {/* Image */}
+            <div className="relative">
+              <Image 
+                src="/solhiress.jpeg" 
+                alt="Segunda tienda Free Air Street" 
+                width={600}
+                height={400}
+                className="rounded-lg shadow-lg object-cover w-full h-[300px] md:h-[400px]"
+              />
+            </div>
+            
+            {/* Content */}
+            <div className="space-y-6">
+              <h2 className="text-3xl md:text-4xl font-bold text-gray-900">
+                {t('secondStore.title')} <span className="text-blue-600 underline">{t('secondStore.otherStore')}</span> {t('secondStore.available')}
+              </h2>
+              
+              <div className="space-y-4">
+                <div className="flex items-start space-x-3">
+                  <MapPin className="h-6 w-6 text-blue-600 mt-1 flex-shrink-0" />
+                  <div>
+                    <p className="text-lg font-semibold text-gray-900">{t('secondStore.secondLocation')}</p>
+                    <p className="text-gray-700">{t('secondStore.address')}</p>
+                    <p className="text-gray-700">{t('secondStore.city')}</p>
+                  </div>
+                </div>
+                
+                <p className="text-gray-600 leading-relaxed">
+                  {t('secondStore.description')}
+                </p>
+              </div>
+              
+              <a 
+                href="https://maps.app.goo.gl/5KcHf2wMjwn9kMEFA"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-semibold shadow-lg"
+              >
+                <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                </svg>
+                {t('secondStore.viewOnMaps')}
+              </a>
             </div>
           </div>
         </div>
