@@ -779,10 +779,10 @@ export default function HomePage() {
                    Descubre nuestra ubicación privilegiada
                  </h3>
                 <p className="text-lg md:text-xl text-gray-600 leading-relaxed">
-                  Estamos estratégicamente ubicados en el corazón de Torremolinos, 
-                  el punto perfecto para comenzar tu aventura por la Costa del Sol. 
-                  Desde aquí podrás explorar playas, montañas y pueblos con total comodidad.
-                </p>
+                   Estamos estratégicamente ubicados al lado de la playa en La colina y Los Álamos, 
+                   el punto perfecto para comenzar tu aventura por la Costa del Sol. 
+                   Desde aquí podrás explorar playas, montañas y pueblos con total comodidad.
+                 </p>
               </div>
             </div>
           </div>
