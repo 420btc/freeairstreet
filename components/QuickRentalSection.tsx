@@ -359,12 +359,13 @@ const QuickRentalSection: React.FC = () => {
                        Selecciona tu Vehículo
                      </h3>
                     <div className="grid grid-cols-2 gap-4">
-                      {vehicles.map((vehicle) => (
+                      {/* Primera fila: 2 tarjetas */}
+                      {vehicles.slice(0, 2).map((vehicle) => (
                         <button
                           key={vehicle.id}
                           type="button"
                           onClick={() => handleVehicleSelection(vehicle.id)}
-                          className="group relative p-6 rounded-xl border-2 transition-all duration-300 hover:scale-105 hover:shadow-lg border-gray-200 hover:border-blue-300 hover:bg-gray-50 shadow-md hover:shadow-xl"
+                          className="group relative p-6 rounded-xl border-2 transition-all duration-300 hover:scale-105 hover:shadow-xl border-gray-200 hover:border-blue-300 hover:bg-gray-50 shadow-md"
                           style={{
                             boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)'
                           }}
@@ -382,6 +383,83 @@ const QuickRentalSection: React.FC = () => {
                           </div>
                         </button>
                       ))}
+                      
+                      {/* Segunda fila: 2 tarjetas */}
+                      {vehicles.slice(2, 4).map((vehicle) => (
+                        <button
+                          key={vehicle.id}
+                          type="button"
+                          onClick={() => handleVehicleSelection(vehicle.id)}
+                          className="group relative p-6 rounded-xl border-2 transition-all duration-300 hover:scale-105 hover:shadow-xl border-gray-200 hover:border-blue-300 hover:bg-gray-50 shadow-md"
+                          style={{
+                            boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)'
+                          }}
+                        >
+                          <div className="text-center">
+                            <div className="text-3xl mb-3 transform group-hover:scale-110 transition-transform duration-200">
+                              {vehicle.icon}
+                            </div>
+                            <div className="text-sm font-semibold text-gray-900 mb-2 leading-tight">
+                              {vehicle.name}
+                            </div>
+                            <div className="text-xs font-bold text-blue-600">
+                              {vehicle.priceFrom}
+                            </div>
+                          </div>
+                        </button>
+                      ))}
+                      
+                      {/* Tercera fila: 2 tarjetas */}
+                      {vehicles.slice(4, 6).map((vehicle) => (
+                        <button
+                          key={vehicle.id}
+                          type="button"
+                          onClick={() => handleVehicleSelection(vehicle.id)}
+                          className="group relative p-6 rounded-xl border-2 transition-all duration-300 hover:scale-105 hover:shadow-xl border-gray-200 hover:border-blue-300 hover:bg-gray-50 shadow-md"
+                          style={{
+                            boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)'
+                          }}
+                        >
+                          <div className="text-center">
+                            <div className="text-3xl mb-3 transform group-hover:scale-110 transition-transform duration-200">
+                              {vehicle.icon}
+                            </div>
+                            <div className="text-sm font-semibold text-gray-900 mb-2 leading-tight">
+                              {vehicle.name}
+                            </div>
+                            <div className="text-xs font-bold text-blue-600">
+                              {vehicle.priceFrom}
+                            </div>
+                          </div>
+                        </button>
+                      ))}
+                      
+                      {/* Cuarta fila: 1 tarjeta centrada */}
+                      <div className="col-span-2 flex justify-center">
+                        {vehicles.slice(6, 7).map((vehicle) => (
+                          <button
+                            key={vehicle.id}
+                            type="button"
+                            onClick={() => handleVehicleSelection(vehicle.id)}
+                            className="group relative p-6 rounded-xl border-2 transition-all duration-300 hover:scale-105 hover:shadow-lg border-gray-200 hover:border-blue-300 hover:bg-gray-50 shadow-md hover:shadow-xl w-40"
+                            style={{
+                              boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)'
+                            }}
+                          >
+                            <div className="text-center">
+                              <div className="text-3xl mb-3 transform group-hover:scale-110 transition-transform duration-200">
+                                {vehicle.icon}
+                              </div>
+                              <div className="text-sm font-semibold text-gray-900 mb-2 leading-tight">
+                                {vehicle.name}
+                              </div>
+                              <div className="text-xs font-bold text-blue-600">
+                                {vehicle.priceFrom}
+                              </div>
+                            </div>
+                          </button>
+                        ))}
+                      </div>
                     </div>
                   </div>
                 ) : showMobilePrices && !showMobileForm ? (
@@ -663,7 +741,7 @@ const QuickRentalSection: React.FC = () => {
                           key={vehicle.id}
                           type="button"
                           onClick={() => handleVehicleSelection(vehicle.id)}
-                          className="group relative p-6 rounded-xl border-2 transition-all duration-300 hover:scale-105 hover:shadow-lg border-gray-200 hover:border-blue-300 hover:bg-gray-50 shadow-md hover:shadow-xl"
+                          className="group relative p-6 rounded-xl border-2 transition-all duration-300 hover:scale-105 hover:shadow-xl border-gray-200 hover:border-blue-300 hover:bg-gray-50 shadow-md"
                           style={{
                             boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)'
                           }}
