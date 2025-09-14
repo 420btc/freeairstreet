@@ -368,7 +368,7 @@ const QuickRentalSection: React.FC = () => {
                           key={vehicle.id}
                           type="button"
                           onClick={() => handleVehicleSelection(vehicle.id)}
-                          className="group relative p-8 rounded-xl border-2 transition-all duration-300 hover:scale-105 hover:shadow-xl border-gray-200 hover:border-blue-300 shadow-md"
+                          className="group relative px-12 py-10 rounded-xl border-2 transition-all duration-300 hover:scale-105 hover:shadow-xl border-gray-200 hover:border-blue-300 shadow-md min-h-[220px] w-full"
                           style={{
                             boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)'
                           }}
@@ -395,7 +395,7 @@ const QuickRentalSection: React.FC = () => {
                           key={vehicle.id}
                           type="button"
                           onClick={() => handleVehicleSelection(vehicle.id)}
-                          className="group relative p-6 rounded-xl border-2 transition-all duration-300 hover:scale-105 hover:shadow-xl border-gray-200 hover:border-blue-300 shadow-md"
+                          className="group relative p-8 rounded-xl border-2 transition-all duration-300 hover:scale-105 hover:shadow-xl border-gray-200 hover:border-blue-300 shadow-md"
                           style={{
                             boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)'
                           }}
@@ -743,7 +743,7 @@ const QuickRentalSection: React.FC = () => {
               <div className="hidden md:block">
                 {!showDesktopPrices && !showDesktopForm ? (
                   <div className="text-center">
-                    <div className="grid grid-cols-4 lg:grid-cols-7 gap-6">
+                    <div className="grid grid-cols-4 lg:grid-cols-7 gap-8">
                       {vehicles.map((vehicle) => (
                         <button
                           key={vehicle.id}
@@ -755,15 +755,15 @@ const QuickRentalSection: React.FC = () => {
                           }}
                         >
                           <div className="text-center">
-                            <div className="mb-6 transform group-hover:scale-110 transition-transform duration-200 flex justify-center">
+                            <div className="mb-8 transform group-hover:scale-110 transition-transform duration-200 flex justify-center">
                                {vehicle.icon}
                              </div>
-                            <div className="text-lg font-semibold text-gray-900 mb-3 leading-tight">
-                              {vehicle.name}
-                            </div>
-                            <div className="text-base font-bold text-blue-600">
-                              {vehicle.priceFrom}
-                            </div>
+                             <div className="text-xl font-semibold text-gray-900 mb-4 leading-tight">
+                               {vehicle.name}
+                             </div>
+                             <div className="text-lg font-bold text-blue-600">
+                               {vehicle.priceFrom}
+                             </div>
                           </div>
                         </button>
                       ))}

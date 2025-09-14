@@ -431,15 +431,28 @@ export default function AlquilerPage() {
   const quads = [
     {
       id: "quad-rental",
-      name: "RENT A QUAD",
-      description: "Quad para una persona, perfecto para excursiones y diversión",
+      name: "NORMAL QUAD",
+      description: "Quad potente para aventuras extremas y emociones fuertes",
       image: "/quad.jpeg",
       cc: "Quad",
       prices: [
         { duration: "1 hora", price: "30€", featured: true },
         { duration: "2 horas", price: "50€", featured: true },
       ],
-      features: ["1 persona", "Fácil manejo", "Diversión garantizada", "Excursiones"],
+      features: ["Alta potencia", "Aventuras extremas", "Emociones fuertes", "Deportivo"],
+    },
+    {
+      id: "quad-premium",
+      name: "QUAD DOBLE",
+      description: "Quad doble con dos asientos, cómodo y seguro para dos personas",
+      image: "/quad2.png",
+      cc: "Quad Doble",
+      prices: [
+        { duration: "1 hora", price: "15€" },
+        { duration: "2 horas", price: "25€" },
+        { duration: "Todo el día", price: "60€", featured: true },
+      ],
+      features: ["Dos asientos", "Para 2 personas", "Ideal familias", "Máxima seguridad"],
     },
   ]
 
@@ -571,6 +584,12 @@ export default function AlquilerPage() {
     'Adaptado minusválidos': 'Adapted for reduced mobility',
     'Fácil acceso': 'Easy access',
     'Seguridad extra': 'Extra safety',
+    'Alta potencia': 'High power',
+    'Aventuras extremas': 'Extreme adventures',
+    'Emociones fuertes': 'Strong emotions',
+    'Dos asientos': 'Two seats',
+    'Para 2 personas': 'For 2 people',
+    'Máxima seguridad': 'Maximum safety',
   }
 
   const descMap: Record<string, string> = {
@@ -590,6 +609,8 @@ export default function AlquilerPage() {
     'Maxiscooter de 350cc ideal para viajes largos y carretera': '350cc maxi scooter ideal for long trips and highway',
     'Moto trail de 650cc para aventuras on-road y off-road': '650cc trail bike for on-road and off-road adventures',
     'Quad para una persona, perfecto para excursiones y diversión': 'Quad for one person, perfect for excursions and fun',
+    'Quad potente para aventuras extremas y emociones fuertes': 'Powerful quad for extreme adventures and strong emotions',
+    'Quad doble con dos asientos, cómodo y seguro para dos personas': 'Double quad with two seats, comfortable and safe for two people',
     'Scooter eléctrico para movilidad urbana sostenible y eficiente': 'Electric scooter for sustainable and efficient urban mobility',
     'Scooter eléctrico especial para personas con movilidad reducida': 'Electric scooter specially designed for people with reduced mobility',
     'Asiento adicional para niños, seguro y cómodo': 'Additional child seat, safe and comfortable',
@@ -600,7 +621,7 @@ export default function AlquilerPage() {
   const durationMap: Record<string, string> = {
     '1 Día': '1 Day',
     '1D': '1D', '2D': '2D', '3D': '3D', '4D': '4D', '5D': '5D', '6D': '6D', '7D': '7D',
-    '1 hora': '1 hour', '2 horas': '2 hours', '30 min': '30 min', '1h': '1h', '2h': '2h', '3h': '3h', '4h': '4h'
+    '1 hora': '1 hour', '2 horas': '2 hours', 'Todo el día': 'All day', '30 min': '30 min', '1h': '1h', '2h': '2h', '3h': '3h', '4h': '4h'
   }
 
   const groupTransform = (g?: string) => g?.startsWith('GRUPO ') ? g.replace('GRUPO ', 'GROUP ') : g
@@ -625,6 +646,8 @@ export default function AlquilerPage() {
 
   const translateQuad = (q: any) => ({
     ...q,
+    name: q.name === 'NORMAL QUAD' ? 'NORMAL QUAD' : q.name === 'QUAD DOBLE' ? 'DOUBLE QUAD' : q.name,
+    cc: q.cc === 'Quad Doble' ? 'Double Quad' : q.cc,
     description: descMap[q.description] || q.description,
     features: translateFeatures(q.features),
     prices: Array.isArray(q.prices) ? q.prices.map((p: any) => ({ ...p, duration: durationMap[p.duration] || p.duration })) : q.prices,
