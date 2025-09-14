@@ -8,7 +8,7 @@ import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Checkbox } from '@/components/ui/checkbox'
-import { Calendar, MapPin, Clock, User, Mail, Phone, CheckCircle } from 'lucide-react'
+import { Calendar, MapPin, Clock, User, Mail, Phone, CheckCircle, Bike, Zap, Mountain, Car, CarFront } from 'lucide-react'
 import { useLanguage } from '@/contexts/LanguageContext'
 import { sendReservationEmail, type ReservationFormData } from '@/lib/emailjs'
 import Link from 'next/link'
@@ -16,7 +16,8 @@ import Link from 'next/link'
 interface VehicleType {
   id: string
   name: string
-  icon: string
+  icon: React.ReactNode
+  mobileIcon: React.ReactNode
   image: string
   priceFrom: string
   prices: Array<{
@@ -63,10 +64,11 @@ const QuickRentalSection: React.FC = () => {
   const vehicles: VehicleType[] = [
     {
       id: 'bicycles',
-      name: 'Bicicleta',
-      icon: '🚲',
+      name: t('quickRental.vehicles.bicycle') as string,
+      icon: <Bike className="w-20 h-20 text-yellow-500" />,
+      mobileIcon: <Bike className="w-12 h-12 text-yellow-500" />,
       image: '/urban-bicycle.png',
-      priceFrom: 'Desde 3€',
+      priceFrom: `${t('quickRental.priceFrom') as string} 3€`,
       prices: [
         { duration: "1h", price: "3€" },
         { duration: "2h", price: "5€" },
@@ -77,10 +79,11 @@ const QuickRentalSection: React.FC = () => {
     },
     {
       id: 'electric-bikes',
-      name: 'E-Bike',
-      icon: '⚡',
+      name: t('quickRental.vehicles.electricBike') as string,
+      icon: <Zap className="w-20 h-20 text-yellow-500" />,
+      mobileIcon: <Zap className="w-12 h-12 text-yellow-500" />,
       image: '/modern-electric-bike.png',
-      priceFrom: 'Desde 10€',
+      priceFrom: `${t('quickRental.priceFrom') as string} 10€`,
       prices: [
         { duration: "1h", price: "10€" },
         { duration: "2h", price: "18€" },
@@ -91,10 +94,11 @@ const QuickRentalSection: React.FC = () => {
     },
     {
       id: 'fat-bikes',
-      name: 'Fat Bike',
-      icon: '🚵',
+      name: t('quickRental.vehicles.fatBike') as string,
+      icon: <Mountain className="w-20 h-20 text-yellow-500" />,
+      mobileIcon: <Mountain className="w-12 h-12 text-yellow-500" />,
       image: '/fat-bike-electric-wide-tires.png',
-      priceFrom: 'Desde 10€',
+      priceFrom: `${t('quickRental.priceFrom') as string} 10€`,
       prices: [
         { duration: "1h", price: "10€" },
         { duration: "2h", price: "18€" },
@@ -105,10 +109,11 @@ const QuickRentalSection: React.FC = () => {
     },
     {
       id: 'scooters',
-      name: 'Patinete',
-      icon: '🛴',
+      name: t('quickRental.vehicles.scooter') as string,
+      icon: <Zap className="w-20 h-20 text-yellow-500" />,
+      mobileIcon: <Zap className="w-12 h-12 text-yellow-500" />,
       image: '/patinelectrico.jpg',
-      priceFrom: 'Desde 10€',
+      priceFrom: `${t('quickRental.priceFrom') as string} 10€`,
       prices: [
         { duration: "30 min", price: "10€" },
         { duration: "1h", price: "15€", featured: true },
@@ -116,10 +121,11 @@ const QuickRentalSection: React.FC = () => {
     },
     {
       id: 'motorcycles',
-      name: 'Moto',
-      icon: '🏍️',
+      name: t('quickRental.vehicles.motorcycle') as string,
+      icon: <Bike className="w-20 h-20 text-yellow-500" />,
+      mobileIcon: <Bike className="w-12 h-12 text-yellow-500" />,
       image: '/motos/motobike.jpeg',
-      priceFrom: 'Desde 15€',
+      priceFrom: `${t('quickRental.priceFrom') as string} 15€`,
       prices: [
         { duration: "1h", price: "15€" },
         { duration: "2h", price: "25€", featured: true },
@@ -131,10 +137,11 @@ const QuickRentalSection: React.FC = () => {
     },
     {
       id: 'quads',
-      name: 'Quad',
-      icon: '🏎️',
+      name: t('quickRental.vehicles.quad') as string,
+      icon: <CarFront className="w-20 h-20 text-yellow-500" />,
+      mobileIcon: <CarFront className="w-12 h-12 text-yellow-500" />,
       image: '/quad.jpeg',
-      priceFrom: 'Desde 30€',
+      priceFrom: `${t('quickRental.priceFrom') as string} 30€`,
       prices: [
         { duration: "1 hora", price: "30€", featured: true },
         { duration: "2 horas", price: "50€", featured: true },
@@ -142,10 +149,11 @@ const QuickRentalSection: React.FC = () => {
     },
     {
       id: 'cars',
-      name: 'Coche',
-      icon: '🚗',
+      name: t('quickRental.vehicles.car') as string,
+      icon: <Car className="w-20 h-20 text-yellow-500" />,
+      mobileIcon: <Car className="w-12 h-12 text-yellow-500" />,
       image: '/coches/toyotaaygo.png',
-      priceFrom: 'Desde 54€',
+      priceFrom: `${t('quickRental.priceFrom') as string} 54€`,
       prices: [
         { duration: "1 día", price: "54€", featured: true },
         { duration: "2 días", price: "94€" },
@@ -341,10 +349,10 @@ const QuickRentalSection: React.FC = () => {
       <div className="container mx-auto px-4">
         <div className="text-center mb-12">
           <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-            Alquila Ahora
+            {t('quickRental.title')}
           </h2>
           <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-            Selecciona tu vehículo ideal y reserva al instante
+            {t('quickRental.subtitle')}
           </p>
         </div>
 
@@ -366,8 +374,10 @@ const QuickRentalSection: React.FC = () => {
                           }}
                         >
                           <div className="text-center">
-                            <div className="text-3xl mb-3 transform group-hover:scale-110 transition-transform duration-200">
-                              {vehicle.icon}
+                            <div className="mb-3 transform group-hover:scale-110 transition-transform duration-200 flex justify-center">
+                              <div className="w-12 h-12 flex items-center justify-center">
+                                {vehicle.mobileIcon}
+                              </div>
                             </div>
                             <div className="text-sm font-semibold text-gray-900 mb-2 leading-tight">
                               {vehicle.name}
@@ -391,8 +401,10 @@ const QuickRentalSection: React.FC = () => {
                           }}
                         >
                           <div className="text-center">
-                            <div className="text-3xl mb-3 transform group-hover:scale-110 transition-transform duration-200">
-                              {vehicle.icon}
+                            <div className="mb-3 transform group-hover:scale-110 transition-transform duration-200 flex justify-center">
+                              <div className="w-12 h-12 flex items-center justify-center">
+                                {vehicle.mobileIcon}
+                              </div>
                             </div>
                             <div className="text-sm font-semibold text-gray-900 mb-2 leading-tight">
                               {vehicle.name}
@@ -416,8 +428,10 @@ const QuickRentalSection: React.FC = () => {
                           }}
                         >
                           <div className="text-center">
-                            <div className="text-3xl mb-3 transform group-hover:scale-110 transition-transform duration-200">
-                              {vehicle.icon}
+                            <div className="mb-3 transform group-hover:scale-110 transition-transform duration-200 flex justify-center">
+                              <div className="w-12 h-12 flex items-center justify-center">
+                                {vehicle.mobileIcon}
+                              </div>
                             </div>
                             <div className="text-sm font-semibold text-gray-900 mb-2 leading-tight">
                               {vehicle.name}
@@ -436,14 +450,16 @@ const QuickRentalSection: React.FC = () => {
                             key={vehicle.id}
                             type="button"
                             onClick={() => handleVehicleSelection(vehicle.id)}
-                            className="group relative p-6 rounded-xl border-2 transition-all duration-300 hover:scale-105 hover:shadow-lg border-gray-200 hover:border-blue-300 hover:bg-gray-50 shadow-md hover:shadow-xl w-40"
+                            className="group relative p-6 rounded-xl border-2 transition-all duration-300 hover:scale-105 hover:shadow-lg border-gray-200 hover:border-blue-300 shadow-md hover:shadow-xl w-40"
                             style={{
                               boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)'
                             }}
                           >
                             <div className="text-center">
-                              <div className="text-3xl mb-3 transform group-hover:scale-110 transition-transform duration-200">
-                                {vehicle.icon}
+                              <div className="mb-3 transform group-hover:scale-110 transition-transform duration-200 flex justify-center">
+                                <div className="w-12 h-12 flex items-center justify-center">
+                                  {vehicle.mobileIcon}
+                                </div>
                               </div>
                               <div className="text-sm font-semibold text-gray-900 mb-2 leading-tight">
                                 {vehicle.name}
@@ -739,9 +755,9 @@ const QuickRentalSection: React.FC = () => {
                           }}
                         >
                           <div className="text-center">
-                            <div className="text-5xl mb-6 transform group-hover:scale-110 transition-transform duration-200">
-                              {vehicle.icon}
-                            </div>
+                            <div className="mb-6 transform group-hover:scale-110 transition-transform duration-200 flex justify-center">
+                               {vehicle.icon}
+                             </div>
                             <div className="text-lg font-semibold text-gray-900 mb-3 leading-tight">
                               {vehicle.name}
                             </div>

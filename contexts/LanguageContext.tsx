@@ -305,6 +305,18 @@ const translations = {
     // Map
     'map.doubleClickToActivate': '2 toques para activar',
     
+    // Quick Rental Vehicles
+    'quickRental.title': 'Alquila Ahora',
+    'quickRental.subtitle': 'Selecciona tu vehículo ideal y reserva al instante',
+    'quickRental.vehicles.bicycle': 'Bicicleta',
+    'quickRental.vehicles.electricBike': 'E-Bike',
+    'quickRental.vehicles.fatBike': 'Fat Bike',
+    'quickRental.vehicles.scooter': 'Patinete',
+    'quickRental.vehicles.motorcycle': 'Moto',
+    'quickRental.vehicles.quad': 'Quad',
+    'quickRental.vehicles.car': 'Coche',
+    'quickRental.priceFrom': 'Desde',
+    
     // Cookie Consent
     'cookies.title': 'Gestionar el consentimiento de cookies',
     'cookies.description': 'Para ofrecerle la mejor experiencia, utilizamos tecnologías como las cookies para almacenar información en su dispositivo o acceder a ella. El consentimiento a estas tecnologías nos permitirá procesar datos como el comportamiento de navegación o identificadores únicos en este sitio. La falta de consentimiento o la retirada del mismo puede afectar negativamente a determinadas características y funciones.',
@@ -608,6 +620,18 @@ const translations = {
     
     // Map
     'map.doubleClickToActivate': '2 taps to activate',
+    
+    // Quick Rental Vehicles
+    'quickRental.title': 'Rent Now',
+    'quickRental.subtitle': 'Select your ideal vehicle and book instantly',
+    'quickRental.vehicles.bicycle': 'Bicycle',
+    'quickRental.vehicles.electricBike': 'E-Bike',
+    'quickRental.vehicles.fatBike': 'Fat Bike',
+    'quickRental.vehicles.scooter': 'Scooter',
+    'quickRental.vehicles.motorcycle': 'Motorcycle',
+    'quickRental.vehicles.quad': 'Quad',
+    'quickRental.vehicles.car': 'Car',
+    'quickRental.priceFrom': 'From',
     
     // Cookie Consent
     'cookies.title': 'Manage cookie consent',
