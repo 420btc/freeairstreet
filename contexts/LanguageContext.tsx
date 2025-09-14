@@ -24,7 +24,7 @@ const translations = {
     // Hero Section
     'hero.title': 'Explora con Libertad',
     'hero.subtitle': 'Alquila bicicletas, patinetes eléctricos, motos, coches y únete a nuestras visitas guiadas. La aventura te espera en cada rincón.',
-    'hero.viewRentals': 'Ver Alquileres',
+    'hero.viewRentals': 'Alquilar Ahora',
     'hero.bookTour': 'Reservar Tour',
     
     // Services Section
@@ -327,7 +327,7 @@ const translations = {
     // Hero Section
     'hero.title': 'Explore with Freedom',
     'hero.subtitle': 'Rent bikes, electric scooters, motorcycles, cars and join our guided tours. Adventure awaits you at every corner.',
-    'hero.viewRentals': 'View Rentals',
+    'hero.viewRentals': 'Rent Now',
     'hero.bookTour': 'Book Tour',
     
     // Services Section
