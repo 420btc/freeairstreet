@@ -784,31 +784,31 @@ export default function AlquilerPage() {
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
           <div className="mb-8">
             {/* Desktop: Una sola fila con 6 elementos */}
-            <TabsList className="hidden sm:grid w-full grid-cols-6 h-16">
-              <TabsTrigger value="bicicletas" className="flex items-center space-x-2 py-4 px-6 text-lg">
+            <TabsList className="hidden sm:grid w-full grid-cols-6 h-20 bg-white/20 backdrop-blur-lg border border-white/30 rounded-2xl shadow-2xl p-2">
+              <TabsTrigger value="bicicletas" className="flex items-center space-x-3 py-4 px-6 text-lg font-semibold rounded-lg transition-all duration-300 hover:bg-white/20 hover:backdrop-blur-sm data-[state=active]:bg-white/40 data-[state=active]:shadow-xl data-[state=active]:border data-[state=active]:border-white/50">
                 <span>🚴</span>
                 <span>{t('rental.bicycles')}</span>
               </TabsTrigger>
-              <TabsTrigger value="coches" className="flex items-center space-x-2 py-4 px-6 text-lg">
+              <TabsTrigger value="coches" className="flex items-center space-x-3 py-4 px-6 text-lg font-semibold rounded-lg transition-all duration-300 hover:bg-white/20 hover:backdrop-blur-sm data-[state=active]:bg-white/40 data-[state=active]:shadow-xl data-[state=active]:border data-[state=active]:border-white/50">
                 <span>🚗</span>
                 <span>{t('rental.cars')}</span>
               </TabsTrigger>
-              <TabsTrigger value="motos" className="flex items-center space-x-2 py-4 px-6 text-lg">
+              <TabsTrigger value="motos" className="flex items-center space-x-3 py-4 px-6 text-lg font-semibold rounded-lg transition-all duration-300 hover:bg-white/20 hover:backdrop-blur-sm data-[state=active]:bg-white/40 data-[state=active]:shadow-xl data-[state=active]:border data-[state=active]:border-white/50">
                 <span>🏍️</span>
                 <span>{t('rental.motorcycles')}</span>
               </TabsTrigger>
-              <TabsTrigger value="quads" className="flex items-center space-x-2 py-4 px-6 text-lg">
+              <TabsTrigger value="quads" className="flex items-center space-x-3 py-4 px-6 text-lg font-semibold rounded-lg transition-all duration-300 hover:bg-white/20 hover:backdrop-blur-sm data-[state=active]:bg-white/40 data-[state=active]:shadow-xl data-[state=active]:border data-[state=active]:border-white/50">
                 <span>🏎️</span>
                 <span>{t('rental.quads')}</span>
               </TabsTrigger>
-              <TabsTrigger value="scooters" className="flex items-center space-x-2 py-4 px-6 text-lg relative">
+              <TabsTrigger value="scooters" className="flex items-center space-x-3 py-4 px-6 text-lg font-semibold rounded-lg transition-all duration-300 hover:bg-white/20 hover:backdrop-blur-sm data-[state=active]:bg-white/40 data-[state=active]:shadow-xl data-[state=active]:border data-[state=active]:border-white/50 relative">
                 <span>🛴</span>
                 <span>{t('rental.scooters')}</span>
                 <div className="absolute -top-2 -right-2 bg-yellow-400 text-red-600 font-bold text-xs px-2 py-1 rounded-full border-2 border-yellow-500 shadow-lg transform rotate-12">
                   HOT!
                 </div>
               </TabsTrigger>
-              <TabsTrigger value="accesorios" className="flex items-center space-x-2 py-4 px-6 text-lg">
+              <TabsTrigger value="accesorios" className="flex items-center space-x-3 py-4 px-6 text-lg font-semibold rounded-lg transition-all duration-300 hover:bg-white/20 hover:backdrop-blur-sm data-[state=active]:bg-white/40 data-[state=active]:shadow-xl data-[state=active]:border data-[state=active]:border-white/50">
                 <span>🛍️</span>
                 <span>{t('rental.accessories')}</span>
               </TabsTrigger>
@@ -865,7 +865,7 @@ export default function AlquilerPage() {
           <TabsContent value="bicicletas" className="sm:data-[state=active]:animate-none data-[state=active]:animate-in data-[state=active]:slide-in-from-right-4 data-[state=active]:duration-300">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               {bicycles.map((bike) => (
-                <Card key={bike.id} className="overflow-hidden hover:shadow-lg transition-shadow">
+                <Card key={bike.id} className="overflow-hidden shadow-lg hover:shadow-2xl transition-shadow duration-300">
                   <div className="aspect-video relative">
                     <Image src={bike.image || "/placeholder.svg"} alt={bike.name as string} fill className="object-cover" />
 
@@ -957,7 +957,7 @@ export default function AlquilerPage() {
           <TabsContent value="coches" className="sm:data-[state=active]:animate-none data-[state=active]:animate-in data-[state=active]:slide-in-from-right-4 data-[state=active]:duration-300">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               {carsLocalized.map((car) => (
-                <Card key={car.id} className="overflow-hidden hover:shadow-lg transition-shadow">
+                <Card key={car.id} className="overflow-hidden shadow-lg hover:shadow-2xl transition-shadow duration-300">
                   <div className="aspect-video relative">
                     <Image src={car.image || "/placeholder.svg"} alt={car.name as string} fill className="object-cover" />
 
@@ -1059,7 +1059,7 @@ export default function AlquilerPage() {
           <TabsContent value="motos" className="sm:data-[state=active]:animate-none data-[state=active]:animate-in data-[state=active]:slide-in-from-right-4 data-[state=active]:duration-300">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               {motorcyclesLocalized.map((moto) => (
-                <Card key={moto.id} className="overflow-hidden hover:shadow-lg transition-shadow">
+                <Card key={moto.id} className="overflow-hidden shadow-lg hover:shadow-2xl transition-shadow duration-300">
                   <div className="aspect-video relative">
                     <Image src={moto.image || "/placeholder.svg"} alt={moto.name} fill className="object-cover" />
 
@@ -1162,7 +1162,7 @@ export default function AlquilerPage() {
           <TabsContent value="quads" className="sm:data-[state=active]:animate-none data-[state=active]:animate-in data-[state=active]:slide-in-from-right-4 data-[state=active]:duration-300">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               {quadsLocalized.map((quad) => (
-                <Card key={quad.id} className="overflow-hidden hover:shadow-lg transition-shadow">
+                <Card key={quad.id} className="overflow-hidden shadow-lg hover:shadow-2xl transition-shadow duration-300">
                   <div className="aspect-video relative">
                     <Image src={quad.image || "/placeholder.svg"} alt={quad.name} fill className="object-cover" />
 
@@ -1272,7 +1272,7 @@ export default function AlquilerPage() {
                 const displayImage = currentModel?.image || scooter.image || "/placeholder.svg"
                 
                 return (
-                  <Card key={scooter.id} className="overflow-hidden hover:shadow-lg transition-shadow">
+                  <Card key={scooter.id} className="overflow-hidden shadow-lg hover:shadow-2xl transition-shadow duration-300">
                     <div className="aspect-video relative">
                       <Image src={displayImage} alt={currentModel?.name || scooter.name} fill className="object-contain" />
                     </div>
@@ -1405,7 +1405,7 @@ export default function AlquilerPage() {
           <TabsContent value="accesorios" className="sm:data-[state=active]:animate-none data-[state=active]:animate-in data-[state=active]:slide-in-from-right-4 data-[state=active]:duration-300">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {accessoriesLocalized.map((accessory) => (
-                <Card key={accessory.id} className="hover:shadow-lg transition-shadow">
+                <Card key={accessory.id} className="shadow-lg hover:shadow-2xl transition-shadow duration-300">
                   <CardHeader className="text-center">
                     {accessory.image ? (
                        <div className="mx-auto mb-4 w-48 h-48 relative">
