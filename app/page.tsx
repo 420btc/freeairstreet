@@ -521,6 +521,129 @@ export default function HomePage() {
       {/* Quick Rental Section */}
       <QuickRentalSection />
 
+      {/* Where We Are Section */}
+      <section className="pt-8 pb-16 bg-white">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-4">{t('location.title')}</h2>
+            <p className="text-lg text-gray-600 max-w-2xl mx-auto mb-8">
+              {t('location.description.before')}
+              <Badge className="bg-yellow-400 text-blue-600 hover:bg-yellow-500 text-lg">Torremolinos</Badge>
+              {t('location.description.after')}
+            </p>
+            
+            {/* Imagen Banana World y Texto */}
+            <div className="flex flex-col lg:flex-row items-center gap-8 mb-12">
+              {/* Imagen a la izquierda en desktop */}
+              <div className="lg:w-1/2">
+                <Image 
+                  src="/banana-world-hero.png" 
+                  alt="Banana World" 
+                  width={800} 
+                  height={400} 
+                  className="max-w-full h-auto"
+                  priority
+                />
+              </div>
+              
+              {/* Texto a la derecha en desktop */}
+              <div className="lg:w-1/2 text-center lg:text-left">
+                <h3 className="text-2xl md:text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
+                   Descubre nuestra ubicación privilegiada
+                 </h3>
+                <p className="text-lg md:text-xl text-gray-600 leading-relaxed">
+                   Estamos estratégicamente ubicados al lado de la playa en La colina y Los Álamos, 
+                   el punto perfecto para comenzar tu aventura por la Costa del Sol. 
+                   Desde aquí podrás explorar playas, montañas y pueblos con total comodidad.
+                 </p>
+              </div>
+            </div>
+          </div>
+          
+          <div className="relative w-full h-[400px] md:h-[500px] rounded-lg overflow-hidden shadow-lg">
+            <div id="mapbox-container" className="w-full h-full"></div>
+            
+            {/* Mobile activation notice */}
+            {isMobile && !isMapActive && (
+              <div className="absolute bottom-2 right-2 bg-black bg-opacity-80 text-white px-2 py-1 rounded text-xs shadow-md z-10 pointer-events-none">
+                <span className="flex items-center gap-1">
+                  <span className="text-yellow-400 text-xs">👆</span>
+                  {t('map.doubleClickToActivate') || '2 toques para activar'}
+                </span>
+              </div>
+            )}
+            
+            {/* Overlay to prevent scrolling interference on mobile */}
+            {isMobile && !isMapActive && (
+              <div className="absolute inset-0 bg-transparent z-5"></div>
+            )}
+          </div>
+          
+          {/* Routes Component */}
+          <div className="mt-8 mb-8">
+            <RoutesComponent />
+          </div>
+          
+          <div className="mt-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+              {/* Location Info */}
+              <div className="bg-gray-50 rounded-lg p-8 shadow-lg border">
+                <h3 className="text-2xl font-bold text-gray-900 mb-6 flex items-center">
+                  <MapPin className="h-6 w-6 mr-2 text-blue-600" />
+                  {t('location.ourLocation')}
+                </h3>
+                <div className="space-y-3 text-gray-700">
+                  <p className="flex items-start">
+                    <span className="font-semibold text-gray-900 min-w-0 flex-1">
+                      {t('location.address')}<br/>
+                      {t('location.city')}<br/>
+                      {t('location.country')}
+                    </span>
+                  </p>
+                </div>
+                <div className="mt-6">
+                  <a 
+                    href="https://www.google.com/local/place/fid/0xd72fbe7f18b7617:0x749a1052ecf23196/photosphere?iu=https://streetviewpixels-pa.googleapis.com/v1/thumbnail?panoid%3Dya1f82-P9e7HTdzyoS5egg%26cb_client%3Dsearch.gws-prod.gps%26yaw%3D348.13068%26pitch%3D0%26thumbfov%3D100%26w%3D0%26h%3D0&ik=CAISFnlhMWY4Mi1QOWU3SFRkenlvUzVlZ2c%3D&sa=X&ved=2ahUKEwitnuPJ1PSOAxVaS_EDHX-WKOQQpx96BAggEBA"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm font-medium"
+                  >
+                    <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                    </svg>
+                    {t('location.streetView')}
+                  </a>
+                </div>
+              </div>
+
+              {/* Contact Info */}
+              <div className="bg-blue-50 rounded-lg p-8 shadow-lg border">
+                <h3 className="text-2xl font-bold text-gray-900 mb-6 flex items-center">
+                   <Phone className="h-6 w-6 mr-2 text-blue-600" />
+                   {t('contact.title')}
+                 </h3>
+                <div className="space-y-4 text-gray-700">
+                  <div className="flex items-center">
+                    <Phone className="h-5 w-5 mr-3 text-blue-600 flex-shrink-0" />
+                    <div>
+                      <p className="font-semibold text-gray-900">{t('location.phone')}</p>
+                      <p className="text-sm text-gray-600">{t('location.hours')}</p>
+                    </div>
+                  </div>
+                  <div className="flex items-center">
+                    <Mail className="h-5 w-5 mr-3 text-blue-600 flex-shrink-0" />
+                    <div>
+                       <p className="font-semibold text-gray-900">{t('location.email')}</p>
+                       <p className="text-sm text-gray-600">{t('contact.emailResponse')}</p>
+                     </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Services Section */}
       <section id="servicios" className="py-16 bg-gray-50">
         <div className="container mx-auto px-4">
@@ -745,129 +868,6 @@ export default function HomePage() {
             </Link>
           </div>
 
-        </div>
-      </section>
-
-      {/* Where We Are Section */}
-      <section className="pt-8 pb-16 bg-white">
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-4">{t('location.title')}</h2>
-            <p className="text-lg text-gray-600 max-w-2xl mx-auto mb-8">
-              {t('location.description.before')}
-              <Badge className="bg-yellow-400 text-blue-600 hover:bg-yellow-500 text-lg">Torremolinos</Badge>
-              {t('location.description.after')}
-            </p>
-            
-            {/* Imagen Banana World y Texto */}
-            <div className="flex flex-col lg:flex-row items-center gap-8 mb-12">
-              {/* Imagen a la izquierda en desktop */}
-              <div className="lg:w-1/2">
-                <Image 
-                  src="/banana-world-hero.png" 
-                  alt="Banana World" 
-                  width={800} 
-                  height={400} 
-                  className="max-w-full h-auto"
-                  priority
-                />
-              </div>
-              
-              {/* Texto a la derecha en desktop */}
-              <div className="lg:w-1/2 text-center lg:text-left">
-                <h3 className="text-2xl md:text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
-                   Descubre nuestra ubicación privilegiada
-                 </h3>
-                <p className="text-lg md:text-xl text-gray-600 leading-relaxed">
-                   Estamos estratégicamente ubicados al lado de la playa en La colina y Los Álamos, 
-                   el punto perfecto para comenzar tu aventura por la Costa del Sol. 
-                   Desde aquí podrás explorar playas, montañas y pueblos con total comodidad.
-                 </p>
-              </div>
-            </div>
-          </div>
-          
-          <div className="relative w-full h-[400px] md:h-[500px] rounded-lg overflow-hidden shadow-lg">
-            <div id="mapbox-container" className="w-full h-full"></div>
-            
-            {/* Mobile activation notice */}
-            {isMobile && !isMapActive && (
-              <div className="absolute bottom-2 right-2 bg-black bg-opacity-80 text-white px-2 py-1 rounded text-xs shadow-md z-10 pointer-events-none">
-                <span className="flex items-center gap-1">
-                  <span className="text-yellow-400 text-xs">👆</span>
-                  {t('map.doubleClickToActivate') || '2 toques para activar'}
-                </span>
-              </div>
-            )}
-            
-            {/* Overlay to prevent scrolling interference on mobile */}
-            {isMobile && !isMapActive && (
-              <div className="absolute inset-0 bg-transparent z-5"></div>
-            )}
-          </div>
-          
-          {/* Routes Component */}
-          <div className="mt-8 mb-8">
-            <RoutesComponent />
-          </div>
-          
-          <div className="mt-8">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-              {/* Location Info */}
-              <div className="bg-gray-50 rounded-lg p-8 shadow-lg border">
-                <h3 className="text-2xl font-bold text-gray-900 mb-6 flex items-center">
-                  <MapPin className="h-6 w-6 mr-2 text-blue-600" />
-                  {t('location.ourLocation')}
-                </h3>
-                <div className="space-y-3 text-gray-700">
-                  <p className="flex items-start">
-                    <span className="font-semibold text-gray-900 min-w-0 flex-1">
-                      {t('location.address')}<br/>
-                      {t('location.city')}<br/>
-                      {t('location.country')}
-                    </span>
-                  </p>
-                </div>
-                <div className="mt-6">
-                  <a 
-                    href="https://www.google.com/local/place/fid/0xd72fbe7f18b7617:0x749a1052ecf23196/photosphere?iu=https://streetviewpixels-pa.googleapis.com/v1/thumbnail?panoid%3Dya1f82-P9e7HTdzyoS5egg%26cb_client%3Dsearch.gws-prod.gps%26yaw%3D348.13068%26pitch%3D0%26thumbfov%3D100%26w%3D0%26h%3D0&ik=CAISFnlhMWY4Mi1QOWU3SFRkenlvUzVlZ2c%3D&sa=X&ved=2ahUKEwitnuPJ1PSOAxVaS_EDHX-WKOQQpx96BAggEBA"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm font-medium"
-                  >
-                    <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                    </svg>
-                    {t('location.streetView')}
-                  </a>
-                </div>
-              </div>
-
-              {/* Contact Info */}
-              <div className="bg-blue-50 rounded-lg p-8 shadow-lg border">
-                <h3 className="text-2xl font-bold text-gray-900 mb-6 flex items-center">
-                   <Phone className="h-6 w-6 mr-2 text-blue-600" />
-                   {t('contact.title')}
-                 </h3>
-                <div className="space-y-4 text-gray-700">
-                  <div className="flex items-center">
-                    <Phone className="h-5 w-5 mr-3 text-blue-600 flex-shrink-0" />
-                    <div>
-                      <p className="font-semibold text-gray-900">{t('location.phone')}</p>
-                      <p className="text-sm text-gray-600">{t('location.hours')}</p>
-                    </div>
-                  </div>
-                  <div className="flex items-center">
-                    <Mail className="h-5 w-5 mr-3 text-blue-600 flex-shrink-0" />
-                    <div>
-                       <p className="font-semibold text-gray-900">{t('location.email')}</p>
-                       <p className="text-sm text-gray-600">{t('contact.emailResponse')}</p>
-                     </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
         </div>
       </section>
 
