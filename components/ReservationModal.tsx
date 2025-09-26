@@ -11,6 +11,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Checkbox } from "@/components/ui/checkbox"
 import { sendReservationEmail, type ReservationFormData } from "@/lib/emailjs"
 import { useInventory } from "@/contexts/InventoryContext"
+import { TourConfirmationModal } from "./TourConfirmationModal"
 
 interface ReservationModalProps {
   isOpen: boolean
@@ -76,6 +77,7 @@ export function ReservationModal({ isOpen, onClose, type, itemName, itemPrice, i
   const [submitError, setSubmitError] = useState<string | null>(null)
   const [isEnglish, setIsEnglish] = useState(false)
   const [submittedInEnglish, setSubmittedInEnglish] = useState(false)
+  const [showTourConfirmation, setShowTourConfirmation] = useState(false)
 
   // Función para validar DNI español
   const validateDNI = (dni: string): boolean => {
@@ -158,6 +160,14 @@ export function ReservationModal({ isOpen, onClose, type, itemName, itemPrice, i
         // Guardar el idioma en el que se envió la reserva
         setSubmittedInEnglish(isEnglish)
         setIsSubmitted(true)
+        
+        // Si es un tour, mostrar el modal de confirmación específico después de un breve delay
+        if (type === 'tour') {
+          setTimeout(() => {
+            setShowTourConfirmation(true)
+          }, 2000) // Mostrar el modal de confirmación después de 2 segundos
+        }
+        
         // Reset form after successful submission
         setFormData({
           name: "",
@@ -194,6 +204,7 @@ export function ReservationModal({ isOpen, onClose, type, itemName, itemPrice, i
     setIsSubmitted(false)
     setSubmitError(null)
     setSubmittedInEnglish(false)
+    setShowTourConfirmation(false)
     setConfirmations({
       purchaseInfo: false,
       dniRequired: false,
@@ -202,6 +213,11 @@ export function ReservationModal({ isOpen, onClose, type, itemName, itemPrice, i
     setDniError("")
     setShowDataPolicy(false)
     onClose()
+  }
+
+  const handleTourConfirmationClose = () => {
+    setShowTourConfirmation(false)
+    handleClose()
   }
 
   const handleInputChange = (field: string, value: string) => {
@@ -731,6 +747,14 @@ export function ReservationModal({ isOpen, onClose, type, itemName, itemPrice, i
           )}
         </CardContent>
       </Card>
+      
+      {/* Modal de confirmación específico para tours */}
+      <TourConfirmationModal
+        isOpen={showTourConfirmation}
+        onClose={handleTourConfirmationClose}
+        tourName={itemName || ''}
+        isEnglish={submittedInEnglish}
+      />
     </div>
   )
 }
