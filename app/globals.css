@@ -198,6 +198,34 @@
   color: oklch(0.2 0.15 240) !important;
 }
 
+/* Estilos específicos para Mapbox */
+#mapbox-container {
+  width: 100%;
+  height: 100%;
+  min-height: 400px;
+  position: relative;
+}
+
+/* Estilos responsive para el contenedor del mapa */
+@media (min-width: 768px) {
+  #mapbox-container {
+    min-height: 500px;
+  }
+}
+
+/* Asegurar que el mapa se renderice correctamente en PC sin forzar dimensiones */
+@media (min-width: 1024px) {
+  #mapbox-container {
+    min-height: 500px;
+  }
+  
+  #mapbox-container .mapboxgl-canvas {
+    image-rendering: auto;
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: crisp-edges;
+  }
+}
+
 .dark .navbar-mobile-button {
   color: oklch(0.2 0.15 240) !important;
 }

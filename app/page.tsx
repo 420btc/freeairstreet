@@ -169,6 +169,18 @@ export default function HomePage() {
           map.resize();
         }, 100);
         
+        // Additional resize for desktop with proper timing
+        if (!isMobile) {
+          setTimeout(() => {
+            map.resize();
+          }, 200);
+          
+          // Final resize to ensure proper rendering
+          setTimeout(() => {
+            map.resize();
+          }, 1000);
+        }
+        
         // Add atmosphere for globe effect
         map.setFog({
           'color': 'rgb(186, 210, 235)',
@@ -283,9 +295,11 @@ export default function HomePage() {
       // Handle window resize to ensure map stays properly sized
       const handleResize = () => {
         if (map) {
-          setTimeout(() => {
+          // Debounce resize calls to prevent excessive resizing
+          clearTimeout((window as any).mapResizeTimeout);
+          (window as any).mapResizeTimeout = setTimeout(() => {
             map.resize();
-          }, 100);
+          }, 150);
         }
       };
       
@@ -294,6 +308,7 @@ export default function HomePage() {
       // Cleanup
       return () => {
         window.removeEventListener('resize', handleResize);
+        clearTimeout((window as any).mapResizeTimeout);
         if (map) {
           map.remove();
         }
