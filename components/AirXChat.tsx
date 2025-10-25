@@ -166,7 +166,8 @@ export default function AirXChat() {
           showTranslateButton: true
         };
         
-        setMessages(prev => [...prev, proactiveMessage]);
+        // Replace all previous messages with only the proactive message
+        setMessages([proactiveMessage]);
         setHasNewMessage(true);
         setHasShownProactiveMessage(true);
         

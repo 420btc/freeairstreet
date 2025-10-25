@@ -156,7 +156,7 @@ const routes: RouteData[] = [
     difficulty: 'hard',
     highlights: ['Pico Veleta', 'Laguna de las Yeguas', 'Refugio Poqueira'],
     type: 'strava',
-    stravaUrl: 'https://www.strava.com/routes/3089234567891',
+    stravaUrl: 'https://www.strava.com/routes/2985737',
     coordinates: [
       STORE_COORDINATES,
       [-3.3456, 37.0567], // Hacia Granada
@@ -196,7 +196,7 @@ const routes: RouteData[] = [
     difficulty: 'medium',
     highlights: ['Playa de Mónsul', 'Faro de Cabo de Gata', 'Las Salinas'],
     type: 'strava',
-    stravaUrl: 'https://www.strava.com/routes/3089234567892',
+    stravaUrl: 'https://www.wikiloc.com/bicycle-touring-trails/btt-cicloturismo-cabo-gata-a-las-negras-parque-natural-de-cabo-de-gata-almeria-can-dela-56888470',
     coordinates: [
       STORE_COORDINATES,
       [-2.1234, 36.7890], // Hacia Almería
@@ -235,7 +235,7 @@ const routes: RouteData[] = [
     difficulty: 'hard',
     highlights: ['Caminito del Rey', 'Desfiladero de los Gaitanes', 'Embalse del Conde de Guadalhorce'],
     type: 'strava',
-    stravaUrl: 'https://www.strava.com/routes/3089234567890',
+    stravaUrl: 'https://www.strava.com/routes/hiking/spain/malaga/3254142979967956854',
     coordinates: [
       STORE_COORDINATES,
       [-4.7234, 36.9123], // Hacia Ardales
