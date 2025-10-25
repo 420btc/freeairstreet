@@ -162,8 +162,8 @@ Para más detalles, consulta [EMAILJS_SETUP.md](./EMAILJS_SETUP.md)
 - **Cálculo automático de precios**
 
 ### Gestión de Vehículos
-- **Catálogo completo** con imágenes y especificaciones
-- **Sistema de precios dinámico** por duración
+- **Catálogo completo** con imágenes y especificaciones.
+- **Sistema de precios dinámico** por duración.
 - **Filtros por categoría** (bicicletas, coches, motos, etc.)
 - **Modelos diferenciados** (básico, medio, premium) para scooters
 - **Características detalladas** de cada vehículo
