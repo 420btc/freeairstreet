@@ -169,9 +169,13 @@ export default function RoutesComponent() {
     if (!map || !map.isStyleLoaded()) return
     
     try {
-      // Clear existing route
-      if (map.getSource('route')) {
+      // Clear existing route layer first
+      if (map.getLayer('route')) {
         map.removeLayer('route')
+      }
+      
+      // Then clear the source
+      if (map.getSource('route')) {
         map.removeSource('route')
       }
       
@@ -205,7 +209,7 @@ export default function RoutesComponent() {
   }
 
   useEffect(() => {
-    if (selectedRoute && map) {
+    if (selectedRoute && map && map.isStyleLoaded()) {
       clearRouteFromMap()
       
       // Scroll to map when route is selected
@@ -217,57 +221,83 @@ export default function RoutesComponent() {
       const routeWaypoints = [STORE_COORDINATES, ...selectedRoute.waypoints.map(w => w.coordinates), STORE_COORDINATES]
       
       getDirectionsRoute(routeWaypoints).then(routeCoordinates => {
-        // Add route line with real street navigation
-        map.addSource('route', {
-          type: 'geojson',
-          data: {
-            type: 'Feature',
-            properties: {},
-            geometry: {
-              type: 'LineString',
-              coordinates: routeCoordinates
+        try {
+          if (!map || !map.isStyleLoaded()) {
+            console.warn('Map not ready for route rendering')
+            return
+          }
+
+          // Ensure any existing route is cleared before adding new one
+          if (map.getLayer('route')) {
+            map.removeLayer('route')
+          }
+          if (map.getSource('route')) {
+            map.removeSource('route')
+          }
+
+          // Add route line with real street navigation
+          map.addSource('route', {
+            type: 'geojson',
+            data: {
+              type: 'Feature',
+              properties: {},
+              geometry: {
+                type: 'LineString',
+                coordinates: routeCoordinates
+              }
             }
-          }
-        })
-
-        map.addLayer({
-          id: 'route',
-          type: 'line',
-          source: 'route',
-          layout: {
-            'line-join': 'round',
-            'line-cap': 'round'
-          },
-          paint: {
-            'line-color': '#3b82f6',
-            'line-width': 2,
-            'line-opacity': 0.9
-          }
-        })
-
-        // Add waypoint markers
-        selectedRoute.waypoints.forEach((waypoint, index) => {
-          const popup = new mapboxgl.Popup({ offset: 25 })
-            .setHTML(`
-              <div class="p-2">
-                <h3 class="font-bold text-sm">${waypoint.name}</h3>
-                <p class="text-xs text-gray-600">${waypoint.description}</p>
-              </div>
-            `)
-
-          new mapboxgl.Marker({
-            color: '#f59e0b',
-            scale: 0.8
           })
-            .setLngLat(waypoint.coordinates)
-            .setPopup(popup)
-            .addTo(map)
-        })
 
-        // Fit map to route bounds
-        const bounds = new mapboxgl.LngLatBounds()
-        routeCoordinates.forEach((coord: [number, number]) => bounds.extend(coord))
-        map.fitBounds(bounds, { padding: 50 })
+          map.addLayer({
+            id: 'route',
+            type: 'line',
+            source: 'route',
+            layout: {
+              'line-join': 'round',
+              'line-cap': 'round'
+            },
+            paint: {
+              'line-color': '#3b82f6',
+              'line-width': 2,
+              'line-opacity': 0.9
+            }
+          })
+
+          // Add waypoint markers
+          selectedRoute.waypoints.forEach((waypoint, index) => {
+            try {
+              if (!map || !map.getContainer()) {
+                console.warn('Map not properly initialized, skipping marker creation')
+                return
+              }
+
+              const popup = new mapboxgl.Popup({ offset: 25 })
+                .setHTML(`
+                  <div class="p-2">
+                    <h3 class="font-bold text-sm">${waypoint.name}</h3>
+                    <p class="text-xs text-gray-600">${waypoint.description}</p>
+                  </div>
+                `)
+
+              new mapboxgl.Marker({
+                color: '#f59e0b',
+                scale: 0.8
+              })
+                .setLngLat(waypoint.coordinates)
+                .setPopup(popup)
+                .addTo(map)
+            } catch (error) {
+              console.error('Error adding marker to map:', error)
+            }
+          })
+
+          // Fit map to route bounds
+          const bounds = new mapboxgl.LngLatBounds()
+          routeCoordinates.forEach((coord: [number, number]) => bounds.extend(coord))
+          map.fitBounds(bounds, { padding: 50 })
+        } catch (error) {
+          console.error('Error rendering route on map:', error)
+        }
       })
     } else if (!selectedRoute && map) {
       clearRouteFromMap()
@@ -288,8 +318,15 @@ export default function RoutesComponent() {
       // Wait for the map to be initialized
       const checkMap = () => {
         const existingMap = (window as any).mapboxMap
-        if (existingMap) {
+        if (existingMap && existingMap.isStyleLoaded && existingMap.isStyleLoaded()) {
           setMap(existingMap)
+        } else if (existingMap) {
+          // Map exists but style not loaded yet, wait for style to load
+          existingMap.on('styledata', () => {
+            if (existingMap.isStyleLoaded()) {
+              setMap(existingMap)
+            }
+          })
         } else {
           setTimeout(checkMap, 1000)
         }
