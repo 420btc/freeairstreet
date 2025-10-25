@@ -4,10 +4,11 @@ import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { MapPin, Clock, Route, Navigation } from "lucide-react"
+import { MapPin, Clock, Route, Navigation, ExternalLink } from "lucide-react"
 import mapboxgl from 'mapbox-gl'
 import 'mapbox-gl/dist/mapbox-gl.css'
 import { useLanguage } from '../contexts/LanguageContext'
+import ElevationChart from './ElevationChart'
 
 interface RouteData {
   id: string
@@ -23,6 +24,9 @@ interface RouteData {
     coordinates: [number, number]
     description: string
   }[]
+  elevation?: number[]
+  type?: 'local' | 'strava'
+  stravaUrl?: string
 }
 
 const STORE_COORDINATES: [number, number] = [-4.489167162077166, 36.63222134109576]
@@ -44,6 +48,7 @@ const routes: RouteData[] = [
       [-4.4756, 36.6229], // Benalmádena Costa
       STORE_COORDINATES
     ],
+    elevation: [45, 25, 15, 8, 12, 18], // Elevación costera suave
     waypoints: [
       {
         name: 'Playa de la Carihuela',
@@ -79,6 +84,7 @@ const routes: RouteData[] = [
       [-4.4934, 36.6467], // Regreso
       STORE_COORDINATES
     ],
+    elevation: [45, 120, 280, 450, 520, 380, 45], // Elevación montañosa con ascenso y descenso
     waypoints: [
       {
         name: 'Benalmádena Pueblo',
@@ -116,6 +122,7 @@ const routes: RouteData[] = [
       [-4.4567, 36.6423], // Regreso
       STORE_COORDINATES
     ],
+    elevation: [45, 85, 120, 180, 150, 165, 140, 85, 45], // Elevación urbana con colinas del centro histórico
     waypoints: [
       {
         name: 'Centro Histórico Málaga',
@@ -136,6 +143,125 @@ const routes: RouteData[] = [
         name: 'Catedral de Málaga',
         coordinates: [-4.4187, 36.7198],
         description: 'Catedral renacentista conocida como "La Manquita"'
+      }
+    ]
+  },
+  // Rutas de Strava predefinidas
+  {
+    id: 'strava-sierra-nevada',
+    name: 'Sierra Nevada - Granada',
+    description: 'Ascenso desafiante por las montañas de Sierra Nevada',
+    duration: '6-8 horas',
+    distance: '68 km',
+    difficulty: 'hard',
+    highlights: ['Pico Veleta', 'Laguna de las Yeguas', 'Refugio Poqueira'],
+    type: 'strava',
+    stravaUrl: 'https://www.strava.com/routes/3089234567891',
+    coordinates: [
+      STORE_COORDINATES,
+      [-3.3456, 37.0567], // Hacia Granada
+      [-3.3234, 37.0789], // Capileira
+      [-3.3012, 37.0912], // Refugio Poqueira
+      [-3.2890, 37.1034], // Laguna de las Yeguas
+      [-3.2768, 37.1156], // Pico Veleta
+      [-3.3012, 37.0912], // Regreso al refugio
+      [-3.3456, 37.0567], // Regreso
+      STORE_COORDINATES
+    ],
+    elevation: [45, 200, 450, 780, 1200, 1650, 2100, 2800, 3200, 2800, 2100, 1650, 1200, 780, 450, 200, 45],
+    waypoints: [
+      {
+        name: 'Capileira',
+        coordinates: [-3.3234, 37.0789],
+        description: 'Pueblo blanco de la Alpujarra granadina'
+      },
+      {
+        name: 'Refugio Poqueira',
+        coordinates: [-3.3012, 37.0912],
+        description: 'Refugio de montaña a 2500m de altitud'
+      },
+      {
+        name: 'Pico Veleta',
+        coordinates: [-3.2768, 37.1156],
+        description: 'Segundo pico más alto de la Península Ibérica (3396m)'
+      }
+    ]
+  },
+  {
+    id: 'strava-cabo-de-gata',
+    name: 'Cabo de Gata - Almería',
+    description: 'Ruta costera por el Parque Natural Cabo de Gata-Níjar',
+    duration: '4-5 horas',
+    distance: '38 km',
+    difficulty: 'medium',
+    highlights: ['Playa de Mónsul', 'Faro de Cabo de Gata', 'Las Salinas'],
+    type: 'strava',
+    stravaUrl: 'https://www.strava.com/routes/3089234567892',
+    coordinates: [
+      STORE_COORDINATES,
+      [-2.1234, 36.7890], // Hacia Almería
+      [-2.1456, 36.7567], // San José
+      [-2.1678, 36.7234], // Playa de Mónsul
+      [-2.1890, 36.6901], // Faro de Cabo de Gata
+      [-2.2012, 36.6678], // Las Salinas
+      [-2.1456, 36.7567], // Regreso a San José
+      STORE_COORDINATES
+    ],
+    elevation: [5, 25, 45, 80, 120, 95, 65, 35, 15, 25, 45, 80, 25, 5],
+    waypoints: [
+      {
+        name: 'San José',
+        coordinates: [-2.1456, 36.7567],
+        description: 'Pueblo pesquero en el corazón del parque natural'
+      },
+      {
+        name: 'Playa de Mónsul',
+        coordinates: [-2.1678, 36.7234],
+        description: 'Playa virgen con formaciones volcánicas únicas'
+      },
+      {
+        name: 'Faro de Cabo de Gata',
+        coordinates: [-2.1890, 36.6901],
+        description: 'Faro histórico en el punto más meridional'
+      }
+    ]
+  },
+  {
+    id: 'strava-caminito-del-rey',
+    name: 'Caminito del Rey - Málaga',
+    description: 'Ruta épica por el famoso Caminito del Rey con vistas espectaculares',
+    duration: '5-6 horas',
+    distance: '42 km',
+    difficulty: 'hard',
+    highlights: ['Caminito del Rey', 'Desfiladero de los Gaitanes', 'Embalse del Conde de Guadalhorce'],
+    type: 'strava',
+    stravaUrl: 'https://www.strava.com/routes/3089234567890',
+    coordinates: [
+      STORE_COORDINATES,
+      [-4.7234, 36.9123], // Hacia Ardales
+      [-4.7456, 36.9234], // Entrada Caminito del Rey
+      [-4.7567, 36.9345], // Desfiladero
+      [-4.7678, 36.9456], // Mirador
+      [-4.7789, 36.9567], // Final del sendero
+      [-4.7456, 36.9234], // Regreso
+      STORE_COORDINATES
+    ],
+    elevation: [45, 120, 180, 250, 320, 380, 420, 450, 380, 320, 250, 180, 120, 45],
+    waypoints: [
+      {
+        name: 'Entrada Norte Caminito del Rey',
+        coordinates: [-4.7456, 36.9234],
+        description: 'Punto de acceso principal al sendero'
+      },
+      {
+        name: 'Desfiladero de los Gaitanes',
+        coordinates: [-4.7567, 36.9345],
+        description: 'Impresionante garganta natural'
+      },
+      {
+        name: 'Mirador del Rey',
+        coordinates: [-4.7678, 36.9456],
+        description: 'Vista panorámica del valle'
       }
     ]
   }
@@ -419,6 +545,22 @@ export default function RoutesComponent() {
                       </ul>
                     </div>
                     
+                    {/* Mostrar enlace de Strava si es una ruta de Strava */}
+                    {route.type === 'strava' && route.stravaUrl && (
+                      <div className="flex items-center justify-between p-2 bg-orange-50 rounded-md border border-orange-200">
+                        <span className="text-sm text-orange-700 font-medium">Ruta de Strava</span>
+                        <a 
+                          href={route.stravaUrl} 
+                          target="_blank" 
+                          rel="noopener noreferrer"
+                          className="flex items-center text-orange-600 hover:text-orange-800 text-sm"
+                        >
+                          Ver en Strava
+                          <ExternalLink className="h-3 w-3 ml-1" />
+                        </a>
+                      </div>
+                    )}
+                    
                     <Button 
                       className="w-full mt-4"
                       variant={selectedRoute?.id === route.id ? "default" : "outline"}
@@ -435,16 +577,29 @@ export default function RoutesComponent() {
             <div className="mt-8 p-6 bg-blue-50 rounded-lg border">
               <div className="flex items-center justify-between mb-4">
                 <h4 className="text-xl font-bold text-gray-900">Ruta Activa: {selectedRoute.name}</h4>
-                <Button 
-                  onClick={() => setSelectedRoute(null)}
-                  variant="outline"
-                  size="sm"
-                >
-                  Limpiar Ruta
-                </Button>
+                <div className="flex items-center gap-2">
+                  {selectedRoute.type === 'strava' && selectedRoute.stravaUrl && (
+                    <a 
+                      href={selectedRoute.stravaUrl} 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="flex items-center text-orange-600 hover:text-orange-800 text-sm"
+                    >
+                      <ExternalLink className="h-4 w-4 mr-1" />
+                      Strava
+                    </a>
+                  )}
+                  <Button 
+                    onClick={() => setSelectedRoute(null)}
+                    variant="outline"
+                    size="sm"
+                  >
+                    Limpiar Ruta
+                  </Button>
+                </div>
               </div>
               <p className="text-gray-700 mb-4">{selectedRoute.description}</p>
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm mb-6">
                 <div className="flex items-center">
                   <Clock className="h-4 w-4 mr-2 text-blue-600" />
                   <span><strong>Duración:</strong> {selectedRoute.duration}</span>
@@ -463,6 +618,18 @@ export default function RoutesComponent() {
                   </Badge>
                 </div>
               </div>
+              
+              {/* Mostrar gráfico de elevación si hay datos disponibles */}
+               {selectedRoute.elevation && selectedRoute.elevation.length > 0 && (
+                 <div className="mt-6">
+                   <h5 className="text-lg font-semibold mb-3 text-gray-900">Perfil de Elevación</h5>
+                   <ElevationChart 
+                     elevation={selectedRoute.elevation} 
+                     distance={selectedRoute.distance}
+                     routeName={selectedRoute.name}
+                   />
+                 </div>
+               )}
             </div>
           )}
         </div>
