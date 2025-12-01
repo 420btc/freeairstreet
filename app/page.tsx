@@ -305,9 +305,25 @@ export default function HomePage() {
       
       window.addEventListener('resize', handleResize);
 
+      // Use ResizeObserver to handle container size changes robustly
+      const resizeObserver = new ResizeObserver(() => {
+        if (map) {
+           map.resize();
+        }
+      });
+      
+      const container = document.getElementById('mapbox-container');
+      if (container) {
+        resizeObserver.observe(container);
+      }
+
       // Cleanup
       return () => {
         window.removeEventListener('resize', handleResize);
+        if (container) {
+          resizeObserver.unobserve(container);
+        }
+        resizeObserver.disconnect();
         clearTimeout((window as any).mapResizeTimeout);
         if (map) {
           map.remove();
