@@ -212,7 +212,7 @@ export default function HomePage() {
         markerElement.style.border = '2px solid #f59e0b';
         markerElement.style.boxShadow = '0 4px 6px rgba(0,0,0,0.3)';
         markerElement.style.zIndex = '10';
-        markerElement.className = 'animate-bounce'; // Añadir animación de rebote
+        // markerElement.className = 'animate-bounce'; // Eliminado para evitar que flote
 
         // Create popup for main store
         const mainStorePopup = new mapboxgl.Popup({
