@@ -191,105 +191,108 @@ export default function HomePage() {
         });
 
         // Wait a moment then animate to location
-        setTimeout(() => {
-          map.flyTo({
-            center: [-4.489167162077166, 36.63222134109576], // Exact coordinates
-            zoom: 17,
-            duration: 3000,
-            essential: true
+        // Ejecutar la animación inmediatamente después de cargar
+        map.flyTo({
+          center: [-4.489167162077166, 36.63222134109576], // Exact coordinates
+          zoom: 18, // Un poco más de zoom para ver mejor
+          pitch: 45, // Añadir inclinación para efecto 3D
+          bearing: -17.6, // Orientación
+          duration: 4000, // Un poco más lento para apreciar el viaje
+          essential: true
+        });
+
+        // Add markers immediately so they are ready when we arrive
+        // Create custom marker element
+        const markerElement = document.createElement('div');
+        markerElement.innerHTML = '🛴';
+        markerElement.style.fontSize = '24px'; // Más grande
+        markerElement.style.backgroundColor = '#fbbf24';
+        markerElement.style.borderRadius = '50%';
+        markerElement.style.padding = '8px';
+        markerElement.style.border = '2px solid #f59e0b';
+        markerElement.style.boxShadow = '0 4px 6px rgba(0,0,0,0.3)';
+        markerElement.style.zIndex = '10';
+        markerElement.className = 'animate-bounce'; // Añadir animación de rebote
+
+        // Create popup for main store
+        const mainStorePopup = new mapboxgl.Popup({
+          offset: 25,
+          closeButton: false,
+          closeOnClick: false
+        }).setHTML(`
+          <div class="p-3 text-center">
+            <h3 class="font-bold text-sm text-gray-900 mb-1">Tienda Principal</h3>
+            <p class="text-xs text-gray-600">Calle de la Playa, 22</p>
+            <p class="text-xs text-gray-600">29620 Torremolinos</p>
+          </div>
+        `);
+
+        const storeMarker = new mapboxgl.Marker(markerElement)
+          .setLngLat([-4.489167162077166, 36.63222134109576])
+          .setPopup(mainStorePopup)
+          .addTo(map);
+        
+        // Mostrar popup al terminar la animación
+        map.once('moveend', () => {
+            mainStorePopup.addTo(map);
+        });
+        
+        // Add class to identify store marker
+        const markerEl = storeMarker.getElement();
+        if (markerEl) {
+          markerEl.classList.add('store-marker');
+          
+          // Add hover events for desktop
+          markerEl.addEventListener('mouseenter', () => {
+            mainStorePopup.addTo(map);
           });
+          markerEl.addEventListener('mouseleave', () => {
+             // Mantener abierto si es el destino principal, o cerrar
+             // mainStorePopup.remove(); 
+          });
+        }
+        
+        // Add second store marker (red scooter)
+          const secondMarkerElement = document.createElement('div');
+          secondMarkerElement.innerHTML = '🛴';
+          secondMarkerElement.style.fontSize = '18px';
+          secondMarkerElement.style.backgroundColor = '#ef4444';
+          secondMarkerElement.style.borderRadius = '50%';
+          secondMarkerElement.style.padding = '6px';
+          secondMarkerElement.style.border = '2px solid #dc2626';
+          secondMarkerElement.style.boxShadow = '0 2px 4px rgba(0,0,0,0.3)';
 
-          // Add custom scooter marker after animation
-          setTimeout(() => {
-            // Create custom marker element
-            const markerElement = document.createElement('div');
-            markerElement.innerHTML = '🛴';
-            markerElement.style.fontSize = '12px';
-            markerElement.style.backgroundColor = '#fbbf24';
-            markerElement.style.borderRadius = '50%';
-            markerElement.style.padding = '4px';
-            markerElement.style.border = '1px solid #f59e0b';
-            markerElement.style.boxShadow = '0 1px 4px rgba(0,0,0,0.3)';
+          // Create popup for second store
+          const secondStorePopup = new mapboxgl.Popup({
+            offset: 25,
+            closeButton: false,
+            closeOnClick: false
+          }).setHTML(`
+            <div class="p-3 text-center">
+              <h3 class="font-bold text-sm text-gray-900 mb-1">Segunda Tienda</h3>
+              <p class="text-xs text-gray-600">Calle Obispo Juan Alonso, 8</p>
+              <p class="text-xs text-gray-600">Los Álamos, Torremolinos</p>
+            </div>
+          `);
 
-            // Create popup for main store
-            const mainStorePopup = new mapboxgl.Popup({
-              offset: 25,
-              closeButton: false,
-              closeOnClick: false
-            }).setHTML(`
-              <div class="p-3 text-center">
-                <h3 class="font-bold text-sm text-gray-900 mb-1">Tienda Principal</h3>
-                <p class="text-xs text-gray-600">Calle de la Playa, 22</p>
-                <p class="text-xs text-gray-600">29620 Torremolinos</p>
-              </div>
-            `);
-
-            const storeMarker = new mapboxgl.Marker(markerElement)
-              .setLngLat([-4.489167162077166, 36.63222134109576])
-              .setPopup(mainStorePopup)
-              .addTo(map);
+          const secondStoreMarker = new mapboxgl.Marker(secondMarkerElement)
+            .setLngLat([-4.487738, 36.635466])
+            .setPopup(secondStorePopup)
+            .addTo(map);
+          
+          // Add class to identify second store marker
+          const secondMarkerEl = secondStoreMarker.getElement();
+          if (secondMarkerEl) {
+            secondMarkerEl.classList.add('store-marker');
             
-            // Add class to identify store marker
-            setTimeout(() => {
-              const markerEl = storeMarker.getElement();
-              if (markerEl) {
-                markerEl.classList.add('store-marker');
-                
-                // Add hover events for desktop
-                markerEl.addEventListener('mouseenter', () => {
-                  mainStorePopup.addTo(map);
-                });
-                markerEl.addEventListener('mouseleave', () => {
-                  mainStorePopup.remove();
-                });
-              }
-            }, 100);
-            
-            // Add second store marker (red scooter)
-             const secondMarkerElement = document.createElement('div');
-             secondMarkerElement.innerHTML = '🛴';
-             secondMarkerElement.style.fontSize = '12px';
-             secondMarkerElement.style.backgroundColor = '#ef4444';
-             secondMarkerElement.style.borderRadius = '50%';
-             secondMarkerElement.style.padding = '4px';
-             secondMarkerElement.style.border = '1px solid #dc2626';
-             secondMarkerElement.style.boxShadow = '0 1px 4px rgba(0,0,0,0.3)';
-
-             // Create popup for second store
-             const secondStorePopup = new mapboxgl.Popup({
-               offset: 25,
-               closeButton: false,
-               closeOnClick: false
-             }).setHTML(`
-               <div class="p-3 text-center">
-                 <h3 class="font-bold text-sm text-gray-900 mb-1">Segunda Tienda</h3>
-                 <p class="text-xs text-gray-600">Calle Obispo Juan Alonso, 8</p>
-                 <p class="text-xs text-gray-600">Los Álamos, Torremolinos</p>
-               </div>
-             `);
-
-             const secondStoreMarker = new mapboxgl.Marker(secondMarkerElement)
-               .setLngLat([-4.487738, 36.635466])
-               .setPopup(secondStorePopup)
-               .addTo(map);
-             
-             // Add class to identify second store marker
-             setTimeout(() => {
-               const secondMarkerEl = secondStoreMarker.getElement();
-               if (secondMarkerEl) {
-                 secondMarkerEl.classList.add('store-marker');
-                 
-                 // Add hover events for desktop
-                 secondMarkerEl.addEventListener('mouseenter', () => {
-                   secondStorePopup.addTo(map);
-                 });
-                 secondMarkerEl.addEventListener('mouseleave', () => {
-                   secondStorePopup.remove();
-                 });
-               }
-             }, 100);
-          }, 3200);
-        }, 1000);
+            // Add hover events for desktop
+            secondMarkerEl.addEventListener('mouseenter', () => {
+              secondStorePopup.addTo(map);
+            });
+            secondMarkerEl.addEventListener('mouseleave', () => {
+              secondStorePopup.remove();
+            });
+          }
       });
 
       // Handle window resize to ensure map stays properly sized
