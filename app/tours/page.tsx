@@ -189,7 +189,7 @@ export default function ToursPage() {
     {
       name: "Gibraltar Shopping",
       days: ["Martes", "Miércoles", "Viernes", "Sábado"],
-      price: "30€",
+      price: "33€",
       description: "Compras libres de impuestos en Gibraltar con tiempo libre",
       image: "/destinos/gibraltarshoping.jpg",
       emoji: "🛍️",
@@ -198,7 +198,7 @@ export default function ToursPage() {
     {
       name: "Gibraltar Visit",
       days: ["Martes", "Miércoles", "Viernes", "Sábado"],
-      price: "70€",
+      price: "83€",
       description: "Visita completa a Gibraltar incluyendo el Peñón y los monos",
       image: "/destinos/gibraltarv.jpg",
       emoji: "🐒",
@@ -207,7 +207,7 @@ export default function ToursPage() {
     {
       name: "Granada Alhambra",
       days: ["Jueves", "Viernes"],
-      price: "79€",
+      price: "94€",
       description: "Visita a la majestuosa Alhambra y los jardines del Generalife",
       image: "/destinos/alhambragranada.png",
       emoji: "🏰",
@@ -216,7 +216,7 @@ export default function ToursPage() {
     {
       name: "Sevilla",
       days: ["Miércoles"],
-      price: "72€",
+      price: "81€",
       description: "Descubre la capital andaluza: Catedral, Alcázar y barrio de Santa Cruz",
       image: "/destinos/sevilla.jpg",
       emoji: "🕌",
@@ -225,7 +225,7 @@ export default function ToursPage() {
     {
       name: "Córdoba",
       days: ["Jueves"],
-      price: "72€",
+      price: "81€",
       description: "Mezquita-Catedral y el encantador barrio judío de Córdoba",
       image: "/destinos/cordoba.png",
       emoji: "🕌",
@@ -234,7 +234,7 @@ export default function ToursPage() {
     {
       name: "Ronda",
       days: ["Martes", "Sábado"],
-      price: "58€",
+      price: "59€",
       description: "Pueblo blanco con impresionantes vistas y plaza de toros histórica",
       image: "/destinos/ronda.png",
       emoji: "🌉",
@@ -243,7 +243,7 @@ export default function ToursPage() {
     {
       name: "Caminito del Rey",
       days: ["Martes", "Miércoles", "Jueves", "Viernes"],
-      price: "59€",
+      price: "63€",
       description: "Aventura por el sendero más espectacular de Andalucía",
       image: "/destinos/caminitodelrey.jpg",
       emoji: "🥾",
@@ -252,7 +252,7 @@ export default function ToursPage() {
     {
       name: "Nerja y Frigiliana",
       days: ["Lunes"],
-      price: "35€",
+      price: "45€",
       description: "Pueblos blancos costeros con cuevas y vistas al Mediterráneo",
       image: "/destinos/nerjayfrig.jpg",
       emoji: "🏖️",
@@ -261,7 +261,7 @@ export default function ToursPage() {
     {
       name: "Mijas Marbella Banús",
       days: ["Sábado"],
-      price: "35€",
+      price: "45€",
       description: "Ruta por la Costa del Sol: Mijas, Marbella y Puerto Banús",
       image: "/destinos/marbella.jpg",
       emoji: "🏖️",
@@ -270,7 +270,7 @@ export default function ToursPage() {
     {
       name: "Tánger",
       days: ["Sábado"],
-      price: "135€",
+      price: "149€",
       description: "Excursión a Marruecos: medina, mercados y cultura bereber",
       image: "/destinos/tanger.jpg",
       emoji: "🕌",
