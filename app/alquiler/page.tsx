@@ -304,7 +304,7 @@ export default function AlquilerPage() {
         { duration: "4D", price: "210€" },
         { duration: "5D", price: "239€" },
         { duration: "6D", price: "330€" },
-        { duration: "7D", price: "376€", featured: true },
+        { duration: "7D", price: "357€", featured: true },
       ],
       features: ["Transmisión automática", "Fácil conducción", "Confort urbano", "Tecnología moderna"],
     },
