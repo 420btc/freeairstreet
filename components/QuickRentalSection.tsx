@@ -78,6 +78,18 @@ const QuickRentalSection: React.FC = () => {
       ]
     },
     {
+      id: 'scooters',
+      name: t('quickRental.vehicles.scooter') as string,
+      icon: <Zap className="w-20 h-20 text-yellow-500" />,
+      mobileIcon: <Zap className="w-12 h-12 text-yellow-500" />,
+      image: '/patinelectrico.jpg',
+      priceFrom: `${t('quickRental.priceFrom') as string} 10€`,
+      prices: [
+        { duration: "30 min", price: "10€" },
+        { duration: "1h", price: "15€", featured: true },
+      ]
+    },
+    {
       id: 'fat-bikes',
       name: t('quickRental.vehicles.fatBike') as string,
       icon: <Mountain className="w-20 h-20 text-yellow-500" />,
@@ -90,18 +102,6 @@ const QuickRentalSection: React.FC = () => {
         { duration: "3h", price: "25€" },
         { duration: "4h", price: "30€" },
         { duration: "Todo el día", price: "35€", featured: true },
-      ]
-    },
-    {
-      id: 'scooters',
-      name: t('quickRental.vehicles.scooter') as string,
-      icon: <Zap className="w-20 h-20 text-yellow-500" />,
-      mobileIcon: <Zap className="w-12 h-12 text-yellow-500" />,
-      image: '/patinelectrico.jpg',
-      priceFrom: `${t('quickRental.priceFrom') as string} 10€`,
-      prices: [
-        { duration: "30 min", price: "10€" },
-        { duration: "1h", price: "15€", featured: true },
       ]
     },
     {
