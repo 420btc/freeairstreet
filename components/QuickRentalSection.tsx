@@ -78,21 +78,6 @@ const QuickRentalSection: React.FC = () => {
       ]
     },
     {
-      id: 'electric-bikes',
-      name: t('quickRental.vehicles.electricBike') as string,
-      icon: <Zap className="w-20 h-20 text-yellow-500" />,
-      mobileIcon: <Zap className="w-12 h-12 text-yellow-500" />,
-      image: '/modern-electric-bike.png',
-      priceFrom: `${t('quickRental.priceFrom') as string} 10€`,
-      prices: [
-        { duration: "1h", price: "10€" },
-        { duration: "2h", price: "18€" },
-        { duration: "3h", price: "25€" },
-        { duration: "4h", price: "30€" },
-        { duration: "Todo el día", price: "35€", featured: true },
-      ]
-    },
-    {
       id: 'fat-bikes',
       name: t('quickRental.vehicles.fatBike') as string,
       icon: <Mountain className="w-20 h-20 text-yellow-500" />,

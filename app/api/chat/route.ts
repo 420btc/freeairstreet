@@ -98,27 +98,31 @@ export async function POST(req: NextRequest) {
       contextPrompt += `\nSi el usuario ha proporcionado información sobre fechas, duración o servicios específicos, incluye esa información en tu respuesta y sugiere opciones relevantes. Usa **asteriscos dobles** SOLO alrededor de PRECIOS para que aparezcan en badges morados.`;
     }
     
-    // Build conversation history
-    let historyPrompt = '';
+    // Build messages array
+    const messages = [
+      {
+        role: "system",
+        content: SYSTEM_PROMPT + languagePrompt + contextPrompt
+      }
+    ];
+
     if (conversationHistory && conversationHistory.length > 0) {
-      historyPrompt = `\n\nHISTORIAL RECIENTE:\n`;
-      conversationHistory.forEach((msg: any, index: number) => {
-        historyPrompt += `${msg.isUser ? 'Usuario' : 'AirX'}: ${msg.content}\n`;
+      conversationHistory.forEach((msg: any) => {
+        messages.push({
+          role: msg.isUser ? "user" : "assistant",
+          content: msg.content
+        });
       });
     }
 
+    messages.push({
+      role: "user",
+      content: message
+    });
+
     const completion = await openai.chat.completions.create({
       model: "gpt-4o-mini",
-      messages: [
-        {
-          role: "system",
-          content: SYSTEM_PROMPT + languagePrompt + contextPrompt + historyPrompt
-        },
-        {
-          role: "user",
-          content: message
-        }
-      ],
+      messages: messages as any,
       max_tokens: 500,
       temperature: 0.7,
     });

@@ -124,20 +124,6 @@ export default function AlquilerPage() {
       features: currentTranslations['rental.vehicles.mountainBike.features'] as string[],
     },
     {
-      id: "electric-bike",
-      name: t('rental.vehicles.electricBike.name'),
-      description: t('rental.vehicles.electricBike.description'),
-      image: "/modern-electric-bike.png",
-      prices: [
-        { duration: "1h", price: "8€" },
-        { duration: "2h", price: "9€" },
-        { duration: "3h", price: "10€" },
-        { duration: "4h", price: "11€" },
-        { duration: t('rental.vehicles.electricBike.allDay'), price: "21€", featured: true },
-      ],
-      features: currentTranslations['rental.vehicles.electricBike.features'] as string[],
-    },
-    {
       id: "fat-bike",
       name: t('rental.vehicles.fatBike.name'),
       description: t('rental.vehicles.fatBike.description'),

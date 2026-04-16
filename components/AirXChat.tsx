@@ -47,14 +47,18 @@ export default function AirXChat() {
 
   // Function to detect language from user message
   const detectLanguage = (message: string): 'es' | 'en' => {
-    const englishWords = ['hello', 'hi', 'bike', 'rent', 'car', 'tour', 'help', 'please', 'thank', 'yes', 'no', 'how', 'what', 'when', 'where', 'price', 'cost', 'available', 'book', 'reserve'];
-    const spanishWords = ['hola', 'bici', 'alquiler', 'coche', 'tour', 'ayuda', 'por favor', 'gracias', 'sí', 'no', 'cómo', 'qué', 'cuándo', 'dónde', 'precio', 'coste', 'disponible', 'reservar'];
+    const englishWords = ['hello', 'hi', 'bike', 'rent', 'car', 'tour', 'help', 'please', 'thank', 'yes', 'no', 'how', 'what', 'when', 'where', 'price', 'cost', 'available', 'book', 'reserve', 'ok'];
+    const spanishWords = ['hola', 'bici', 'alquiler', 'coche', 'tour', 'ayuda', 'por favor', 'gracias', 'sí', 'no', 'cómo', 'qué', 'cuándo', 'dónde', 'precio', 'coste', 'disponible', 'reservar', 'vale'];
     
     const lowerMessage = message.toLowerCase();
     const englishMatches = englishWords.filter(word => lowerMessage.includes(word)).length;
     const spanishMatches = spanishWords.filter(word => lowerMessage.includes(word)).length;
     
-    return englishMatches > spanishMatches ? 'en' : 'es';
+    if (englishMatches > spanishMatches) return 'en';
+    if (spanishMatches > englishMatches) return 'es';
+    
+    // If no clear match, maintain current language
+    return currentLanguage;
   };
 
   // Function to translate welcome message
@@ -408,7 +412,7 @@ export default function AirXChat() {
         body: JSON.stringify({ 
           message: inputMessage,
           context: newContext,
-          conversationHistory: messages.slice(-5), // Send last 5 messages for context
+          conversationHistory: messages.slice(-20), // Send last 20 messages for better context
           detectedLanguage: detectedLanguage // Send detected language to API
         }),
       });
