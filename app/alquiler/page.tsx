@@ -872,9 +872,9 @@ export default function AlquilerPage() {
 
           {/* Bicicletas Tab */}
           <TabsContent value="bicicletas" className="sm:data-[state=active]:animate-none data-[state=active]:animate-in data-[state=active]:slide-in-from-right-4 data-[state=active]:duration-300">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 justify-items-center">
               {bicycles.map((bike) => (
-                <Card key={bike.id} className="overflow-hidden shadow-lg hover:shadow-2xl transition-shadow duration-300">
+                <Card key={bike.id} className="w-full max-w-lg overflow-hidden shadow-lg hover:shadow-2xl transition-shadow duration-300">
                   <div className="aspect-video relative">
                     <Image src={bike.image || "/placeholder.svg"} alt={bike.name as string} fill className="object-cover" />
 

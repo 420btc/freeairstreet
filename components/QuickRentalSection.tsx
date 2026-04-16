@@ -401,7 +401,7 @@ const QuickRentalSection: React.FC = () => {
                         </button>
                       ))}
                       
-                      {/* Tercera fila: 2 tarjetas */}
+                      {/* Tercera fila: 2 tarjetas (los 2 últimos vehículos, ya que ahora son 6 en total) */}
                       {vehicles.slice(4, 6).map((vehicle) => (
                         <button
                           key={vehicle.id}
@@ -427,35 +427,6 @@ const QuickRentalSection: React.FC = () => {
                           </div>
                         </button>
                       ))}
-                      
-                      {/* Cuarta fila: 1 tarjeta centrada */}
-                      <div className="col-span-2 flex justify-center">
-                        {vehicles.slice(6, 7).map((vehicle) => (
-                          <button
-                            key={vehicle.id}
-                            type="button"
-                            onClick={() => handleVehicleSelection(vehicle.id)}
-                            className="group relative p-6 rounded-xl border-2 transition-all duration-300 hover:scale-105 hover:shadow-lg border-gray-200 hover:border-blue-300 shadow-md hover:shadow-xl w-40"
-                            style={{
-                              boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)'
-                            }}
-                          >
-                            <div className="text-center">
-                              <div className="mb-3 transform group-hover:scale-110 transition-transform duration-200 flex justify-center">
-                                <div className="w-12 h-12 flex items-center justify-center">
-                                  {vehicle.mobileIcon}
-                                </div>
-                              </div>
-                              <div className="text-sm font-semibold text-gray-900 mb-2 leading-tight">
-                                {vehicle.name}
-                              </div>
-                              <div className="text-xs font-bold text-blue-600">
-                                {vehicle.priceFrom}
-                              </div>
-                            </div>
-                          </button>
-                        ))}
-                      </div>
                     </div>
                   </div>
                 ) : showMobilePrices && !showMobileForm ? (
@@ -728,13 +699,13 @@ const QuickRentalSection: React.FC = () => {
               <div className="hidden md:block">
                 {!showDesktopPrices && !showDesktopForm ? (
                   <div className="text-center">
-                    <div className="grid grid-cols-4 lg:grid-cols-7 gap-8">
+                    <div className="grid grid-cols-3 lg:grid-cols-6 gap-8 justify-items-center">
                       {vehicles.map((vehicle) => (
                         <button
                           key={vehicle.id}
                           type="button"
                           onClick={() => handleVehicleSelection(vehicle.id)}
-                          className="group relative p-6 rounded-xl border-2 transition-all duration-300 hover:scale-105 hover:shadow-xl border-gray-200 hover:border-blue-300 shadow-md"
+                          className="group relative w-full max-w-[200px] p-6 rounded-xl border-2 transition-all duration-300 hover:scale-105 hover:shadow-xl border-gray-200 hover:border-blue-300 shadow-md"
                           style={{
                             boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)'
                           }}
