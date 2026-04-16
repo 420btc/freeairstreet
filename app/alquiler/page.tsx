@@ -798,6 +798,13 @@ export default function AlquilerPage() {
                 <span>🚴</span>
                 <span>{t('rental.bicycles')}</span>
               </TabsTrigger>
+              <TabsTrigger value="scooters" className="flex items-center space-x-3 py-4 px-6 text-lg font-semibold rounded-lg transition-all duration-300 hover:bg-white/20 hover:backdrop-blur-sm data-[state=active]:bg-white/40 data-[state=active]:shadow-xl data-[state=active]:border data-[state=active]:border-white/50 relative">
+                <span>🛴</span>
+                <span>{t('rental.scooters')}</span>
+                <div className="absolute -top-2 -right-2 bg-yellow-400 text-red-600 font-bold text-xs px-2 py-1 rounded-full border-2 border-yellow-500 shadow-lg transform rotate-12">
+                  HOT!
+                </div>
+              </TabsTrigger>
               <TabsTrigger value="coches" className="flex items-center space-x-3 py-4 px-6 text-lg font-semibold rounded-lg transition-all duration-300 hover:bg-white/20 hover:backdrop-blur-sm data-[state=active]:bg-white/40 data-[state=active]:shadow-xl data-[state=active]:border data-[state=active]:border-white/50">
                 <span>🚗</span>
                 <span>{t('rental.cars')}</span>
@@ -809,13 +816,6 @@ export default function AlquilerPage() {
               <TabsTrigger value="quads" className="flex items-center space-x-3 py-4 px-6 text-lg font-semibold rounded-lg transition-all duration-300 hover:bg-white/20 hover:backdrop-blur-sm data-[state=active]:bg-white/40 data-[state=active]:shadow-xl data-[state=active]:border data-[state=active]:border-white/50">
                 <span>🏎️</span>
                 <span>{t('rental.quads')}</span>
-              </TabsTrigger>
-              <TabsTrigger value="scooters" className="flex items-center space-x-3 py-4 px-6 text-lg font-semibold rounded-lg transition-all duration-300 hover:bg-white/20 hover:backdrop-blur-sm data-[state=active]:bg-white/40 data-[state=active]:shadow-xl data-[state=active]:border data-[state=active]:border-white/50 relative">
-                <span>🛴</span>
-                <span>{t('rental.scooters')}</span>
-                <div className="absolute -top-2 -right-2 bg-yellow-400 text-red-600 font-bold text-xs px-2 py-1 rounded-full border-2 border-yellow-500 shadow-lg transform rotate-12">
-                  HOT!
-                </div>
               </TabsTrigger>
               <TabsTrigger value="accesorios" className="flex items-center space-x-3 py-4 px-6 text-lg font-semibold rounded-lg transition-all duration-300 hover:bg-white/20 hover:backdrop-blur-sm data-[state=active]:bg-white/40 data-[state=active]:shadow-xl data-[state=active]:border data-[state=active]:border-white/50">
                 <span>🛍️</span>
@@ -830,26 +830,26 @@ export default function AlquilerPage() {
                    <span>🚴</span>
                    <span>{t('rental.bicycles')}</span>
                  </TabsTrigger>
-                 <TabsTrigger value="coches" className="flex items-center justify-center space-x-2 h-full px-3 text-sm">
-                   <span>🚗</span>
-                   <span>{t('rental.cars')}</span>
-                 </TabsTrigger>
-                 <TabsTrigger value="motos" className="flex items-center justify-center space-x-2 h-full px-3 text-sm">
-                   <span>🏍️</span>
-                   <span>{t('rental.motorcycles')}</span>
-                 </TabsTrigger>
-               </TabsList>
-               <TabsList className="grid w-full grid-cols-3 bg-gray-100 h-16">
-                 <TabsTrigger value="quads" className="flex items-center justify-center space-x-2 h-full px-3 text-sm">
-                   <span>🏎️</span>
-                   <span>{t('rental.quads')}</span>
-                 </TabsTrigger>
                  <TabsTrigger value="scooters" className="flex items-center justify-center space-x-2 h-full px-3 text-sm relative">
                    <span>🛴</span>
                    <span>{t('rental.scooters')}</span>
                    <div className="absolute -top-1 -right-1 bg-yellow-400 text-red-600 font-bold text-xs px-1.5 py-0.5 rounded-full border-2 border-yellow-500 shadow-lg transform rotate-12">
                      HOT!
                    </div>
+                 </TabsTrigger>
+                 <TabsTrigger value="coches" className="flex items-center justify-center space-x-2 h-full px-3 text-sm">
+                   <span>🚗</span>
+                   <span>{t('rental.cars')}</span>
+                 </TabsTrigger>
+               </TabsList>
+               <TabsList className="grid w-full grid-cols-3 bg-gray-100 h-16">
+                 <TabsTrigger value="motos" className="flex items-center justify-center space-x-2 h-full px-3 text-sm">
+                   <span>🏍️</span>
+                   <span>{t('rental.motorcycles')}</span>
+                 </TabsTrigger>
+                 <TabsTrigger value="quads" className="flex items-center justify-center space-x-2 h-full px-3 text-sm">
+                   <span>🏎️</span>
+                   <span>{t('rental.quads')}</span>
                  </TabsTrigger>
                  <TabsTrigger value="accesorios" className="flex items-center justify-center space-x-2 h-full px-3 text-sm">
                    <span>🛍️</span>
