@@ -69,3 +69,11 @@ model AdvertisingRequest {
   createdAt       DateTime @default(now())
 }
 
+model AdminAccessLog {
+  id        String   @id @default(uuid())
+  success   Boolean
+  ipAddress String?
+  userAgent String?
+  createdAt DateTime @default(now())
+}
+

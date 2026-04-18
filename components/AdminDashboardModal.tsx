@@ -173,10 +173,23 @@ export default function AdminDashboardModal() {
     }
   }, [isOpen, isAuthenticated, getPrice])
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault()
     const correctPassword = process.env.NEXT_PUBLIC_ADMIN_PASSWORD || 'DanielleX30..'
-    if (password === correctPassword) {
+    const isSuccess = password === correctPassword
+
+    try {
+      // Registrar el intento de acceso de forma silenciosa
+      await fetch('/api/save-admin-access', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ success: isSuccess }),
+      })
+    } catch (err) {
+      console.error('Failed to log admin access:', err)
+    }
+
+    if (isSuccess) {
       setIsAuthenticated(true)
       setError('')
     } else {
