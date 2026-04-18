@@ -105,7 +105,7 @@ export default function HomePage() {
     if (!document.getElementById('mapbox-container')) return;
     
     // Set Mapbox access token
-    mapboxgl.accessToken = 'pk.eyJ1IjoiNDIwYnRjIiwiYSI6ImNtOTN3ejBhdzByNjgycHF6dnVmeHl2ZTUifQ.Utq_q5wN6DHwpkn6rcpZdw';
+    mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN || '';
 
     try {
       // Initialize map
@@ -583,12 +583,10 @@ export default function HomePage() {
               {/* Texto a la derecha en desktop */}
               <div className="lg:w-1/2 text-center lg:text-left">
                 <h3 className="text-2xl md:text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
-                   Descubre nuestra ubicación privilegiada
+                   {t('location.discover')}
                  </h3>
                 <p className="text-lg md:text-xl text-gray-600 leading-relaxed">
-                   Estamos estratégicamente ubicados al lado de la playa en La colina y Los Álamos, 
-                   el punto perfecto para comenzar tu aventura por la Costa del Sol. 
-                   Desde aquí podrás explorar playas, montañas y pueblos con total comodidad.
+                   {t('location.discoverDesc')}
                  </p>
               </div>
             </div>
@@ -986,7 +984,7 @@ export default function HomePage() {
                 <div className="text-center mt-auto">
                   <Link href="/alquiler?tab=bicicletas">
                     <Button className="bg-blue-600 hover:bg-blue-700 text-white font-bold px-6 py-2">
-                      Reservar
+                      {t('rental.reserve') || 'Reservar'}
                     </Button>
                   </Link>
                 </div>
@@ -1012,7 +1010,7 @@ export default function HomePage() {
                 <div className="text-center mt-auto">
                   <Link href="/alquiler?tab=bicicletas">
                     <Button className="bg-blue-600 hover:bg-blue-700 text-white font-bold px-6 py-2">
-                      Reservar
+                      {t('rental.reserve') || 'Reservar'}
                     </Button>
                   </Link>
                 </div>
@@ -1038,7 +1036,7 @@ export default function HomePage() {
                 <div className="text-center mt-auto">
                   <Link href="/alquiler?tab=scooters">
                     <Button className="bg-blue-600 hover:bg-blue-700 text-white font-bold px-6 py-2">
-                      Reservar
+                      {t('rental.reserve') || 'Reservar'}
                     </Button>
                   </Link>
                 </div>
@@ -1065,14 +1063,14 @@ export default function HomePage() {
               {/* Content */}
               <div className="text-center lg:text-left space-y-6">
                 <h3 className="text-2xl md:text-3xl font-bold text-blue-900">
-                  ¡Descubre nuestros patinetes eléctricos!
+                  {t('scooterPromo.title')}
                 </h3>
                 <p className="text-lg text-gray-700">
-                  La forma más divertida y ecológica de moverte por Torremolinos.
+                  {t('scooterPromo.description')}
                 </p>
                 <Link href="/alquiler?tab=scooters">
                   <Button className="bg-yellow-400 hover:bg-yellow-500 text-blue-900 font-bold px-8 py-3 text-lg shadow-lg">
-                    Reservar Patinete
+                    {t('scooterPromo.button')}
                   </Button>
                 </Link>
               </div>
@@ -1416,7 +1414,7 @@ export default function HomePage() {
                 className="inline-flex items-center px-6 py-3 bg-yellow-500 hover:bg-yellow-600 text-white font-semibold rounded-lg transition-all duration-300 transform hover:scale-105 shadow-lg"
               >
                 <Phone className="w-5 h-5 mr-2" />
-                Llamar Ahora
+                {t('contact.callNow') || 'Llamar Ahora'}
               </a>
             </div>
           </div>
@@ -1541,7 +1539,7 @@ export default function HomePage() {
                 onClick={() => window.open('https://quadaventuracostadelsol.com/actividades-de-aventura', '_blank')}
                 className="w-full bg-orange-600 hover:bg-orange-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors"
               >
-                Acceder a Quad Aventura
+                {t('tours.reserveActivity') || 'Acceder a Quad Aventura'}
               </Button>
             </div>
           </div>

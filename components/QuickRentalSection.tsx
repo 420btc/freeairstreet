@@ -317,10 +317,10 @@ const QuickRentalSection: React.FC = () => {
               <CardContent className="p-8">
                 <CheckCircle className="h-16 w-16 text-green-600 mx-auto mb-4" />
                 <h3 className="text-2xl font-bold text-green-800 mb-2">
-                  ¡Reserva Enviada!
+                  {t('quickRental.form.successTitle')}
                 </h3>
                 <p className="text-green-700 mb-6">
-                  Hemos recibido tu solicitud de reserva. Te contactaremos pronto para confirmar los detalles.
+                  {t('quickRental.form.successText')}
                 </p>
                 <Button
                   onClick={() => {
@@ -334,7 +334,7 @@ const QuickRentalSection: React.FC = () => {
                   }}
                   className="bg-blue-600 hover:bg-blue-700"
                 >
-                  Hacer Otra Reserva
+                  {t('quickRental.form.makeAnother')}
                 </Button>
               </CardContent>
             </Card>
@@ -480,10 +480,10 @@ const QuickRentalSection: React.FC = () => {
                         onClick={handleBackToVehicles}
                         className="text-gray-500 hover:text-gray-700 flex items-center gap-2"
                       >
-                        ← Volver
+                        ← {t('quickRental.form.backToVehicles')}
                       </button>
                       <h3 className="text-xl font-semibold text-gray-900">
-                         Selecciona Duración
+                         {t('quickRental.form.selectDuration')}
                        </h3>
                       <div></div>
                     </div>
@@ -533,10 +533,10 @@ const QuickRentalSection: React.FC = () => {
                          onClick={handleBackToPrices}
                          className="text-gray-500 hover:text-gray-700 flex items-center gap-2"
                        >
-                         ← Volver
+                         ← {t('quickRental.form.backToPrices')}
                        </button>
                        <h3 className="text-xl font-semibold text-gray-900">
-                          Datos de Reserva
+                          {t('quickRental.form.completeReservation')}
                         </h3>
                        <div></div>
                      </div>
@@ -561,20 +561,20 @@ const QuickRentalSection: React.FC = () => {
                         <div>
                           <Label htmlFor="name-mobile" className="flex items-center gap-1 mb-2">
                             <User className="h-4 w-4" />
-                            Nombre completo *
+                            {t('quickRental.form.fullName')}
                           </Label>
                           <Input
                             id="name-mobile"
                             value={formData.name}
                             onChange={(e) => handleInputChange('name', e.target.value)}
-                            placeholder="Tu nombre completo"
+                            placeholder={t('quickRental.form.fullName') as string}
                             required
                           />
                         </div>
                         <div>
                           <Label htmlFor="email-mobile" className="flex items-center gap-1 mb-2">
                             <Mail className="h-4 w-4" />
-                            Email *
+                            {t('quickRental.form.email')}
                           </Label>
                           <Input
                             id="email-mobile"
@@ -588,7 +588,7 @@ const QuickRentalSection: React.FC = () => {
                         <div>
                           <Label htmlFor="phone-mobile" className="flex items-center gap-1 mb-2">
                             <Phone className="h-4 w-4" />
-                            Teléfono *
+                            {t('quickRental.form.phone')}
                           </Label>
                           <Input
                             id="phone-mobile"
@@ -605,7 +605,7 @@ const QuickRentalSection: React.FC = () => {
                         <div>
                           <Label htmlFor="date-mobile" className="flex items-center gap-1 mb-2">
                             <Calendar className="h-4 w-4" />
-                            Fecha *
+                            {t('quickRental.form.date')}
                           </Label>
                           <Input
                             id="date-mobile"
@@ -619,11 +619,11 @@ const QuickRentalSection: React.FC = () => {
                         <div>
                           <Label htmlFor="time-mobile" className="flex items-center gap-1 mb-2">
                             <Clock className="h-4 w-4" />
-                            Hora *
+                            {t('quickRental.form.time')}
                           </Label>
                           <Select value={formData.time} onValueChange={(value) => handleInputChange('time', value)}>
                             <SelectTrigger>
-                              <SelectValue placeholder="Hora" />
+                              <SelectValue placeholder={t('quickRental.form.selectTime') as string} />
                             </SelectTrigger>
                             <SelectContent>
                               {Array.from({ length: 14 }, (_, i) => {
@@ -642,20 +642,20 @@ const QuickRentalSection: React.FC = () => {
                       <div className="grid grid-cols-2 gap-4">
                         <div>
                           <Label htmlFor="duration-mobile" className="mb-2 block">
-                            Duración Seleccionada
+                            {t('quickRental.form.duration')}
                           </Label>
                           <div className="p-3 bg-gray-50 rounded-lg border">
                             <div className="text-sm font-medium text-gray-900">
                               {selectedPrice?.duration}
                             </div>
                             <div className="text-xs text-gray-600">
-                              Precio: {selectedPrice?.price}
+                              {t('quickRental.form.price')}: {selectedPrice?.price}
                             </div>
                           </div>
                         </div>
                         <div>
                           <Label htmlFor="participants-mobile" className="mb-2 block">
-                            Participantes
+                            {t('quickRental.form.participants')}
                           </Label>
                           <Select value={formData.participants} onValueChange={(value) => handleInputChange('participants', value)}>
                             <SelectTrigger>
@@ -664,7 +664,7 @@ const QuickRentalSection: React.FC = () => {
                             <SelectContent>
                               {Array.from({ length: 10 }, (_, i) => (
                                 <SelectItem key={i + 1} value={String(i + 1)}>
-                                  {i + 1} {i === 0 ? 'persona' : 'personas'}
+                                  {i + 1} {i === 0 ? t('quickRental.form.person') : t('quickRental.form.people')}
                                 </SelectItem>
                               ))}
                             </SelectContent>
@@ -674,13 +674,13 @@ const QuickRentalSection: React.FC = () => {
 
                       <div>
                         <Label htmlFor="comments-mobile" className="mb-2 block">
-                          Comentarios adicionales
+                          {t('quickRental.form.comments')}
                         </Label>
                         <Textarea
                           id="comments-mobile"
                           value={formData.comments}
                           onChange={(e) => handleInputChange('comments', e.target.value)}
-                          placeholder="Cualquier información adicional..."
+                          placeholder={t('quickRental.form.commentsPlaceholder') as string}
                           rows={3}
                         />
                       </div>
@@ -694,7 +694,7 @@ const QuickRentalSection: React.FC = () => {
                             onCheckedChange={(checked) => handleConfirmationChange('purchaseInfo', checked as boolean)}
                           />
                           <Label htmlFor="purchaseInfo-mobile" className="text-sm leading-relaxed">
-                            Acepto las condiciones de alquiler.
+                            {t('quickRental.form.confirm1')}
                           </Label>
                         </div>
                         <div className="flex items-start space-x-2">
@@ -704,7 +704,7 @@ const QuickRentalSection: React.FC = () => {
                             onCheckedChange={(checked) => handleConfirmationChange('dniRequired', checked as boolean)}
                           />
                           <Label htmlFor="dniRequired-mobile" className="text-sm leading-relaxed">
-                            Presentaré documento de identidad válido.
+                            {t('quickRental.form.confirm2')}
                           </Label>
                         </div>
                         <div className="flex items-start space-x-2">
@@ -714,7 +714,7 @@ const QuickRentalSection: React.FC = () => {
                             onCheckedChange={(checked) => handleConfirmationChange('dataPolicy', checked as boolean)}
                           />
                           <Label htmlFor="dataPolicy-mobile" className="text-sm leading-relaxed">
-                            Acepto la política de privacidad.
+                            {t('quickRental.form.confirm3')}
                           </Label>
                         </div>
                       </div>
@@ -732,7 +732,7 @@ const QuickRentalSection: React.FC = () => {
                         className="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 text-lg font-semibold"
                         disabled={isSubmitting}
                       >
-                        {isSubmitting ? 'Enviando...' : 'Enviar Reserva'}
+                        {isSubmitting ? t('quickRental.form.submitting') : t('quickRental.form.submit')}
                       </Button>
                     </div>
                   </form>
@@ -832,10 +832,10 @@ const QuickRentalSection: React.FC = () => {
                          onClick={handleBackToPrices}
                          className="text-gray-500 hover:text-gray-700 flex items-center gap-2 text-lg"
                        >
-                         ← Volver a Precios
+                         ← {t('quickRental.form.backToPrices')}
                        </button>
                        <h3 className="text-3xl font-bold text-gray-900">
-                          Completa tu Reserva
+                          {t('quickRental.form.completeReservation')}
                         </h3>
                        <div></div>
                      </div>
@@ -858,20 +858,20 @@ const QuickRentalSection: React.FC = () => {
                         <div>
                           <Label htmlFor="name" className="flex items-center gap-1 mb-2">
                             <User className="h-4 w-4" />
-                            Nombre completo *
+                            {t('quickRental.form.fullName')}
                           </Label>
                           <Input
                             id="name"
                             value={formData.name}
                             onChange={(e) => handleInputChange('name', e.target.value)}
-                            placeholder="Tu nombre completo"
+                            placeholder={t('quickRental.form.fullName') as string}
                             required
                           />
                         </div>
                         <div>
                           <Label htmlFor="email" className="flex items-center gap-1 mb-2">
                             <Mail className="h-4 w-4" />
-                            Email *
+                            {t('quickRental.form.email')}
                           </Label>
                           <Input
                             id="email"
@@ -885,7 +885,7 @@ const QuickRentalSection: React.FC = () => {
                         <div>
                           <Label htmlFor="phone" className="flex items-center gap-1 mb-2">
                             <Phone className="h-4 w-4" />
-                            Teléfono *
+                            {t('quickRental.form.phone')}
                           </Label>
                           <Input
                             id="phone"
@@ -902,7 +902,7 @@ const QuickRentalSection: React.FC = () => {
                   <div>
                     <Label htmlFor="date" className="flex items-center gap-1 mb-2">
                       <Calendar className="h-4 w-4" />
-                      Fecha *
+                      {t('quickRental.form.date')}
                     </Label>
                     <Input
                       id="date"
@@ -916,11 +916,11 @@ const QuickRentalSection: React.FC = () => {
                   <div>
                     <Label htmlFor="time" className="flex items-center gap-1 mb-2">
                       <Clock className="h-4 w-4" />
-                      Hora *
+                      {t('quickRental.form.time')}
                     </Label>
                     <Select value={formData.time} onValueChange={(value) => handleInputChange('time', value)}>
                       <SelectTrigger>
-                        <SelectValue placeholder="Seleccionar hora" />
+                        <SelectValue placeholder={t('quickRental.form.selectTime') as string} />
                       </SelectTrigger>
                       <SelectContent>
                         {Array.from({ length: 14 }, (_, i) => {
@@ -936,20 +936,20 @@ const QuickRentalSection: React.FC = () => {
                   </div>
                   <div>
                         <Label htmlFor="duration" className="mb-2 block">
-                          Duración Seleccionada
+                          {t('quickRental.form.duration')}
                         </Label>
                         <div className="p-3 bg-gray-50 rounded-lg border">
                           <div className="text-sm font-medium text-gray-900">
                             {selectedPrice?.duration}
                           </div>
                           <div className="text-xs text-gray-600">
-                            Precio: {selectedPrice?.price}
+                            {t('quickRental.form.price')}: {selectedPrice?.price}
                           </div>
                         </div>
                       </div>
                   <div>
                     <Label htmlFor="participants" className="mb-2 block">
-                      Participantes
+                      {t('quickRental.form.participants')}
                     </Label>
                     <Select value={formData.participants} onValueChange={(value) => handleInputChange('participants', value)}>
                       <SelectTrigger>
@@ -958,7 +958,7 @@ const QuickRentalSection: React.FC = () => {
                       <SelectContent>
                         {Array.from({ length: 10 }, (_, i) => (
                           <SelectItem key={i + 1} value={String(i + 1)}>
-                            {i + 1} {i === 0 ? 'persona' : 'personas'}
+                            {i + 1} {i === 0 ? t('quickRental.form.person') : t('quickRental.form.people')}
                           </SelectItem>
                         ))}
                       </SelectContent>
@@ -971,37 +971,37 @@ const QuickRentalSection: React.FC = () => {
                   <div>
                     <Label htmlFor="pickupLocation" className="flex items-center gap-1 mb-2">
                       <MapPin className="h-4 w-4" />
-                      Lugar de recogida
+                      {t('quickRental.form.pickupLocation')}
                     </Label>
                     <Input
                       id="pickupLocation"
                       value={formData.pickupLocation}
                       onChange={(e) => handleInputChange('pickupLocation', e.target.value)}
-                      placeholder="Dirección o punto de referencia"
+                      placeholder={t('quickRental.form.pickupPlaceholder') as string}
                     />
                   </div>
                   <div>
                     <Label htmlFor="dni" className="mb-2 block">
-                      DNI/Pasaporte
+                      {t('quickRental.form.dni')}
                     </Label>
                     <Input
                       id="dni"
                       value={formData.dni}
                       onChange={(e) => handleInputChange('dni', e.target.value)}
-                      placeholder="Documento de identidad"
+                      placeholder={t('quickRental.form.dniPlaceholder') as string}
                     />
                   </div>
                       </div>
 
                       <div>
                         <Label htmlFor="comments" className="mb-2 block">
-                          Comentarios adicionales
+                          {t('quickRental.form.comments')}
                         </Label>
                         <Textarea
                           id="comments"
                           value={formData.comments}
                           onChange={(e) => handleInputChange('comments', e.target.value)}
-                          placeholder="Cualquier información adicional..."
+                          placeholder={t('quickRental.form.commentsPlaceholder') as string}
                           rows={3}
                         />
                       </div>
@@ -1015,7 +1015,7 @@ const QuickRentalSection: React.FC = () => {
                       onCheckedChange={(checked) => handleConfirmationChange('purchaseInfo', checked as boolean)}
                     />
                     <Label htmlFor="purchaseInfo" className="text-sm leading-relaxed">
-                      He leído y acepto las condiciones de alquiler y política de cancelación.
+                      {t('quickRental.form.confirm1')}
                     </Label>
                   </div>
                   <div className="flex items-start space-x-2">
@@ -1025,7 +1025,7 @@ const QuickRentalSection: React.FC = () => {
                       onCheckedChange={(checked) => handleConfirmationChange('dniRequired', checked as boolean)}
                     />
                     <Label htmlFor="dniRequired" className="text-sm leading-relaxed">
-                      Confirmo que presentaré un documento de identidad válido en el momento de la recogida.
+                      {t('quickRental.form.confirm2')}
                     </Label>
                   </div>
                   <div className="flex items-start space-x-2">
@@ -1035,7 +1035,7 @@ const QuickRentalSection: React.FC = () => {
                       onCheckedChange={(checked) => handleConfirmationChange('dataPolicy', checked as boolean)}
                     />
                     <Label htmlFor="dataPolicy" className="text-sm leading-relaxed">
-                      Acepto la política de privacidad y el tratamiento de mis datos personales.
+                      {t('quickRental.form.confirm3')}
                     </Label>
                   </div>
                       </div>
@@ -1054,7 +1054,7 @@ const QuickRentalSection: React.FC = () => {
                     className="flex-1 bg-blue-600 hover:bg-blue-700 text-white py-3 text-lg font-semibold"
                     disabled={isSubmitting}
                   >
-                    {isSubmitting ? 'Enviando...' : 'Enviar Reserva'}
+                    {isSubmitting ? t('quickRental.form.submitting') : t('quickRental.form.submit')}
                   </Button>
                   <Link href="/alquiler" className="flex-1">
                     <Button
@@ -1062,7 +1062,7 @@ const QuickRentalSection: React.FC = () => {
                       variant="outline"
                       className="w-full border-blue-600 text-blue-600 hover:bg-blue-50 py-3"
                     >
-                      Ver Todos los Precios
+                      {t('quickRental.form.seeAllPrices')}
                     </Button>
                         </Link>
                       </div>

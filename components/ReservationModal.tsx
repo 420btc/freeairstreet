@@ -11,6 +11,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Checkbox } from "@/components/ui/checkbox"
 import { sendReservationEmail, type ReservationFormData } from "@/lib/emailjs"
 import { useInventory } from "@/contexts/InventoryContext"
+import { useLanguage } from "@/contexts/LanguageContext"
 import { TourConfirmationModal } from "./TourConfirmationModal"
 
 interface ReservationModalProps {
@@ -34,6 +35,7 @@ interface ReservationModalProps {
 }
 
 export function ReservationModal({ isOpen, onClose, type, itemName, itemPrice, itemDuration, itemId, prefillData }: ReservationModalProps) {
+  const { language, setLanguage } = useLanguage()
   const { makeReservation } = useInventory()
   const [formData, setFormData] = useState({
     name: prefillData?.name || "",
@@ -75,7 +77,10 @@ export function ReservationModal({ isOpen, onClose, type, itemName, itemPrice, i
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [isSubmitted, setIsSubmitted] = useState(false)
   const [submitError, setSubmitError] = useState<string | null>(null)
-  const [isEnglish, setIsEnglish] = useState(false)
+  
+  // Sincronizar el idioma con el contexto global
+  const isEnglish = language === 'en'
+  const setIsEnglish = (val: boolean) => setLanguage(val ? 'en' : 'es')
   const [submittedInEnglish, setSubmittedInEnglish] = useState(false)
   const [showTourConfirmation, setShowTourConfirmation] = useState(false)
 
