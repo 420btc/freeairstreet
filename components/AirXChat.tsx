@@ -40,10 +40,16 @@ export default function AirXChat() {
   const [inputMessage, setInputMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [conversationContext, setConversationContext] = useState<ConversationContext>({});
+  const [sessionId, setSessionId] = useState<string>('');
   const [hasNewMessage, setHasNewMessage] = useState(false);
   const [hasShownProactiveMessage, setHasShownProactiveMessage] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const pageLoadTimeRef = useRef<number>(Date.now());
+
+  // Inicializar sessionId solo en el cliente
+  useEffect(() => {
+    setSessionId(Date.now().toString() + '-' + Math.random().toString(36).substring(2, 9));
+  }, []);
 
   // Function to detect language from user message
   const detectLanguage = (message: string): 'es' | 'en' => {
@@ -93,6 +99,7 @@ export default function AirXChat() {
     setMessages([welcomeMessage]);
     setConversationContext({});
     setInputMessage('');
+    setSessionId(Date.now().toString() + '-' + Math.random().toString(36).substring(2, 9));
   };
 
   // Function to format message content with purple badges only for prices
@@ -413,7 +420,8 @@ export default function AirXChat() {
           message: inputMessage,
           context: newContext,
           conversationHistory: messages.slice(-20), // Send last 20 messages for better context
-          detectedLanguage: detectedLanguage // Send detected language to API
+          detectedLanguage: detectedLanguage, // Send detected language to API
+          sessionId: sessionId
         }),
       });
 

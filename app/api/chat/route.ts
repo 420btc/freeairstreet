@@ -1,11 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server';
 import OpenAI from 'openai';
+import prisma from '@/lib/prisma';
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
 
-const SYSTEM_PROMPT = `Eres AirX, un asistente virtual especializado en servicios de alquiler de vehículos, patinetes eléctricos, scooters eléctricos, fat bikes, y excursiones en la Costa del Sol en la Calle de la playa n22 29620, España. Usa emoticonos ocasionalmente para hacer la conversación más amigable y cercana. 
+const BASE_SYSTEM_PROMPT = `Eres AirX, un asistente virtual especializado en servicios de alquiler de vehículos, patinetes eléctricos, scooters eléctricos, fat bikes, y excursiones en la Costa del Sol en la Calle de la playa n22 29620, España. Usa emoticonos ocasionalmente para hacer la conversación más amigable y cercana. 
 
 **INFORMACIÓN DE LA EMPRESA:**
 - Ubicación: Calle de la Playa, 22 - 29620 Torremolinos, Málaga, España
@@ -13,40 +14,21 @@ const SYSTEM_PROMPT = `Eres AirX, un asistente virtual especializado en servicio
 - Email: info@freeairstreet-rentbike.com
 - Horario: Lunes a Domingo 9:00-22:00
 
-**BICICLETAS Y PATINETES:**
-- **Bicicleta Paseo Urbana (City Bike)**: 3€/1h, 5€/2h, 6€/3h, 7€/4h, 13€/día completo (24h)
-- **Bicicleta Eléctrica (Fat Bike Elect)**: 10€/1h, 18€/2h, 25€/3h, 30€/4h, 35€/día completo (11h)
-- **Mountain Bike (Bici de Carrera)**: 6€/1h, 7€/2h, 8€/3h, 9€/4h, 19€/día completo
-- **Scooter/Patinete Eléctrico**: Consultar precios
-- **Carro para Niños**: 6€
-- **Quad para Niños**: 30€/30min
+**PRECIOS ACTUALIZADOS (Desde Base de Datos):**
+`;
 
-**COCHES (Grupos por tamaño):**
-- **Grupo A** (Toyota Aygo, Citroën C1): 54-58€/día, 196-224€/semana
-- **Grupo B** (Seat Ibiza): 65€/día, 238€/semana
-- **Grupo B** (Seat Arona): 75€/día, 320€/semana
-- **Grupo B** (Seat Ateca): 80€/día, 315€/semana
-- **Grupo B** (Seat León): 99€/día, 430€/semana
-- **Grupo C** (Volkswagen Touran 7 plazas): 119€/día, 495€/semana
-- **Grupo D** (Minibús 9 plazas): 145€/día, 675€/semana
-- **Grupo E** (Renault Clio Automático): 65€/día, 357€/semana
+export async function POST(req: NextRequest) {
+  try {
+    const { message, context, conversationHistory, detectedLanguage, sessionId } = await req.json();
+    
+    // Obtener precios desde la base de datos
+    const dbPrices = await prisma.price.findMany();
+    let dynamicPricesText = "";
+    dbPrices.forEach((p: { name: string; category: string; price: string }) => {
+      dynamicPricesText += `- **${p.name}** (${p.category}): ${p.price}\n`;
+    });
 
-**MOTOS, PATINETES ELÉCTRICOS Y QUADS:**
-- **Yamaha Neo's 50cc**: 40€/día, 155€/semana
-- **Piaggio Liberty 125cc**: 45€/día, 160€/semana
-- **Yamaha Xenter 125cc**: 55€/día, 220€/semana
-- **Kymco Super Dink 350cc**: 60€/día, 310€/semana
-- **BMW 310R**: 60€/día, 310€/semana
-- **CFMoto 650 MT**: 80€/día, 395€/semana
-- **Moto Eléctrica**: 15€/1h, 25€/2h
-- **Rent a Quad**: 30€/1h, 50€/2h
-
-**TOURS DESTACADOS:**
-- **Dolphin Trip**: Avistamiento de delfines, perfecto para familias
-- **Granada Alhambra**: Visita la majestuosa Alhambra y jardines del Generalife
-- **Paseo a Caballo**: 1.30 horas, 1 persona por caballo, guía experto incluido
-- **Caminito del Rey**, **Córdoba**, **Gibraltar**, **Marbella**, **Nerja y Frigiliana**, **Ronda**, **Sevilla**, **Tánger**
-
+    const SYSTEM_PROMPT = BASE_SYSTEM_PROMPT + dynamicPricesText + `
 **REQUISITOS IMPORTANTES:**
 - **Bicicletas/Patinetes**: Solo DNI
 - **Coches**: Carnet de conducir válido, pasaporte/DNI, tarjeta de crédito para depósito
@@ -75,10 +57,24 @@ Puedes responder en los siguientes idiomas según el idioma en que te hablen:
 
 Detecta automáticamente el idioma del usuario y responde en el mismo idioma. Mantén siempre un tono cercano y profesional. Si te preguntan por el dueño de la tienda, se llama Daniele y siempre deja su numero de Telefono si preguntan por el, nunca des el nombre si no te lo preguntan`;
 
-export async function POST(req: NextRequest) {
-  try {
-    const { message, context, conversationHistory, detectedLanguage } = await req.json();
-    
+    // Guardar mensaje del usuario en la base de datos
+    if (sessionId && message) {
+      // Asegurar que exista la sesión
+      await (prisma as any).chatSession.upsert({
+        where: { id: sessionId },
+        update: {},
+        create: { id: sessionId },
+      });
+
+      await (prisma as any).chatMessage.create({
+        data: {
+          chatSessionId: sessionId,
+          isUser: true,
+          content: message,
+        }
+      });
+    }
+
     // Build language-specific prompt
     let languagePrompt = '';
     if (detectedLanguage === 'en') {
@@ -128,6 +124,17 @@ export async function POST(req: NextRequest) {
     });
 
     const response = completion.choices[0]?.message?.content || "Lo siento, no pude procesar tu consulta.";
+
+    // Guardar respuesta del asistente en la base de datos
+    if (sessionId && response) {
+      await (prisma as any).chatMessage.create({
+        data: {
+          chatSessionId: sessionId,
+          isUser: false,
+          content: response,
+        }
+      });
+    }
 
     return NextResponse.json({ response });
   } catch (error) {
