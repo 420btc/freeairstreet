@@ -51,6 +51,18 @@ export const sendContactEmail = async (formData: ContactFormData) => {
   }
 
   try {
+    // 1. Guardar en la base de datos primero
+    try {
+      await fetch('/api/save-contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData),
+      });
+    } catch (dbError) {
+      console.error('Error saving contact to DB:', dbError);
+      // Continuamos enviando el email aunque falle la DB
+    }
+
     // Enviar email al administrador
     const adminResponse = await emailjs.send(
       EMAILJS_SERVICE_ID,
@@ -108,6 +120,18 @@ export const sendReservationEmail = async (formData: ReservationFormData) => {
   }
 
   try {
+    // 1. Guardar en la base de datos primero
+    try {
+      await fetch('/api/save-reservation', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData),
+      });
+    } catch (dbError) {
+      console.error('Error saving reservation to DB:', dbError);
+      // Continuamos enviando el email aunque falle la DB
+    }
+
     const isRental = formData.type === 'rental'
     const serviceType = isRental ? 'Alquiler' : 'Tour/Excursión'
     
@@ -187,6 +211,18 @@ export const sendAdvertisingEmail = async (formData: AdvertisingFormData) => {
   }
 
   try {
+    // 1. Guardar en la base de datos primero
+    try {
+      await fetch('/api/save-advertising', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData),
+      });
+    } catch (dbError) {
+      console.error('Error saving advertising request to DB:', dbError);
+      // Continuamos enviando el email aunque falle la DB
+    }
+
     // Enviar email al administrador
     const adminResponse = await emailjs.send(
       EMAILJS_SERVICE_ID,

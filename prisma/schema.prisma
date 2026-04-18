@@ -31,3 +31,41 @@ model ChatMessage {
   createdAt     DateTime    @default(now())
 }
 
+model Reservation {
+  id             String   @id @default(uuid())
+  name           String
+  email          String
+  phone          String
+  date           String
+  time           String
+  duration       String?
+  participants   String
+  pickupLocation String?
+  comments       String?
+  itemName       String?
+  itemPrice      String?
+  type           String   // 'rental' | 'tour'
+  createdAt      DateTime @default(now())
+}
+
+model ContactMessage {
+  id        String   @id @default(uuid())
+  name      String
+  email     String
+  phone     String
+  subject   String?
+  message   String
+  createdAt DateTime @default(now())
+}
+
+model AdvertisingRequest {
+  id              String   @id @default(uuid())
+  businessName    String
+  contactPerson   String
+  email           String
+  phone           String
+  advertisingType String
+  message         String
+  createdAt       DateTime @default(now())
+}
+
