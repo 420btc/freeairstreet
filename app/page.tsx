@@ -10,6 +10,7 @@ import Link from "next/link"
 import mapboxgl from 'mapbox-gl'
 import 'mapbox-gl/dist/mapbox-gl.css'
 import { useLanguage } from '../contexts/LanguageContext'
+import { usePricing } from '../contexts/PricingContext'
 import { LanguageToggle } from '../components/LanguageToggle'
 import { ThemeToggle } from '../components/ThemeToggle'
 import RoutesComponent from '../components/RoutesComponent'
@@ -23,6 +24,7 @@ export default function HomePage() {
   const [isMapActive, setIsMapActive] = useState(false)
   const [isMobile, setIsMobile] = useState(false)
   const { t } = useLanguage()
+  const { getPrice } = usePricing()
 
 
   // Schema.org structured data
@@ -974,11 +976,11 @@ export default function HomePage() {
                 <div className="space-y-2 mb-4 flex-1">
                   <div className="flex justify-between">
                     <span>{t('prices.hour')}</span>
-                    <Badge variant="secondary" className="text-lg font-bold">3€</Badge>
+                    <Badge variant="secondary" className="text-lg font-bold">{getPrice('city-bike-1h', '3€')}</Badge>
                   </div>
                   <div className="flex justify-between">
                     <span>{t('prices.allDay')}</span>
-                    <Badge className="bg-yellow-500 text-blue-900 text-xl font-bold">13€</Badge>
+                    <Badge className="bg-yellow-500 text-blue-900 text-xl font-bold">{getPrice('city-bike-allday', '13€')}</Badge>
                   </div>
                 </div>
                 <div className="text-center mt-auto">
@@ -1000,11 +1002,11 @@ export default function HomePage() {
                 <div className="space-y-2 mb-4 flex-1">
                   <div className="flex justify-between">
                     <span>{t('prices.hour')}</span>
-                    <Badge variant="secondary" className="text-lg font-bold">10€</Badge>
+                    <Badge variant="secondary" className="text-lg font-bold">{getPrice('electric-bike-1h', '10€')}</Badge>
                   </div>
                   <div className="flex justify-between">
                     <span>{t('prices.allDay')}</span>
-                    <Badge className="bg-yellow-500 text-blue-900 text-xl font-bold">35€</Badge>
+                    <Badge className="bg-yellow-500 text-blue-900 text-xl font-bold">{getPrice('electric-bike-allday', '35€')}</Badge>
                   </div>
                 </div>
                 <div className="text-center mt-auto">
@@ -1026,11 +1028,11 @@ export default function HomePage() {
                 <div className="space-y-2 mb-4 flex-1">
                   <div className="flex justify-between">
                     <span>{t('prices.halfHour')}</span>
-                    <Badge variant="secondary" className="text-lg font-bold">10€</Badge>
+                    <Badge variant="secondary" className="text-lg font-bold">{getPrice('scooter-30m', '10€')}</Badge>
                   </div>
                   <div className="flex justify-between">
                     <span>{t('prices.hour')}</span>
-                    <Badge className="bg-yellow-500 text-blue-900 text-xl font-bold">15€</Badge>
+                    <Badge className="bg-yellow-500 text-blue-900 text-xl font-bold">{getPrice('scooter-1h', '15€')}</Badge>
                   </div>
                 </div>
                 <div className="text-center mt-auto">
@@ -1206,8 +1208,8 @@ export default function HomePage() {
                         <div className="text-lg">👥</div>
                       </div>
                       <div className="bg-yellow-400 text-black p-2 text-center flex flex-col justify-center">
-                        <div className="text-xs font-bold mb-1">75€ {t('quadTours.perQuad')}</div>
-                        <div className="text-xs font-bold">90€ {t('quadTours.perQuad')}</div>
+                        <div className="text-xs font-bold mb-1">{getPrice('quad-tour-1h-1', '75€')} {t('quadTours.perQuad')}</div>
+                        <div className="text-xs font-bold">{getPrice('quad-tour-1h-2', '90€')} {t('quadTours.perQuad')}</div>
                       </div>
                       
                       {/* 2H Row */}
@@ -1217,8 +1219,8 @@ export default function HomePage() {
                         <div className="text-lg">👥</div>
                       </div>
                       <div className="bg-orange-500 text-black p-2 text-center flex flex-col justify-center">
-                        <div className="text-xs font-bold mb-1">90€ {t('quadTours.perQuad')}</div>
-                        <div className="text-xs font-bold">120€ {t('quadTours.perQuad')}</div>
+                        <div className="text-xs font-bold mb-1">{getPrice('quad-tour-2h-1', '90€')} {t('quadTours.perQuad')}</div>
+                        <div className="text-xs font-bold">{getPrice('quad-tour-2h-2', '120€')} {t('quadTours.perQuad')}</div>
                       </div>
                       
                       {/* 3H Row */}
@@ -1228,8 +1230,8 @@ export default function HomePage() {
                         <div className="text-lg">👥</div>
                       </div>
                       <div className="bg-red-500 text-white p-2 text-center flex flex-col justify-center">
-                        <div className="text-xs font-bold mb-1">150€ {t('quadTours.perQuad')}</div>
-                        <div className="text-xs font-bold">170€ {t('quadTours.perQuad')}</div>
+                        <div className="text-xs font-bold mb-1">{getPrice('quad-tour-3h-1', '150€')} {t('quadTours.perQuad')}</div>
+                        <div className="text-xs font-bold">{getPrice('quad-tour-3h-2', '170€')} {t('quadTours.perQuad')}</div>
                       </div>
                  </div>
                  
@@ -1274,7 +1276,7 @@ export default function HomePage() {
                   <div className="bg-white/90 backdrop-blur-sm rounded-full p-2 text-2xl">🐬</div>
                 </div>
                 <div className="absolute top-4 right-4">
-                  <Badge className="bg-yellow-500 text-blue-900 font-bold text-xl">18€</Badge>
+                  <Badge className="bg-yellow-500 text-blue-900 font-bold text-xl">{getPrice('dolphin-trip', '18€')}</Badge>
                 </div>
               </div>
               <CardHeader>
@@ -1320,7 +1322,7 @@ export default function HomePage() {
                   <div className="bg-white/90 backdrop-blur-sm rounded-full p-2 text-2xl">🏰</div>
                 </div>
                 <div className="absolute top-4 right-4">
-                  <Badge className="bg-yellow-500 text-blue-900 font-bold text-xl">79€</Badge>
+                  <Badge className="bg-yellow-500 text-blue-900 font-bold text-xl">{getPrice('alhambra-granada', '79€')}</Badge>
                 </div>
               </div>
               <CardHeader>
@@ -1361,7 +1363,7 @@ export default function HomePage() {
                   <div className="bg-white/90 backdrop-blur-sm rounded-full p-2 text-2xl">🐎</div>
                 </div>
                 <div className="absolute top-4 right-4">
-                  <Badge className="bg-yellow-500 text-blue-900 font-bold text-xl">65€</Badge>
+                  <Badge className="bg-yellow-500 text-blue-900 font-bold text-xl">{getPrice('paseo-caballo', '65€')}</Badge>
                 </div>
               </div>
               <CardHeader>
@@ -1495,6 +1497,13 @@ export default function HomePage() {
                 >
                   Carlosfr.es
                 </a>
+                <button
+                  id="admin-dashboard-trigger"
+                  className="ml-4 text-gray-400 hover:text-gray-600 transition-colors"
+                  title="Admin"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+                </button>
               </div>
             </div>
           </div>

@@ -12,6 +12,7 @@ import { LanguageToggle } from '../../components/LanguageToggle'
 import { ThemeToggle } from '../../components/ThemeToggle'
 import { ReservationModal } from '../../components/ReservationModal'
 import { useLanguage } from '../../contexts/LanguageContext'
+import { usePricing } from '../../contexts/PricingContext'
 
 export default function ToursPage() {
   const [activeTab, setActiveTab] = useState("excursiones")
@@ -20,6 +21,7 @@ export default function ToursPage() {
   const [isQrModalOpen, setIsQrModalOpen] = useState(false)
   const [selectedItem, setSelectedItem] = useState<{name: string, price?: string}>({name: ""})
   const { t, language } = useLanguage()
+  const { getPrice } = usePricing()
 
   const handleReservation = (itemName: string, itemPrice?: string) => {
     setSelectedItem({name: itemName, price: itemPrice})
@@ -31,7 +33,7 @@ export default function ToursPage() {
       name: "Paseos a Caballo",
       duration: "1.30 horas",
       capacity: "1 persona",
-      price: "65€",
+      price: getPrice("paseo-caballo", "65€"),
       description: "Disfruta de un relajante paseo a caballo por paisajes naturales únicos",
       image: "/lugares/paseocaballo.jpeg",
       highlights: ["Guía experto", "Caballo dócil", "Paisajes naturales", "Experiencia única"],
@@ -158,7 +160,7 @@ export default function ToursPage() {
     {
       name: "Dolphin Trip (Paseo de los Delfines)",
       location: "Puerto Marina Benalmádena",
-      priceAdult: "19€",
+      priceAdult: getPrice("dolphin-trip", "19€"),
       priceChild: "12€",
       description: "Avistamiento de delfines en su hábitat natural desde Puerto Marina",
       image: "/lugares/dolphintrip.jpg",
@@ -207,7 +209,7 @@ export default function ToursPage() {
     {
       name: "Granada Alhambra",
       days: ["Jueves", "Viernes"],
-      price: "94€",
+      price: getPrice("alhambra-granada", "94€"),
       description: "Visita a la majestuosa Alhambra y los jardines del Generalife",
       image: "/destinos/alhambragranada.png",
       emoji: "🏰",
@@ -243,7 +245,7 @@ export default function ToursPage() {
     {
       name: "Caminito del Rey",
       days: ["Martes", "Miércoles", "Jueves", "Viernes"],
-      price: "63€",
+      price: getPrice("caminito-rey", "63€"),
       description: "Aventura por el sendero más espectacular de Andalucía",
       image: "/destinos/caminitodelrey.jpg",
       emoji: "🥾",
@@ -252,7 +254,7 @@ export default function ToursPage() {
     {
       name: "Nerja y Frigiliana",
       days: ["Lunes"],
-      price: "45€",
+      price: getPrice("nerja-setenil", "45€"),
       description: "Pueblos blancos costeros con cuevas y vistas al Mediterráneo",
       image: "/destinos/nerjayfrig.jpg",
       emoji: "🏖️",
@@ -261,7 +263,7 @@ export default function ToursPage() {
     {
       name: "Mijas Marbella Banús",
       days: ["Sábado"],
-      price: "45€",
+      price: getPrice("marbella-mijas", "45€"),
       description: "Ruta por la Costa del Sol: Mijas, Marbella y Puerto Banús",
       image: "/destinos/marbella.jpg",
       emoji: "🏖️",
@@ -270,7 +272,7 @@ export default function ToursPage() {
     {
       name: "Tánger",
       days: ["Sábado"],
-      price: "149€",
+      price: getPrice("tanger", "149€"),
       description: "Excursión a Marruecos: medina, mercados y cultura bereber",
       image: "/destinos/tanger.jpg",
       emoji: "🕌",
