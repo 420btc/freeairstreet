@@ -46,7 +46,7 @@ export default function ContactoPage() {
   })
 
   useEffect(() => {
-    mapboxgl.accessToken = 'pk.eyJ1IjoiNDIwYnRjIiwiYSI6ImNtOTN3ejBhdzByNjgycHF6dnVmeHl2ZTUifQ.Utq_q5wN6DHwpkn6rcpZdw'
+    mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN || ''
 
     const map = new mapboxgl.Map({
       container: 'contact-mapbox-container',
