@@ -124,6 +124,20 @@ export default function AlquilerPage() {
       features: currentTranslations['rental.vehicles.mountainBike.features'] as string[],
     },
     {
+      id: "electric-bike",
+      name: t('rental.vehicles.electricBike.name'),
+      description: t('rental.vehicles.electricBike.description'),
+      image: "/modern-electric-bike.png",
+      prices: [
+        { duration: "1h", price: "10€" },
+        { duration: "2h", price: "18€" },
+        { duration: "3h", price: "25€" },
+        { duration: "4h", price: "30€" },
+        { duration: t('rental.vehicles.electricBike.allDay'), price: "35€", featured: true },
+      ],
+      features: currentTranslations['rental.vehicles.electricBike.features'] as string[],
+    },
+    {
       id: "fat-bike",
       name: t('rental.vehicles.fatBike.name'),
       description: t('rental.vehicles.fatBike.description'),
@@ -872,9 +886,9 @@ export default function AlquilerPage() {
 
           {/* Bicicletas Tab */}
           <TabsContent value="bicicletas" className="sm:data-[state=active]:animate-none data-[state=active]:animate-in data-[state=active]:slide-in-from-right-4 data-[state=active]:duration-300">
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 justify-items-center">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               {bicycles.map((bike) => (
-                <Card key={bike.id} className="w-full max-w-lg overflow-hidden shadow-lg hover:shadow-2xl transition-shadow duration-300">
+                <Card key={bike.id} className="overflow-hidden shadow-lg hover:shadow-2xl transition-shadow duration-300">
                   <div className="aspect-video relative">
                     <Image src={bike.image || "/placeholder.svg"} alt={bike.name as string} fill className="object-cover" />
 

@@ -54,6 +54,13 @@ const initialInventory: InventoryItem[] = [
     reservations: []
   },
   {
+    id: 'electric-bike',
+    name: 'BIKE ELECT (Bicicleta eléctrica)',
+    totalStock: 14,
+    availableStock: 14,
+    reservations: []
+  },
+  {
     id: 'electric-scooter',
     name: 'Scooter Eléctrico',
     totalStock: 16,
