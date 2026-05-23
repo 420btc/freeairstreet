@@ -1,491 +1,347 @@
 'use client';
 
 import React, { useState, useRef, useEffect } from 'react';
-import { MessageCircle, X, Send, RotateCcw } from 'lucide-react';
-import { Button } from './ui/button';
-import { useModal } from '../contexts/ModalContext';
+import { MessageCircle } from 'lucide-react';
+import { usePathname } from 'next/navigation';
+import { useModal } from '@/contexts/ModalContext';
+import ChatHeader from './chat/ChatHeader';
+import ChatMessages from './chat/ChatMessages';
+import ChatInput from './chat/ChatInput';
+import { detectLanguage, parseQuickReplies, cleanContent, shouldShowReservationButton, getReservationType, extractContextWithRegex } from '@/lib/chat-utils';
+import type { Message, ConversationContext, PageContext, QuickReply, SupportedLanguage } from '@/types/chat';
 
-interface Message {
-  id: string;
-  content: string;
-  isUser: boolean;
-  timestamp: Date;
-  showReservationButton?: boolean;
-  reservationType?: 'rental' | 'tour' | 'appointment';
-  showTranslateButton?: boolean;
-  translatedContent?: string;
-}
+const SIZE_CLASSES: Record<string, string> = {
+  S: 'w-80 h-96',
+  M: 'w-[450px] h-[500px]',
+  L: 'w-[600px] h-[70vh]',
+};
 
-interface ConversationContext {
-  serviceType?: string;
-  duration?: string;
-  date?: string;
-  participants?: string;
-  vehicleType?: string;
+const SIZE_MOBILE = 'w-[90vw] h-[80vh]';
+
+function getWelcomeMessage(lang: 'es' | 'en'): string {
+  return lang === 'en'
+    ? "Hello! 👋 I'm AirX, your virtual assistant. How can I help you today? I can help you with information or booking our rental vehicles, tours and services in Torremolinos 😊🌴"
+    : '¡Hola! 👋 Soy AirX, tu asistente virtual. ¿En qué puedo ayudarte hoy? Puedo ayudarte con información o a reservar nuestros vehículos de alquiler, excursiones y servicios en Torremolinos 😊🌴';
 }
 
 export default function AirXChat() {
   const { openReservationModal } = useModal();
+  const pathname = usePathname();
+
   const [isOpen, setIsOpen] = useState(false);
-  const [currentLanguage, setCurrentLanguage] = useState<'es' | 'en'>('es');
-  const [messages, setMessages] = useState<Message[]>([
+  const [language, setLanguage] = useState<SupportedLanguage>('es');
+  const [messages, setMessages] = useState<Message[]>(() => [
     {
       id: '1',
-      content: '¡Hola! 👋 Soy AirX, tu asistente virtual. ¿En qué puedo ayudarte hoy? Puedo ayudarte con información o a reservar nuestros vehículos de alquiler, excursiones y servicios en Torremolinos 😊🌴',
+      content: getWelcomeMessage('es'),
       isUser: false,
       timestamp: new Date(),
-      showTranslateButton: true
-    }
+      showTranslateButton: true,
+    },
   ]);
   const [inputMessage, setInputMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [isStreaming, setIsStreaming] = useState(false);
+  const [streamingContent, setStreamingContent] = useState('');
   const [conversationContext, setConversationContext] = useState<ConversationContext>({});
   const [sessionId, setSessionId] = useState<string>('');
+  const [chatSize, setChatSize] = useState<'S' | 'M' | 'L'>('S');
   const [hasNewMessage, setHasNewMessage] = useState(false);
   const [hasShownProactiveMessage, setHasShownProactiveMessage] = useState(false);
-  const messagesEndRef = useRef<HTMLDivElement>(null);
+  const [pageContext, setPageContext] = useState<PageContext>({ route: 'home' });
   const pageLoadTimeRef = useRef<number>(Date.now());
+  const abortControllerRef = useRef<AbortController | null>(null);
 
-  // Inicializar sessionId solo en el cliente
+  // Initialize session from localStorage or create new
   useEffect(() => {
-    setSessionId(Date.now().toString() + '-' + Math.random().toString(36).substring(2, 9));
+    const existingSessionId = localStorage.getItem('airx-session-id');
+    if (existingSessionId) {
+      setSessionId(existingSessionId);
+      fetchSessionMessages(existingSessionId);
+    } else {
+      const newId = crypto.randomUUID();
+      localStorage.setItem('airx-session-id', newId);
+      setSessionId(newId);
+    }
   }, []);
 
-  // Function to detect language from user message
-  const detectLanguage = (message: string): 'es' | 'en' => {
-    const englishWords = ['hello', 'hi', 'bike', 'rent', 'car', 'tour', 'help', 'please', 'thank', 'yes', 'no', 'how', 'what', 'when', 'where', 'price', 'cost', 'available', 'book', 'reserve', 'ok'];
-    const spanishWords = ['hola', 'bici', 'alquiler', 'coche', 'tour', 'ayuda', 'por favor', 'gracias', 'sí', 'no', 'cómo', 'qué', 'cuándo', 'dónde', 'precio', 'coste', 'disponible', 'reservar', 'vale'];
-    
-    const lowerMessage = message.toLowerCase();
-    const englishMatches = englishWords.filter(word => lowerMessage.includes(word)).length;
-    const spanishMatches = spanishWords.filter(word => lowerMessage.includes(word)).length;
-    
-    if (englishMatches > spanishMatches) return 'en';
-    if (spanishMatches > englishMatches) return 'es';
-    
-    // If no clear match, maintain current language
-    return currentLanguage;
-  };
-
-  // Function to translate welcome message
-  const translateWelcomeMessage = async (messageId: string) => {
-    const targetLang = currentLanguage === 'es' ? 'en' : 'es';
-    const welcomeMessages = {
-      es: '¡Hola! 👋 Soy AirX, tu asistente virtual. ¿En qué puedo ayudarte hoy? Puedo ayudarte con información o a reservar nuestros vehículos de alquiler, excursiones y servicios en Torremolinos 😊🌴',
-      en: 'Hello! 👋 I\'m AirX, your virtual assistant. How can I help you today? I can help you with information or booking our rental vehicles, tours and services in Torremolinos 😊🌴'
-    };
-    
-    setMessages(prev => prev.map(msg => 
-      msg.id === messageId 
-        ? { ...msg, content: welcomeMessages[targetLang], translatedContent: msg.content }
-        : msg
-    ));
-    
-    setCurrentLanguage(targetLang);
-  };
-
-  // Function to reset chat
-  const resetChat = () => {
-    const welcomeMessage = {
-      id: '1',
-      content: currentLanguage === 'en' 
-        ? 'Hello! 👋 I\'m AirX, your virtual assistant. How can I help you today? I can help you with information or booking our rental vehicles, tours and services in Torremolinos 😊🌴'
-        : '¡Hola! 👋 Soy AirX, tu asistente virtual. ¿En qué puedo ayudarte hoy? Puedo ayudarte con información o a reservar nuestros vehículos de alquiler, excursiones y servicios en Torremolinos 😊🌴',
-      isUser: false,
-      timestamp: new Date(),
-      showTranslateButton: true
-    };
-    
-    setMessages([welcomeMessage]);
-    setConversationContext({});
-    setInputMessage('');
-    setSessionId(Date.now().toString() + '-' + Math.random().toString(36).substring(2, 9));
-  };
-
-  // Function to format message content with purple badges only for prices
-  const formatMessageContent = (content: string) => {
-    const parts = content.split(/\*\*(.*?)\*\*/g);
-    return parts.map((part, index) => {
-      if (index % 2 === 1) {
-        // This is text that was between asterisks - only show badge if it contains a price
-        const isPriceText = /\d+€|€\d+|\d+\s*€|€\s*\d+/.test(part);
-        if (isPriceText) {
-          return (
-            <span
-              key={index}
-              className="inline-block bg-purple-600 text-white px-2 py-1 rounded-full text-xs font-medium mx-1"
-            >
-              {part}
-            </span>
-          );
-        } else {
-          // Return plain text without badge for non-price content
-          return part;
-        }
-      }
-      return part;
-    });
-  };
-
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  };
-
+  // Detect page context from URL
   useEffect(() => {
-    scrollToBottom();
-  }, [messages]);
+    if (!pathname) return;
+    const route = pathname.replace('/', '') || 'home';
+    setPageContext({ route });
+  }, [pathname]);
 
-  // Function to play notification sound
-  const playNotificationSound = () => {
+  // Fetch existing session messages
+  const fetchSessionMessages = async (sessionId: string) => {
     try {
-      // Create audio context for better browser compatibility
-      const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
-      const oscillator = audioContext.createOscillator();
-      const gainNode = audioContext.createGain();
-      
-      oscillator.connect(gainNode);
-      gainNode.connect(audioContext.destination);
-      
-      // Configure notification sound (gentle chime)
-      oscillator.frequency.setValueAtTime(800, audioContext.currentTime);
-      oscillator.frequency.setValueAtTime(600, audioContext.currentTime + 0.1);
-      oscillator.frequency.setValueAtTime(800, audioContext.currentTime + 0.2);
-      
-      gainNode.gain.setValueAtTime(0, audioContext.currentTime);
-      gainNode.gain.linearRampToValueAtTime(0.3, audioContext.currentTime + 0.01);
-      gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.3);
-      
-      oscillator.start(audioContext.currentTime);
-      oscillator.stop(audioContext.currentTime + 0.3);
-    } catch (error) {
-      // Fallback: try to use a simple beep if Web Audio API fails
-      console.log('Web Audio API not available, using fallback');
+      const res = await fetch(`/api/chat/sessions/${sessionId}`);
+      const data = await res.json();
+      if (data.messages && data.messages.length > 0) {
+        const restored: Message[] = data.messages.map((msg: any) => ({
+          id: msg.id,
+          content: msg.content,
+          isUser: msg.isUser,
+          timestamp: new Date(msg.timestamp),
+          showTranslateButton: !msg.isUser,
+        }));
+        setMessages(restored);
+      }
+    } catch {
+      // Silent fail - session messages are nice-to-have
     }
   };
 
-  // Proactive message timer - show message after 10 minutes
+  // Clear notification when chat is opened
+  useEffect(() => {
+    if (isOpen) setHasNewMessage(false);
+  }, [isOpen]);
+
+  // Proactive message after 10 minutes
   useEffect(() => {
     const timer = setTimeout(() => {
       if (!hasShownProactiveMessage && !isOpen) {
         const proactiveMessage: Message = {
           id: `proactive-${Date.now()}`,
-          content: currentLanguage === 'en' 
-            ? 'Hi! 👋 I noticed you\'ve been browsing for a while. Is there anything I can help you with? I\'m here to assist you with rentals, tours, or any questions you might have! 😊'
+          content: language === 'en'
+            ? "Hi! 👋 I noticed you've been browsing for a while. Is there anything I can help you with? I'm here to assist you with rentals, tours, or any questions you might have! 😊"
             : '¡Hola! 👋 Veo que llevas un rato navegando. ¿Hay algo en lo que pueda ayudarte? ¡Estoy aquí para asistirte con alquileres, tours o cualquier pregunta que tengas! 😊',
           isUser: false,
           timestamp: new Date(),
-          showTranslateButton: true
+          showTranslateButton: true,
         };
-        
-        // Replace all previous messages with only the proactive message
-        setMessages([proactiveMessage]);
+        setMessages((prev) => [...prev, proactiveMessage]);
         setHasNewMessage(true);
         setHasShownProactiveMessage(true);
-        
-        // Play notification sound
-        playNotificationSound();
       }
-    }, 10 * 60 * 1000); // 10 minutes
+    }, 10 * 60 * 1000);
 
     return () => clearTimeout(timer);
-  }, [hasShownProactiveMessage, isOpen, currentLanguage]);
+  }, [hasShownProactiveMessage, isOpen, language]);
 
-  // Clear notification when chat is opened
-  useEffect(() => {
-    if (isOpen) {
-      setHasNewMessage(false);
-    }
-  }, [isOpen]);
+  // Scroll on messages change is handled by ChatMessages component
 
-  // Function to extract context from user message
-  const extractContext = (message: string) => {
-    const newContext = { ...conversationContext };
-    
-    // Extract dates
-    const dateRegex = /(\d{1,2}[\/\-]\d{1,2}[\/\-]\d{2,4}|mañana|hoy|pasado mañana|\d{1,2} de \w+)/i;
-    const dateMatch = message.match(dateRegex);
-    if (dateMatch) newContext.date = dateMatch[0];
-    
-    // Extract duration
-    const durationRegex = /(\d+\s*(hora|día|semana|mes)s?|todo el día|media jornada)/i;
-    const durationMatch = message.match(durationRegex);
-    if (durationMatch) newContext.duration = durationMatch[0];
-    
-    // Extract participants
-    const participantsRegex = /(\d+\s*(persona|gente|adulto|niño)s?|familia|pareja|grupo)/i;
-    const participantsMatch = message.match(participantsRegex);
-    if (participantsMatch) newContext.participants = participantsMatch[0];
-    
-    // Extract vehicle/service type
-    const serviceRegex = /(bicicleta|coche|moto|quad|scooter|patinete|tour|excursión|visita)/i;
-    const serviceMatch = message.match(serviceRegex);
-    if (serviceMatch) newContext.serviceType = serviceMatch[0];
-    
-    return newContext;
+  // Translate welcome message
+  const translateMessage = async (messageId: string) => {
+    const targetLang = language === 'es' ? 'en' : 'es';
+
+    setMessages((prev) =>
+      prev.map((msg) => {
+        if (msg.id !== messageId) return msg;
+        if (msg.id === '1') {
+          return {
+            ...msg,
+            content: getWelcomeMessage(targetLang as 'es' | 'en'),
+            translatedContent: msg.content,
+          };
+        }
+        return msg;
+      })
+    );
+
+    setLanguage(targetLang);
   };
 
-  // Function to determine if should show reservation button
-  const shouldShowReservationButton = (response: string, context: ConversationContext) => {
-    const hasServiceInfo = context.serviceType || context.duration || context.date;
-    const hasReservationKeywords = /reserva|alquila|book|rent|disponible|precio/i.test(response);
-    return hasServiceInfo && hasReservationKeywords;
+  // Reset chat
+  const resetChat = () => {
+    const newId = crypto.randomUUID();
+    localStorage.setItem('airx-session-id', newId);
+    setSessionId(newId);
+
+    setMessages([
+      {
+        id: '1',
+        content: getWelcomeMessage(language === 'en' ? 'en' : 'es'),
+        isUser: false,
+        timestamp: new Date(),
+        showTranslateButton: true,
+      },
+    ]);
+    setConversationContext({});
+    setInputMessage('');
+    setIsStreaming(false);
+    setStreamingContent('');
   };
 
-  // Function to determine reservation type
-  const getReservationType = (context: ConversationContext = conversationContext): 'rental' | 'tour' | 'appointment' => {
-    if (context.serviceType) {
-      if (/tour|excursión|visita|alhambra|córdoba|sevilla|gibraltar/i.test(context.serviceType)) {
-        return 'tour';
-      }
-      if (/bicicleta|coche|moto|quad|scooter|patinete/i.test(context.serviceType)) {
-        return 'rental';
-      }
-    }
-    return 'appointment';
-  };
-
-  // Function to extract reservation context from conversation
-  const extractReservationContext = () => {
-    const lastMessages = messages.slice(-5); // Get last 5 messages for more context
-    let itemName = '';
-    let itemPrice = '';
-    let itemDuration = '';
-    
-    // Initialize prefill data
-    const prefillData: {
-      name?: string;
-      email?: string;
-      phone?: string;
-      date?: string;
-      time?: string;
-      participants?: string;
-      pickupLocation?: string;
-      comments?: string;
-    } = {};
-
-    // Extract information from recent messages
-    for (const message of lastMessages) {
-      const content = message.content.toLowerCase();
-      
-      if (!message.isUser) {
-        // Look for price patterns in AI responses
-        const priceMatch = message.content.match(/(\d+)€/g);
-        if (priceMatch && !itemPrice) {
-          itemPrice = priceMatch[0];
-        }
-        
-        // Look for duration patterns
-        const durationMatch = message.content.match(/(\d+\s*(hora|día|semana|mes)s?|todo el día|media jornada)/i);
-        if (durationMatch && !itemDuration) {
-          itemDuration = durationMatch[0];
-        }
-      } else {
-        // Extract user preferences from user messages
-        
-        // Extract dates
-        const datePatterns = [
-          /(\d{1,2}[\/\-]\d{1,2}[\/\-]\d{2,4})/,
-          /(mañana|pasado mañana|hoy)/i,
-          /(lunes|martes|miércoles|jueves|viernes|sábado|domingo)/i,
-          /(\d{1,2}\s+de\s+(enero|febrero|marzo|abril|mayo|junio|julio|agosto|septiembre|octubre|noviembre|diciembre))/i
-        ];
-        
-        for (const pattern of datePatterns) {
-          const dateMatch = content.match(pattern);
-          if (dateMatch && !prefillData.date) {
-            let dateValue = dateMatch[0];
-            
-            // Convert relative dates to actual dates
-            if (dateValue.toLowerCase() === 'mañana') {
-              const tomorrow = new Date();
-              tomorrow.setDate(tomorrow.getDate() + 1);
-              dateValue = tomorrow.toISOString().split('T')[0]; // YYYY-MM-DD format
-            } else if (dateValue.toLowerCase() === 'hoy') {
-              const today = new Date();
-              dateValue = today.toISOString().split('T')[0]; // YYYY-MM-DD format
-            } else if (dateValue.toLowerCase() === 'pasado mañana') {
-              const dayAfterTomorrow = new Date();
-              dayAfterTomorrow.setDate(dayAfterTomorrow.getDate() + 2);
-              dateValue = dayAfterTomorrow.toISOString().split('T')[0]; // YYYY-MM-DD format
-            }
-            
-            prefillData.date = dateValue;
-            break;
-          }
-        }
-        
-        // Extract times
-        const timePatterns = [
-          /(\d{1,2}:\d{2})/,
-          /(\d{1,2}\s*(am|pm|h))/i,
-          /(mañana|tarde|noche)/i,
-          /(por la mañana|por la tarde|por la noche)/i
-        ];
-        
-        for (const pattern of timePatterns) {
-          const timeMatch = content.match(pattern);
-          if (timeMatch && !prefillData.time) {
-            prefillData.time = timeMatch[0];
-            break;
-          }
-        }
-        
-        // Extract pickup locations
-        const locationPatterns = [
-          /(hotel\s+[\w\s]+)/i,
-          /(aeropuerto|estación|centro|plaza\s+[\w\s]*)/i,
-          /(calle\s+[\w\s]+)/i,
-          /(recoger\s+en\s+[\w\s]+)/i
-        ];
-        
-        for (const pattern of locationPatterns) {
-          const locationMatch = content.match(pattern);
-          if (locationMatch && !prefillData.pickupLocation) {
-            prefillData.pickupLocation = locationMatch[0];
-            break;
-          }
-        }
-        
-        // Extract special requests or comments - capture the full user message if it contains relevant keywords
-         const commentKeywords = /(necesito|prefiero|tengo|quiero|me gustaría|quisiera|solicito|requiero|importante|especial)/i;
-         
-         if (commentKeywords.test(content) && !prefillData.comments) {
-           // Use the original message content (not lowercased) for better readability
-           prefillData.comments = message.content;
-         }
-      }
-    }
-
-    // Use conversation context for item name
-    if (conversationContext.serviceType) {
-      itemName = conversationContext.serviceType;
-    }
-
-    // Use conversation context for duration if not found in messages
-    if (conversationContext.duration && !itemDuration) {
-      itemDuration = conversationContext.duration;
-    }
-    
-    // Use conversation context for participants
-    if (conversationContext.participants && !prefillData.participants) {
-      // Extract number from participants string
-      const participantsMatch = conversationContext.participants.match(/\d+/);
-      if (participantsMatch) {
-        prefillData.participants = participantsMatch[0];
-      }
-    }
-    
-    // Use conversation context for date if not found
-    if (conversationContext.date && !prefillData.date) {
-      prefillData.date = conversationContext.date;
-    }
-
-    return {
-      itemName,
-      itemPrice,
-      itemDuration,
-      prefillData
-    };
-  };
-
+  // Send message
   const sendMessage = async () => {
-    if (!inputMessage.trim() || isLoading) return;
+    if (!inputMessage.trim() || isLoading || isStreaming) return;
 
-    // Detect language from user message
-    const detectedLanguage = detectLanguage(inputMessage);
-    setCurrentLanguage(detectedLanguage);
+    const detectedLang = detectLanguage(inputMessage);
+    setLanguage(detectedLang);
 
-    // Extract context from user message
-    const newContext = extractContext(inputMessage);
+    const newContext = extractContextWithRegex(inputMessage);
     setConversationContext(newContext);
 
     const userMessage: Message = {
       id: Date.now().toString(),
       content: inputMessage,
       isUser: true,
-      timestamp: new Date()
+      timestamp: new Date(),
     };
 
-    setMessages(prev => [...prev, userMessage]);
+    setMessages((prev) => [...prev, userMessage]);
     setInputMessage('');
     setIsLoading(true);
 
+    // Abort any ongoing stream
+    if (abortControllerRef.current) {
+      abortControllerRef.current.abort();
+    }
+    const abortController = new AbortController();
+    abortControllerRef.current = abortController;
+
+    let accumulatedContent = '';
+
     try {
-      const response = await fetch('/api/chat', {
+      const res = await fetch('/api/chat', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ 
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
           message: inputMessage,
           context: newContext,
-          conversationHistory: messages.slice(-20), // Send last 20 messages for better context
-          detectedLanguage: detectedLanguage, // Send detected language to API
-          sessionId: sessionId
+          conversationHistory: messages.slice(-20).map((m) => ({ isUser: m.isUser, content: m.content })),
+          detectedLanguage: detectedLang,
+          sessionId,
+          stream: true,
+          pageContext,
         }),
+        signal: abortController.signal,
       });
 
-      const data = await response.json();
-      
-      const showButton = shouldShowReservationButton(data.response, newContext);
-      const reservationType = getReservationType(newContext);
-      
-      const aiMessage: Message = {
-        id: (Date.now() + 1).toString(),
-        content: data.response || (detectedLanguage === 'en' ? 'Sorry, there was an error processing your query.' : 'Lo siento, hubo un error procesando tu consulta.'),
-        isUser: false,
-        timestamp: new Date(),
-        showReservationButton: Boolean(showButton),
-        reservationType: reservationType
-      };
+      if (!res.ok) {
+        throw new Error('API error');
+      }
 
-      setMessages(prev => [...prev, aiMessage]);
-    } catch (error) {
+      const reader = res.body?.getReader();
+      if (!reader) throw new Error('No stream body');
+
+      const decoder = new TextDecoder();
+      setIsLoading(false);
+      setIsStreaming(true);
+
+      setStreamingContent('');
+
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+
+        const chunk = decoder.decode(value, { stream: true });
+        const lines = chunk.split('\n');
+
+        for (const line of lines) {
+          if (line.startsWith('data: ')) {
+            const data = line.slice(6);
+            if (data === '[DONE]') {
+              // Stream complete - finalize message
+              const cleanedContent = cleanContent(accumulatedContent);
+              const quickReplies = parseQuickReplies(accumulatedContent);
+              const showButton = shouldShowReservationButton(cleanedContent, newContext);
+              const reservationType = getReservationType(newContext);
+
+              const aiMessage: Message = {
+                id: (Date.now() + 1).toString(),
+                content: cleanedContent,
+                isUser: false,
+                timestamp: new Date(),
+                showReservationButton: showButton,
+                reservationType,
+                quickReplies: quickReplies.length > 0 ? quickReplies : undefined,
+              };
+
+              setMessages((prev) => [...prev, aiMessage]);
+              setIsStreaming(false);
+              setStreamingContent('');
+            } else {
+              try {
+                const parsed = JSON.parse(data);
+                if (parsed.content) {
+                  accumulatedContent += parsed.content;
+                  setStreamingContent(accumulatedContent);
+                }
+              } catch {
+                // Skip malformed chunks
+              }
+            }
+          }
+        }
+      }
+    } catch (error: any) {
+      if (error.name === 'AbortError') return;
       console.error('Error sending message:', error);
-      const errorMessage: Message = {
-        id: (Date.now() + 1).toString(),
-        content: detectedLanguage === 'en' ? 'Sorry, there was a connection error. Please try again.' : 'Lo siento, hubo un error de conexión. Por favor, inténtalo de nuevo.',
-        isUser: false,
-        timestamp: new Date()
-      };
-      setMessages(prev => [...prev, errorMessage]);
+
+      // If streaming was interrupted, save what we have
+      if (accumulatedContent) {
+        const cleanedContent = cleanContent(accumulatedContent);
+        const quickReplies = parseQuickReplies(accumulatedContent);
+        const aiMessage: Message = {
+          id: (Date.now() + 1).toString(),
+          content: cleanedContent || (language === 'en' ? 'Sorry, there was a connection error.' : 'Lo siento, hubo un error de conexión.'),
+          isUser: false,
+          timestamp: new Date(),
+          quickReplies: quickReplies.length > 0 ? quickReplies : undefined,
+        };
+        setMessages((prev) => [...prev, aiMessage]);
+      } else {
+        const errorMessage: Message = {
+          id: (Date.now() + 1).toString(),
+          content: language === 'en' ? 'Sorry, there was a connection error. Please try again.' : 'Lo siento, hubo un error de conexión. Por favor, inténtalo de nuevo.',
+          isUser: false,
+          timestamp: new Date(),
+        };
+        setMessages((prev) => [...prev, errorMessage]);
+      }
     } finally {
       setIsLoading(false);
+      setIsStreaming(false);
+      setStreamingContent('');
     }
   };
 
-  const handleKeyPress = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
-      e.preventDefault();
-      sendMessage();
+  // Handle quick reply
+  const handleQuickReply = (reply: QuickReply) => {
+    if (reply.action === 'send') {
+      setInputMessage(reply.value);
+      setTimeout(() => {
+        sendMessage();
+      }, 100);
+    } else if (reply.action === 'modal') {
+      handleReservationClick();
     }
   };
 
+  // Handle feedback
+  const handleFeedback = async (messageId: string, rating: 'up' | 'down') => {
+    setMessages((prev) =>
+      prev.map((msg) => (msg.id === messageId ? { ...msg, feedback: rating } : msg))
+    );
+
+    try {
+      await fetch('/api/chat/feedback', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ messageId, sessionId, rating }),
+      });
+    } catch {
+      // Silent fail for feedback
+    }
+  };
+
+  // Handle reservation
   const handleReservationClick = () => {
-    const reservationType = getReservationType(conversationContext)
-    const context = extractReservationContext()
-    
+    const reservationType = getReservationType(conversationContext);
     openReservationModal({
       type: reservationType,
-      itemName: context.itemName,
-      itemPrice: context.itemPrice,
-      itemDuration: context.itemDuration,
-      prefillData: context.prefillData
-    })
-  }
-
-  const getReservationButtonText = (type: 'rental' | 'tour' | 'appointment') => {
-    switch (type) {
-      case 'rental':
-        return 'Reservar Ahora';
-      case 'tour':
-        return 'Reservar Excursión';
-      case 'appointment':
-        return 'Reservar Cita';
-      default:
-        return 'Reservar';
-    }
+      itemName: conversationContext.serviceType,
+      itemDuration: conversationContext.duration,
+      prefillData: {
+        date: conversationContext.date,
+        participants: conversationContext.participants,
+      },
+    });
   };
+
+  const inputPlaceholder = language === 'en' ? 'Type your message...' : 'Escribe tu mensaje...';
 
   return (
     <>
@@ -494,14 +350,15 @@ export default function AirXChat() {
         onClick={() => setIsOpen(!isOpen)}
         className="fixed bottom-6 right-6 z-[9999] bg-blue-600 hover:bg-blue-700 text-white p-4 rounded-full shadow-lg transition-all duration-300 transform hover:scale-110 relative"
         style={{ zIndex: 9999, position: 'fixed' }}
-        aria-label={currentLanguage === 'en' ? 'Open AirX chat' : 'Abrir chat AirX'}
+        aria-label={language === 'en' ? 'Open AirX chat' : 'Abrir chat AirX'}
       >
         {isOpen ? (
-          <X className="h-6 w-6" />
+          <svg className="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" />
+          </svg>
         ) : (
           <MessageCircle className="h-6 w-6" />
         )}
-        {/* Notification indicator */}
         {hasNewMessage && !isOpen && (
           <div className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 rounded-full border-2 border-white animate-pulse" />
         )}
@@ -509,112 +366,39 @@ export default function AirXChat() {
 
       {/* Chat Window */}
       {isOpen && (
-        <div className="fixed bottom-24 right-6 z-[9998] w-80 h-96 bg-white dark:bg-gray-800 rounded-lg shadow-2xl border border-gray-200 dark:border-gray-600 flex flex-col" style={{ zIndex: 9998 }}>
-          {/* Header */}
-          <div className="bg-blue-600 text-white p-4 rounded-t-lg flex items-center justify-between">
-            <div className="flex items-center space-x-2">
-              <MessageCircle className="h-5 w-5" />
-              <span className="font-semibold">AirX Assistant</span>
-            </div>
-            <div className="flex items-center space-x-2">
-              <button
-                onClick={resetChat}
-                className="text-white hover:text-gray-200 transition-colors"
-                title={currentLanguage === 'en' ? 'Reset chat' : 'Reiniciar chat'}
-              >
-                <RotateCcw className="h-4 w-4" />
-              </button>
-              <button
-                onClick={() => setIsOpen(false)}
-                className="text-white hover:text-gray-200 transition-colors"
-              >
-                <X className="h-4 w-4" />
-              </button>
-            </div>
-          </div>
+        <div
+          className={`fixed bottom-24 right-6 z-[9998] bg-white dark:bg-gray-800 rounded-lg shadow-2xl border border-gray-200 dark:border-gray-600 flex flex-col ${
+            typeof window !== 'undefined' && window.innerWidth < 768 ? SIZE_MOBILE : SIZE_CLASSES[chatSize]
+          }`}
+          style={{ zIndex: 9998 }}
+        >
+          <ChatHeader
+            language={language === 'en' ? 'en' : 'es'}
+            chatSize={chatSize}
+            onSizeChange={setChatSize}
+            onReset={resetChat}
+            onClose={() => setIsOpen(false)}
+          />
 
-          {/* Messages */}
-          <div className="flex-1 overflow-y-auto p-4 space-y-3">
-            {messages.map((message) => (
-              <div
-                key={message.id}
-                className={`flex flex-col ${message.isUser ? 'items-end' : 'items-start'}`}
-              >
-                <div
-                  className={`max-w-xs px-3 py-2 rounded-lg text-sm ${
-                    message.isUser
-                      ? 'bg-blue-600 text-white'
-                      : 'bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200'
-                  }`}
-                >
-                  {message.isUser ? message.content : formatMessageContent(message.content)}
-                  {!message.isUser && (
-                    <div className="flex items-center justify-between mt-1">
-                      <div className="text-xs opacity-70">
-                        {message.timestamp.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' })}
-                      </div>
-                      {message.showTranslateButton && (
-                        <button
-                          onClick={() => translateWelcomeMessage(message.id)}
-                          className="text-xs bg-blue-100 hover:bg-blue-200 dark:bg-blue-900 dark:hover:bg-blue-800 text-blue-700 dark:text-blue-300 px-2 py-1 rounded transition-colors"
-                          title={currentLanguage === 'es' ? 'Translate to English' : 'Traducir al español'}
-                        >
-                          {currentLanguage === 'es' ? '🇬🇧 EN' : '🇪🇸 ES'}
-                        </button>
-                      )}
-                    </div>
-                  )}
-                </div>
-                {/* Reservation Button */}
-                {!message.isUser && message.showReservationButton && message.reservationType && (
-                  <div className="mt-2">
-                    <Button
-                      onClick={handleReservationClick}
-                      className="bg-orange-600 hover:bg-orange-700 text-white text-xs px-3 py-1 h-auto"
-                      size="sm"
-                    >
-                      {getReservationButtonText(message.reservationType)}
-                    </Button>
-                  </div>
-                )}
-              </div>
-            ))}
-            {isLoading && (
-              <div className="flex justify-start">
-                <div className="bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 px-3 py-2 rounded-lg text-sm">
-                  <div className="flex space-x-1">
-                    <div className="w-2 h-2 bg-gray-400 dark:bg-gray-500 rounded-full animate-bounce"></div>
-                    <div className="w-2 h-2 bg-gray-400 dark:bg-gray-500 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
-                    <div className="w-2 h-2 bg-gray-400 dark:bg-gray-500 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
-                  </div>
-                </div>
-              </div>
-            )}
-            <div ref={messagesEndRef} />
-          </div>
+          <ChatMessages
+            messages={messages}
+            isStreaming={isStreaming}
+            streamingContent={streamingContent}
+            language={language === 'en' ? 'en' : 'es'}
+            onReply={handleQuickReply}
+            onFeedback={handleFeedback}
+            onReservation={handleReservationClick}
+            onTranslate={translateMessage}
+            onStreamComplete={() => {}}
+          />
 
-          {/* Input */}
-          <div className="p-4 border-t border-gray-200 dark:border-gray-600">
-            <div className="flex space-x-2">
-              <input
-                type="text"
-                value={inputMessage}
-                onChange={(e) => setInputMessage(e.target.value)}
-                onKeyPress={handleKeyPress}
-                placeholder={currentLanguage === 'en' ? 'Type your message...' : 'Escribe tu mensaje...'}
-                className="flex-1 px-3 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
-                disabled={isLoading}
-              />
-              <Button
-                onClick={sendMessage}
-                disabled={!inputMessage.trim() || isLoading}
-                size="sm"
-                className="bg-blue-600 hover:bg-blue-700"
-              >
-                <Send className="h-4 w-4" />
-              </Button>
-            </div>
-          </div>
+          <ChatInput
+            value={inputMessage}
+            onChange={setInputMessage}
+            onSend={sendMessage}
+            isLoading={isLoading || isStreaming}
+            placeholder={inputPlaceholder}
+          />
         </div>
       )}
     </>

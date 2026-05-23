@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server'
 import prisma from '@/lib/prisma'
+import { invalidatePriceCache } from '@/lib/price-cache'
 
 // GET all prices
 export async function GET() {
@@ -32,6 +33,8 @@ export async function POST(request: Request) {
       update: { price, updatedAt: new Date() },
       create: { id, category: category || 'unknown', name: name || id, price, updatedAt: new Date() }
     })
+
+    invalidatePriceCache()
 
     return NextResponse.json({ success: true, data: updatedPrice })
   } catch (error) {

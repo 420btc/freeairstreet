@@ -77,3 +77,11 @@ model AdminAccessLog {
   createdAt DateTime @default(now())
 }
 
+model ChatMessageFeedback {
+  id        String   @id @default(uuid())
+  messageId String
+  sessionId String
+  rating    String
+  createdAt DateTime @default(now())
+}
+

@@ -1,138 +1,174 @@
 import { NextRequest, NextResponse } from 'next/server';
 import OpenAI from 'openai';
 import prisma from '@/lib/prisma';
+import { getCachedPrices } from '@/lib/price-cache';
+import { rateLimit } from '@/lib/rate-limit';
+import type { ChatMessage, ChatSession } from '@prisma/client';
+import type { ExtractedContext } from '@/types/chat';
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
 
-const BASE_SYSTEM_PROMPT = `Eres AirX, un asistente virtual especializado en servicios de alquiler de vehículos, patinetes eléctricos, scooters eléctricos, fat bikes, y excursiones en la Costa del Sol en la Calle de la playa n22 29620, España. Usa emoticonos ocasionalmente para hacer la conversación más amigable y cercana. 
+const SYSTEM_PROMPT = `Eres AirX, asistente virtual de Free Air Street Rental en Torremolinos (Calle de la Playa, 22 - 29620). Ayudas con alquiler de vehículos, excursiones y servicios turísticos en la Costa del Sol. Usa emoticonos ocasionalmente.
 
-**INFORMACIÓN DE LA EMPRESA:**
-- Ubicación: Calle de la Playa, 22 - 29620 Torremolinos, Málaga, España
-- Teléfono: +34 655 707 412
-- Email: info@freeairstreet-rentbike.com
-- Horario: Lunes a Domingo 9:00-22:00
+**Info empresa:**
+- Tel: +34 655 707 412 | Email: info@freeairstreet-rentbike.com
+- Horario: L-D 9:00-22:00
 
-**PRECIOS ACTUALIZADOS (Desde Base de Datos):**
+**Precios actualizados:**
 `;
+
+const REQUIREMENTS_PROMPT = `
+**Requisitos:**
+- Bicis/Patinetes: solo DNI
+- Coches: carnet, pasaporte/DNI, tarjeta crédito depósito. Edad mínima: 21 años (25 para grupos C/D)
+- Motos: carnet según cilindrada
+- Todos los alquileres incluyen seguro básico
+
+**IMPORTANTE - Formato de precios:**
+Usa **asteriscos dobles** SOLO alrededor de PRECIOS para que aparezcan en badges morados. Ejemplo: cuesta **3€/1h** y **13€/día**.
+
+**IMPORTANTE - Quick Replies:**
+Al FINAL de cada respuesta, añade SIEMPRE un bloque [QUICK_REPLIES] con 2-3 sugerencias en este formato exacto (una por línea):
+[QUICK_REPLIES]
+🏷️ Ver todos los precios|Muéstrame los precios|send
+📅 Quiero reservar|Quiero hacer una reserva|modal
+
+**Idiomas:** Responde en el mismo idioma del usuario (ES, EN, PT, FR, DE). Mantén tono cercano y profesional.`;
+
+const EXTRACT_CONTEXT_FUNCTION = {
+  name: 'extract_context',
+  description: 'Extract structured information from the user message',
+  parameters: {
+    type: 'object' as const,
+    properties: {
+      serviceType: { type: 'string', description: 'Vehicle or service type (bicicleta, coche, moto, quad, scooter, patinete, tour, excursión, visita)' },
+      duration: { type: 'string', description: 'Duration mentioned (e.g., "2 horas", "1 día", "todo el día")' },
+      date: { type: 'string', description: 'Date mentioned (e.g., "mañana", "15 de junio", "2024-06-15")' },
+      participants: { type: 'string', description: 'Number of participants (e.g., "2 personas", "familia", "grupo")' },
+      language: { type: 'string', enum: ['es', 'en', 'pt', 'fr', 'de'], description: 'Language the user is communicating in' },
+    },
+  },
+};
 
 export async function POST(req: NextRequest) {
   try {
-    const { message, context, conversationHistory, detectedLanguage, sessionId } = await req.json();
-    
-    // Obtener precios desde la base de datos
-    const dbPrices = await prisma.price.findMany();
-    let dynamicPricesText = "";
-    dbPrices.forEach((p: { name: string; category: string; price: string }) => {
-      dynamicPricesText += `- **${p.name}** (${p.category}): ${p.price}\n`;
-    });
+    const ip = req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || 'anonymous';
+    const { success: rateOk } = rateLimit(ip, { maxRequests: 20, windowMs: 60_000 });
+    if (!rateOk) {
+      return NextResponse.json({ error: 'Too many requests' }, { status: 429 });
+    }
 
-    const SYSTEM_PROMPT = BASE_SYSTEM_PROMPT + dynamicPricesText + `
-**REQUISITOS IMPORTANTES:**
-- **Bicicletas/Patinetes**: Solo DNI
-- **Coches**: Carnet de conducir válido, pasaporte/DNI, tarjeta de crédito para depósito
-- **Edad mínima coches**: 21 años (25 años para grupos C y D)
-- **Motos**: Carnet correspondiente según cilindrada
-- **Seguro**: Todos los alquileres incluyen seguro básico de responsabilidad civil
-- **Reservas**: Recomendamos reservar con 24h de antelación
-- **Cancelaciones**: Consultar política de cancelación
+    const { message, conversationHistory, sessionId, stream = true, pageContext } = await req.json();
 
-**PRECIOS DESTACADOS:**
-Solo usa **asteriscos dobles** alrededor de PRECIOS para que aparezcan en badges morados:
-- Ejemplo: La bicicleta urbana cuesta **3€/1h** y **13€/día completo**
-- Ejemplo: El coche del grupo A está disponible por **54€/día**
-- NO uses asteriscos para características como: Cómoda y ligera, Motor eléctrico, etc.
-- Las características se mencionan normalmente sin formato especial
+    if (!message || typeof message !== 'string') {
+      return NextResponse.json({ error: 'Message is required' }, { status: 400 });
+    }
 
-Tu objetivo es ayudar a los clientes a encontrar el vehículo o excursión perfecta para sus necesidades. Siempre sé amable, profesional y entusiasta. Cuando un cliente muestre interés en alquilar algo, puedes sugerir que abra el modal de reserva para más información.
+    const [pricesText] = await Promise.all([
+      getCachedPrices(),
+    ]);
 
-**IDIOMAS SOPORTADOS:**
-Puedes responder en los siguientes idiomas según el idioma en que te hablen:
-- **Español**: Tu idioma principal
-- **Inglés**: Para turistas internacionales
-- **Portugués**: Para visitantes de Brasil y Portugal
-- **Francés**: Para turistas francófonos
-- **Alemán**: Para visitantes de países germanoparlantes
+    let pageContextStr = '';
+    if (pageContext?.route) {
+      pageContextStr = `\n\nEl usuario está navegando en la página: ${pageContext.route}${pageContext.tab ? ` (sección: ${pageContext.tab})` : ''}. Adapta tu respuesta al contexto de esta página.`;
+    }
 
-Detecta automáticamente el idioma del usuario y responde en el mismo idioma. Mantén siempre un tono cercano y profesional. Si te preguntan por el dueño de la tienda, se llama Daniele y siempre deja su numero de Telefono si preguntan por el, nunca des el nombre si no te lo preguntan`;
+    const systemContent = SYSTEM_PROMPT + pricesText + REQUIREMENTS_PROMPT + pageContextStr;
 
-    // Guardar mensaje del usuario en la base de datos
     if (sessionId && message) {
-      // Asegurar que exista la sesión
-      await (prisma as any).chatSession.upsert({
+      await prisma.chatSession.upsert({
         where: { id: sessionId },
         update: {},
         create: { id: sessionId },
       });
 
-      await (prisma as any).chatMessage.create({
+      await prisma.chatMessage.create({
         data: {
           chatSessionId: sessionId,
           isUser: true,
           content: message,
-        }
+        },
       });
     }
 
-    // Build language-specific prompt
-    let languagePrompt = '';
-    if (detectedLanguage === 'en') {
-      languagePrompt = `\n\nIMPORTANT: The user is communicating in ENGLISH. You MUST respond in ENGLISH. Adapt all information, prices, and details to English while maintaining the same helpful and professional tone.`;
-    } else {
-      languagePrompt = `\n\nIMPORTANTE: El usuario se está comunicando en ESPAÑOL. Debes responder en ESPAÑOL con tu tono habitual amigable y profesional.`;
-    }
+    const historyMessages = (conversationHistory || []).slice(-20).map((msg: { isUser: boolean; content: string }) => ({
+      role: msg.isUser ? 'user' as const : 'assistant' as const,
+      content: msg.content,
+    }));
 
-    // Build context-aware prompt
-    let contextPrompt = '';
-    if (context && Object.keys(context).length > 0) {
-      contextPrompt = `\n\nCONTEXTO DE LA CONVERSACIÓN:\n`;
-      if (context.serviceType) contextPrompt += `- Servicio de interés: ${context.serviceType}\n`;
-      if (context.duration) contextPrompt += `- Duración solicitada: ${context.duration}\n`;
-      if (context.date) contextPrompt += `- Fecha mencionada: ${context.date}\n`;
-      if (context.participants) contextPrompt += `- Participantes: ${context.participants}\n`;
-      contextPrompt += `\nSi el usuario ha proporcionado información sobre fechas, duración o servicios específicos, incluye esa información en tu respuesta y sugiere opciones relevantes. Usa **asteriscos dobles** SOLO alrededor de PRECIOS para que aparezcan en badges morados.`;
-    }
-    
-    // Build messages array
-    const messages = [
-      {
-        role: "system",
-        content: SYSTEM_PROMPT + languagePrompt + contextPrompt
-      }
+    const messages: OpenAI.Chat.Completions.ChatCompletionMessageParam[] = [
+      { role: 'system', content: systemContent },
+      ...historyMessages,
+      { role: 'user', content: message },
     ];
 
-    if (conversationHistory && conversationHistory.length > 0) {
-      conversationHistory.forEach((msg: any) => {
-        messages.push({
-          role: msg.isUser ? "user" : "assistant",
-          content: msg.content
-        });
+    if (stream) {
+      const completion = await openai.chat.completions.create({
+        model: 'gpt-4o-mini',
+        messages,
+        max_tokens: 500,
+        temperature: 0.7,
+        stream: true,
+      });
+
+      const encoder = new TextEncoder();
+      let fullResponse = '';
+
+      const readableStream = new ReadableStream({
+        async start(controller) {
+          try {
+            for await (const chunk of completion) {
+              const content = chunk.choices[0]?.delta?.content || '';
+              if (content) {
+                fullResponse += content;
+                controller.enqueue(encoder.encode(`data: ${JSON.stringify({ content })}\n\n`));
+              }
+            }
+            controller.enqueue(encoder.encode(`data: [DONE]\n\n`));
+            controller.close();
+
+            if (sessionId && fullResponse) {
+              await prisma.chatMessage.create({
+                data: {
+                  chatSessionId: sessionId,
+                  isUser: false,
+                  content: fullResponse,
+                },
+              });
+            }
+          } catch (err) {
+            controller.error(err);
+          }
+        },
+      });
+
+      return new Response(readableStream, {
+        headers: {
+          'Content-Type': 'text/event-stream',
+          'Cache-Control': 'no-cache',
+          Connection: 'keep-alive',
+        },
       });
     }
 
-    messages.push({
-      role: "user",
-      content: message
-    });
-
     const completion = await openai.chat.completions.create({
-      model: "gpt-4o-mini",
-      messages: messages as any,
+      model: 'gpt-4o-mini',
+      messages,
       max_tokens: 500,
       temperature: 0.7,
     });
 
-    const response = completion.choices[0]?.message?.content || "Lo siento, no pude procesar tu consulta.";
+    const response = completion.choices[0]?.message?.content || 'Lo siento, no pude procesar tu consulta.';
 
-    // Guardar respuesta del asistente en la base de datos
     if (sessionId && response) {
-      await (prisma as any).chatMessage.create({
+      await prisma.chatMessage.create({
         data: {
           chatSessionId: sessionId,
           isUser: false,
           content: response,
-        }
+        },
       });
     }
 
