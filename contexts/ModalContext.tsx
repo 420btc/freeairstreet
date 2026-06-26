@@ -34,7 +34,7 @@ const ModalContext = createContext<ModalContextType | undefined>(undefined)
 export function ModalProvider({ children }: { children: ReactNode }) {
   const [isReservationModalOpen, setIsReservationModalOpen] = useState(false)
   const [reservationModalData, setReservationModalData] = useState<ReservationModalData>({ type: 'rental' })
-  const [showIntroVideo, setShowIntroVideo] = useState(true)
+  const [showIntroVideo, setShowIntroVideo] = useState(false)
 
   const openReservationModal = (data: ReservationModalData) => {
     setReservationModalData(data)
