@@ -132,9 +132,9 @@ export default function AlquilerPage() {
       image: "/modern-electric-bike.png",
       prices: [
         { duration: "1h", price: getPrice('electric-bike-1h', "10€") },
-        { duration: "2h", price: "18€" },
-        { duration: "3h", price: "25€" },
-        { duration: "4h", price: "30€" },
+        { duration: "2h", price: getPrice('electric-bike-2h', "18€") },
+        { duration: "3h", price: getPrice('electric-bike-3h', "25€") },
+        { duration: "4h", price: getPrice('electric-bike-4h', "30€") },
         { duration: t('rental.vehicles.electricBike.allDay'), price: getPrice('electric-bike-allday', "35€"), featured: true },
       ],
       features: currentTranslations['rental.vehicles.electricBike.features'] as string[],

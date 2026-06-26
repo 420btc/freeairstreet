@@ -976,11 +976,11 @@ export default function HomePage() {
                 <div className="space-y-2 mb-4 flex-1">
                   <div className="flex justify-between">
                     <span>{t('prices.hour')}</span>
-                    <Badge variant="secondary" className="text-lg font-bold">{getPrice('city-bike-1h', '3€')}</Badge>
+                    <Badge variant="secondary" className="text-lg font-bold">{getPrice('city-bike-1h', '4,50€')}</Badge>
                   </div>
                   <div className="flex justify-between">
                     <span>{t('prices.allDay')}</span>
-                    <Badge className="bg-yellow-500 text-blue-900 text-xl font-bold">{getPrice('city-bike-allday', '13€')}</Badge>
+                    <Badge className="bg-yellow-500 text-blue-900 text-xl font-bold">{getPrice('city-bike-allday', '18€')}</Badge>
                   </div>
                 </div>
                 <div className="text-center mt-auto">

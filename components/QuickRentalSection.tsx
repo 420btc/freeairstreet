@@ -10,6 +10,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Checkbox } from '@/components/ui/checkbox'
 import { Calendar, MapPin, Clock, User, Mail, Phone, CheckCircle, Bike, Zap, Mountain, Car, CarFront } from 'lucide-react'
 import { useLanguage } from '@/contexts/LanguageContext'
+import { usePricing } from '@/contexts/PricingContext'
 import { sendReservationEmail, type ReservationFormData } from '@/lib/emailjs'
 import Link from 'next/link'
 
@@ -34,6 +35,7 @@ interface SelectedPriceType {
 
 const QuickRentalSection: React.FC = () => {
   const { t } = useLanguage()
+  const { getPrice } = usePricing()
   const [selectedVehicle, setSelectedVehicle] = useState<string>('')
   const [selectedPrice, setSelectedPrice] = useState<SelectedPriceType | null>(null)
   const [showMobileForm, setShowMobileForm] = useState(false)
@@ -68,13 +70,13 @@ const QuickRentalSection: React.FC = () => {
       icon: <Bike className="w-20 h-20 text-yellow-500" />,
       mobileIcon: <Bike className="w-12 h-12 text-yellow-500" />,
       image: '/urban-bicycle.png',
-      priceFrom: `${t('quickRental.priceFrom') as string} 3€`,
+      priceFrom: `${t('quickRental.priceFrom') as string} ${getPrice('city-bike-1h', '4,50€')}`,
       prices: [
-        { duration: "1h", price: "3€" },
-        { duration: "2h", price: "5€" },
-        { duration: "3h", price: "6€" },
-        { duration: "4h", price: "7€" },
-        { duration: "Todo el día", price: "13€", featured: true },
+        { duration: "1h", price: getPrice('city-bike-1h', '4,50€') },
+        { duration: "2h", price: getPrice('city-bike-2h', '6€') },
+        { duration: "3h", price: getPrice('city-bike-3h', '8€') },
+        { duration: "4h", price: getPrice('city-bike-4h', '9€') },
+        { duration: t('rental.vehicles.cityBike.allDay') as string, price: getPrice('city-bike-allday', '18€'), featured: true },
       ]
     },
     {
@@ -95,13 +97,13 @@ const QuickRentalSection: React.FC = () => {
       icon: <Zap className="w-20 h-20 text-yellow-500" />,
       mobileIcon: <Zap className="w-12 h-12 text-yellow-500" />,
       image: '/modern-electric-bike.png',
-      priceFrom: `${t('quickRental.priceFrom') as string} 10€`,
+      priceFrom: `${t('quickRental.priceFrom') as string} ${getPrice('electric-bike-1h', '10€')}`,
       prices: [
-        { duration: "1h", price: "10€" },
-        { duration: "2h", price: "18€" },
-        { duration: "3h", price: "25€" },
-        { duration: "4h", price: "30€" },
-        { duration: "Todo el día", price: "35€", featured: true },
+        { duration: "1h", price: getPrice('electric-bike-1h', '10€') },
+        { duration: "2h", price: getPrice('electric-bike-2h', '18€') },
+        { duration: "3h", price: getPrice('electric-bike-3h', '25€') },
+        { duration: "4h", price: getPrice('electric-bike-4h', '30€') },
+        { duration: t('rental.vehicles.electricBike.allDay') as string, price: getPrice('electric-bike-allday', '35€'), featured: true },
       ]
     },
     {
@@ -110,13 +112,13 @@ const QuickRentalSection: React.FC = () => {
       icon: <Mountain className="w-20 h-20 text-yellow-500" />,
       mobileIcon: <Mountain className="w-12 h-12 text-yellow-500" />,
       image: '/fat-bike-electric-wide-tires.png',
-      priceFrom: `${t('quickRental.priceFrom') as string} 10€`,
+      priceFrom: `${t('quickRental.priceFrom') as string} ${getPrice('fat-bike-1h', '10€')}`,
       prices: [
-        { duration: "1h", price: "10€" },
-        { duration: "2h", price: "18€" },
-        { duration: "3h", price: "25€" },
-        { duration: "4h", price: "30€" },
-        { duration: "Todo el día", price: "35€", featured: true },
+        { duration: "1h", price: getPrice('fat-bike-1h', '10€') },
+        { duration: "2h", price: getPrice('fat-bike-2h', '18€') },
+        { duration: "3h", price: getPrice('fat-bike-3h', '25€') },
+        { duration: "4h", price: getPrice('fat-bike-4h', '30€') },
+        { duration: t('rental.vehicles.fatBike.allDay') as string, price: getPrice('fat-bike-allday', '35€'), featured: true },
       ]
     },
     {
