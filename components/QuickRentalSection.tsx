@@ -8,7 +8,7 @@ import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Checkbox } from '@/components/ui/checkbox'
-import { Calendar, MapPin, Clock, User, Mail, Phone, CheckCircle, Bike, Zap, Mountain, Car, CarFront } from 'lucide-react'
+import { ArrowLeft, Calendar, MapPin, Clock, User, Mail, Phone, CheckCircle, Bike, Zap, Mountain, Car, CarFront } from 'lucide-react'
 import { useLanguage } from '@/contexts/LanguageContext'
 import { usePricing } from '@/contexts/PricingContext'
 import { sendReservationEmail, type ReservationFormData } from '@/lib/emailjs'
@@ -477,17 +477,17 @@ const QuickRentalSection: React.FC = () => {
                   </div>
                 ) : showMobilePrices && !showMobileForm ? (
                   <div className="text-center">
-                    <div className="flex items-center justify-between mb-6">
+                    <div className="mb-6">
                       <button
                         onClick={handleBackToVehicles}
-                        className="text-gray-500 hover:text-gray-700 flex items-center gap-2"
+                        className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium text-sm transition-colors"
                       >
-                        ← {t('quickRental.form.backToVehicles')}
+                        <ArrowLeft className="w-4 h-4" />
+                        {t('quickRental.form.backToVehicles')}
                       </button>
-                      <h3 className="text-xl font-semibold text-gray-900">
+                      <h3 className="text-lg font-semibold text-gray-900 mt-4">
                          {t('quickRental.form.selectDuration')}
                        </h3>
-                      <div></div>
                     </div>
                     
                     {/* Vehículo seleccionado */}
