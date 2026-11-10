@@ -312,6 +312,7 @@ const translations = {
     
     // Map
     'map.doubleClickToActivate': '2 toques para activar',
+    'map.moveMap': 'Mover mapa',
     
     // Quick Rental Vehicles
     'quickRental.title': 'Alquila Ahora',
@@ -668,6 +669,7 @@ const translations = {
     
     // Map
     'map.doubleClickToActivate': '2 taps to activate',
+    'map.moveMap': 'Move map',
     
     // Quick Rental Vehicles
     'quickRental.title': 'Rent Now',

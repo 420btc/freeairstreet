@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef } from "react"
 import { Menu, X, Phone, Mail, MapPin, QrCode, Clock, Users, Car, Bike, Zap, Wrench, Store } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import Image from "next/image"
@@ -21,8 +21,9 @@ import { SiteFooter } from "@/components/site/SiteFooter"
 export default function HomePage() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [isQrModalOpen, setIsQrModalOpen] = useState(false)
-  const [isMapActive, setIsMapActive] = useState(false)
   const [isMobile, setIsMobile] = useState(false)
+  const [isMapMovable, setIsMapMovable] = useState(false)
+  const isMapMovableRef = useRef(false)
   const { t } = useLanguage()
   const { getPrice } = usePricing()
 
@@ -99,6 +100,23 @@ export default function HomePage() {
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
+  // Activa/desactiva el arrastre del mapa en móvil con la casilla manual
+  const handleMapMovableChange = (movable: boolean) => {
+    isMapMovableRef.current = movable;
+    setIsMapMovable(movable);
+
+    const map = (window as any).mapboxMap as mapboxgl.Map | undefined;
+    if (!map) return;
+
+    if (movable) {
+      map.dragPan.enable();
+      map.touchZoomRotate.enable();
+    } else {
+      map.dragPan.disable();
+      map.touchZoomRotate.disable();
+    }
+  };
+
   useEffect(() => {
     // Only run on client-side where window is defined
     if (typeof window === 'undefined') return;
@@ -130,41 +148,15 @@ export default function HomePage() {
         map.touchZoomRotate.disable();
       }
 
-      // Handle double click to activate map on mobile
-      let clickCount = 0;
-      const mapContainer = document.getElementById('mapbox-container');
-      
-      if (isMobile && mapContainer) {
-        const handleMapClick = () => {
-          clickCount++;
-          
-          if (clickCount === 1) {
-            setTimeout(() => {
-              if (clickCount === 1) {
-                // Single click - do nothing
-                clickCount = 0;
-              }
-            }, 300);
-          } else if (clickCount === 2) {
-            // Double click - activate map
-            setIsMapActive(true);
-            map.scrollZoom.enable();
-            map.boxZoom.enable();
-            map.dragRotate.enable();
-            map.dragPan.enable();
-            map.keyboard.enable();
-            map.doubleClickZoom.enable();
-            map.touchZoomRotate.enable();
-            clickCount = 0;
-          }
-        };
-        
-        mapContainer.addEventListener('click', handleMapClick);
-      }
-
       map.on('load', () => {
         // Make map globally accessible for routes component
         (window as any).mapboxMap = map;
+
+        // Si el usuario activó la casilla antes de cargar, mantener el mapa arrastrable
+        if (isMobile && isMapMovableRef.current) {
+          map.dragPan.enable();
+          map.touchZoomRotate.enable();
+        }
         
         // Force map resize to ensure it fills container properly
         setTimeout(() => {
@@ -676,21 +668,22 @@ export default function HomePage() {
           </div>
           
           <div className="relative w-full h-[400px] md:h-[500px] overflow-hidden rounded-[2rem] border border-slate-200 shadow-sm dark:border-white/10">
-            <div id="mapbox-container" className="w-full h-full"></div>
-            
-            {/* Mobile activation notice */}
-            {isMobile && !isMapActive && (
-              <div className="absolute bottom-3 right-3 rounded-full bg-[#04122b]/90 px-3 py-1.5 text-white text-xs shadow-md z-10 pointer-events-none">
-                <span className="flex items-center gap-1">
-                  <span className="text-yellow-400 text-xs">👆</span>
-                  {t('map.doubleClickToActivate') || '2 toques para activar'}
-                </span>
-              </div>
-            )}
-            
-            {/* Overlay to prevent scrolling interference on mobile */}
-            {isMobile && !isMapActive && (
-              <div className="absolute inset-0 bg-transparent z-5"></div>
+            <div
+              id="mapbox-container"
+              className={`w-full h-full ${isMobile && !isMapMovable ? 'pointer-events-none' : ''}`}
+            ></div>
+
+            {/* Casilla manual para mover el mapa en móvil */}
+            {isMobile && (
+              <label className="absolute right-3 top-3 z-10 flex cursor-pointer items-center gap-2 rounded-full bg-[#04122b]/90 px-3 py-1.5 text-xs font-medium text-white shadow-md backdrop-blur">
+                <input
+                  type="checkbox"
+                  checked={isMapMovable}
+                  onChange={(event) => handleMapMovableChange(event.target.checked)}
+                  className="h-4 w-4 cursor-pointer accent-yellow-400"
+                />
+                {t('map.moveMap') || 'Mover mapa'}
+              </label>
             )}
           </div>
           
