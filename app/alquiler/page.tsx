@@ -1,9 +1,26 @@
 "use client"
-import { ArrowLeft, Clock, Info, Menu, X, QrCode } from "lucide-react"
+import {
+  ArrowLeft,
+  ArrowRight,
+  ArrowUpRight,
+  Bike,
+  Car,
+  Check,
+  Clock,
+  Info,
+  MapPin,
+  Menu,
+  MessageCircle,
+  QrCode,
+  Sparkles,
+  Tag,
+  X,
+} from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { PageHero } from "@/components/site/PageHero"
+import { SectionHeading } from "@/components/site/SectionHeading"
+import { SiteFooter } from "@/components/site/SiteFooter"
 import Image from "next/image"
 import Link from "next/link"
 import { useSearchParams } from "next/navigation"
@@ -685,8 +702,97 @@ export default function AlquilerPage() {
   const scootersLocalized = language === 'en' ? scooters.map(translateScooter) : scooters
   const accessoriesLocalized = language === 'en' ? accessories.map(translateAccessory) : accessories
 
+  const heroText = language === 'en'
+    ? {
+        badge: 'Rental in Torremolinos',
+        ctaPrimary: 'See the fleet',
+        statVehicles: '24 vehicles',
+        statVehiclesLabel: 'bikes, cars, motorbikes and quads',
+        statPrice: 'From 3 €',
+        statPriceLabel: 'lowest rental price',
+        statHours: '9:00 – 22:00',
+        statHoursLabel: 'every day',
+        statPickup: 'La Colina',
+        statPickupLabel: 'Torremolinos · pickup point',
+      }
+    : {
+        badge: 'Alquiler en Torremolinos',
+        ctaPrimary: 'Ver la flota',
+        statVehicles: '24 vehículos',
+        statVehiclesLabel: 'bicis, coches, motos y quads',
+        statPrice: 'Desde 3 €',
+        statPriceLabel: 'precio más bajo',
+        statHours: '9:00 – 22:00',
+        statHoursLabel: 'todos los días',
+        statPickup: 'La Colina',
+        statPickupLabel: 'Torremolinos · punto de recogida',
+      }
+
+  const fleetTabs = [
+    { value: 'bicicletas', icon: '🚴', label: t('rental.bicycles'), hot: false },
+    { value: 'scooters', icon: '🛴', label: t('rental.scooters'), hot: true },
+    { value: 'coches', icon: '🚗', label: t('rental.cars'), hot: false },
+    { value: 'motos', icon: '🏍️', label: t('rental.motorcycles'), hot: false },
+    { value: 'quads', icon: '🏎️', label: t('rental.quads'), hot: false },
+    { value: 'accesorios', icon: '🛍️', label: t('rental.accessories'), hot: false },
+  ]
+
+  const tabTriggerClass =
+    'inline-flex min-h-[56px] items-center justify-center gap-2 rounded-full px-3 text-sm font-bold text-slate-600 transition-all duration-200 hover:bg-slate-100 data-[state=active]:bg-blue-900 data-[state=active]:text-white data-[state=active]:shadow-lg data-[state=active]:shadow-blue-900/20 dark:text-slate-300 dark:hover:bg-white/10 dark:data-[state=active]:bg-yellow-400 dark:data-[state=active]:text-blue-950'
+
+  const tabTriggerClassMobile =
+    'relative inline-flex min-h-[52px] items-center justify-center gap-1.5 rounded-full px-2 text-xs font-bold leading-tight text-slate-600 transition-all duration-200 hover:bg-slate-100 data-[state=active]:bg-blue-900 data-[state=active]:text-white data-[state=active]:shadow-lg dark:text-slate-300 dark:hover:bg-white/10 dark:data-[state=active]:bg-yellow-400 dark:data-[state=active]:text-blue-950'
+
+  const cardClass =
+    'group flex flex-col overflow-hidden rounded-[2rem] border border-slate-200 bg-white shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl dark:border-white/10 dark:bg-slate-900/70'
+
+  const mediaClass =
+    'relative aspect-video overflow-hidden bg-gradient-to-br from-blue-950 via-blue-900 to-slate-800'
+
+  const overlayClass = 'absolute inset-0 bg-gradient-to-t from-slate-950/85 via-slate-950/15 to-transparent'
+
+  const chipClass =
+    'rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-700 dark:bg-white/10 dark:text-slate-200'
+
+  const smallHeadingClass = 'text-xs font-bold uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400'
+
+  const scrollToFleet = () => {
+    document.getElementById('flota')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+  }
+
+  const renderPriceOptions = (
+    itemName: string,
+    prices: { duration: string; price: string; featured?: boolean }[]
+  ) =>
+    prices.map((price, index) => {
+      const isSelected = selectedPrices[itemName]?.duration === price.duration
+      return (
+        <button
+          key={index}
+          onClick={() => handlePriceSelection(itemName, price.duration, price.price)}
+          className={`flex min-h-[64px] flex-col items-center justify-center gap-1 rounded-2xl border px-2 py-3 transition-all duration-200 ${
+            isSelected
+              ? 'border-blue-900 bg-blue-900 text-white shadow-lg shadow-blue-900/20 dark:border-yellow-400 dark:bg-yellow-400 dark:text-blue-950'
+              : 'border-slate-200 bg-slate-50 hover:-translate-y-0.5 hover:border-blue-300 hover:bg-white dark:border-white/10 dark:bg-white/5 dark:hover:border-yellow-300/40'
+          }`}
+        >
+          <span className="flex items-center gap-1 text-[11px] font-bold uppercase tracking-wide opacity-80">
+            <Clock className="h-3.5 w-3.5" />
+            {price.duration}
+          </span>
+          <span
+            className={`text-xl font-black leading-none ${
+              !isSelected && price.featured ? 'text-yellow-600 dark:text-yellow-300' : ''
+            }`}
+          >
+            {price.price}
+          </span>
+        </button>
+      )
+    })
+
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen overflow-x-hidden bg-[#f5f6f8] text-slate-900 dark:bg-[#070d18] dark:text-slate-100">
       {/* Header */}
       <header className="bg-gradient-to-r from-yellow-400 to-yellow-500 shadow-lg sticky top-0 z-50">
         <div className="container mx-auto px-4">
@@ -708,12 +814,15 @@ export default function AlquilerPage() {
             </Link>
 
              {/* Desktop Navigation - Centered */}
-             <nav className="hidden md:flex space-x-8 flex-1 justify-center">
+             <nav className="hidden md:flex space-x-4 lg:space-x-8 flex-1 justify-center">
                <Link href="/alquiler" className="text-blue-900 hover:text-blue-700 navbar-desktop-link font-medium transition-colors border-b-2 border-blue-900">
                  {t('header.rental')}
                </Link>
                <Link href="/tours" className="text-blue-900 hover:text-blue-700 navbar-desktop-link font-medium transition-colors">
                  {t('header.tours')}
+               </Link>
+               <Link href="/rutas" className="text-blue-900 hover:text-blue-700 navbar-desktop-link font-medium transition-colors">
+                 {t('header.routes')}
                </Link>
                <Link href="/tienda" className="text-blue-900 hover:text-blue-700 navbar-desktop-link font-medium transition-colors">
                  {t('header.shop')}
@@ -772,20 +881,27 @@ export default function AlquilerPage() {
                   <span className="animate-typewriter" style={{ animationDelay: '0.2s' }}>{t('header.tours')}</span>
                 </Link>
                 <Link 
-                  href="/tienda" 
+                  href="/rutas" 
                   className="text-blue-900 hover:text-blue-700 navbar-mobile-text font-medium animate-fadeInUp"
                   style={{ animationDelay: '0.3s' }}
                 >
-                  <span className="animate-typewriter" style={{ animationDelay: '0.3s' }}>{t('header.shop')}</span>
+                  <span className="animate-typewriter" style={{ animationDelay: '0.3s' }}>{t('header.routes')}</span>
+                </Link>
+                <Link 
+                  href="/tienda" 
+                  className="text-blue-900 hover:text-blue-700 navbar-mobile-text font-medium animate-fadeInUp"
+                  style={{ animationDelay: '0.4s' }}
+                >
+                  <span className="animate-typewriter" style={{ animationDelay: '0.4s' }}>{t('header.shop')}</span>
                 </Link>
                 <Link 
                   href="/contacto" 
                   className="text-blue-900 hover:text-blue-700 navbar-mobile-text font-medium animate-fadeInUp"
-                  style={{ animationDelay: '0.4s' }}
+                  style={{ animationDelay: '0.5s' }}
                 >
-                  <span className="animate-typewriter" style={{ animationDelay: '0.4s' }}>{t('header.contact')}</span>
+                  <span className="animate-typewriter" style={{ animationDelay: '0.5s' }}>{t('header.contact')}</span>
                 </Link>
-                <div className="flex items-center space-x-4 pt-4 border-t border-yellow-600 animate-fadeInUp" style={{ animationDelay: '0.5s' }}>
+                <div className="flex items-center space-x-4 pt-4 border-t border-yellow-600 animate-fadeInUp" style={{ animationDelay: '0.6s' }}>
                   <LanguageToggle />
                   <ThemeToggle />
                 </div>
@@ -795,543 +911,471 @@ export default function AlquilerPage() {
         </div>
       </header>
 
-      <div className="container mx-auto px-4 py-8">
-        {/* Título y Subtítulo */}
-        <div className="text-center mb-12">
-          <h1 className="text-4xl md:text-5xl font-bold text-black mb-4">
-            {t('rental.title')}
-          </h1>
-          <p className="text-lg md:text-xl text-gray-700 max-w-3xl mx-auto">
-            {t('rental.subtitle')}
-          </p>
-        </div>
+      {/* Hero */}
+      <PageHero
+        badge={
+          <>
+            <Sparkles className="h-4 w-4" />
+            {heroText.badge}
+          </>
+        }
+        title={t('rental.title')}
+        subtitle={t('rental.subtitle')}
+        image="/hero.png"
+        imageAlt="Free Air Street · alquiler de vehículos en Torremolinos"
+        stats={[
+          { value: heroText.statVehicles, label: heroText.statVehiclesLabel, icon: <Bike className="h-5 w-5" /> },
+          { value: heroText.statPrice, label: heroText.statPriceLabel, icon: <Tag className="h-5 w-5" /> },
+          { value: heroText.statHours, label: heroText.statHoursLabel, icon: <Clock className="h-5 w-5" /> },
+          { value: heroText.statPickup, label: heroText.statPickupLabel, icon: <MapPin className="h-5 w-5" /> },
+        ]}
+        actions={
+          <>
+            <Button
+              onClick={scrollToFleet}
+              className="h-14 rounded-full bg-yellow-400 px-8 text-base font-bold text-blue-950 shadow-xl shadow-yellow-400/20 transition hover:-translate-y-0.5 hover:bg-yellow-300"
+            >
+              <Car className="mr-2 h-5 w-5" />
+              {heroText.ctaPrimary}
+              <ArrowRight className="ml-2 h-5 w-5" />
+            </Button>
+            <a
+              href="https://wa.me/34655707412"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex h-14 items-center justify-center gap-2 rounded-full border border-white/25 bg-white/5 px-8 text-base font-semibold text-white backdrop-blur-md transition hover:bg-white/15"
+            >
+              <MessageCircle className="h-5 w-5" />
+              WhatsApp
+            </a>
+          </>
+        }
+      />
 
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <div className="mb-8">
-            {/* Desktop: Una sola fila con 6 elementos */}
-            <TabsList className="hidden sm:grid w-full grid-cols-6 h-20 bg-white/20 backdrop-blur-lg border border-white/30 rounded-2xl shadow-2xl p-2">
-              <TabsTrigger value="bicicletas" className="flex items-center space-x-3 py-4 px-6 text-lg font-semibold rounded-lg transition-all duration-300 hover:bg-white/20 hover:backdrop-blur-sm data-[state=active]:bg-white/40 data-[state=active]:shadow-xl data-[state=active]:border data-[state=active]:border-white/50">
-                <span>🚴</span>
-                <span>{t('rental.bicycles')}</span>
-              </TabsTrigger>
-              <TabsTrigger value="scooters" className="flex items-center space-x-3 py-4 px-6 text-lg font-semibold rounded-lg transition-all duration-300 hover:bg-white/20 hover:backdrop-blur-sm data-[state=active]:bg-white/40 data-[state=active]:shadow-xl data-[state=active]:border data-[state=active]:border-white/50 relative">
-                <span>🛴</span>
-                <span>{t('rental.scooters')}</span>
-                <div className="absolute -top-2 -right-2 bg-yellow-400 text-red-600 font-bold text-xs px-2 py-1 rounded-full border-2 border-yellow-500 shadow-lg transform rotate-12">
-                  HOT!
+      {/* Fleet */}
+      <section id="flota" className="scroll-mt-24">
+        <div className="container mx-auto px-4 pb-16 pt-14 md:pb-20 md:pt-20">
+          <SectionHeading
+            eyebrow="Torremolinos · La Colina"
+            title={`${t('rental.bicycles')}, ${t('rental.cars')}, ${t('rental.motorcycles')} & ${t('rental.quads')}`}
+          />
+
+          <div className="mt-10">
+            <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+              <div className="rounded-full border border-slate-200 bg-white p-2 shadow-sm dark:border-white/10 dark:bg-slate-900/70">
+                {/* Desktop: Una sola fila con 6 elementos */}
+                <TabsList className="hidden h-auto w-full grid-cols-6 gap-1 bg-transparent p-0 sm:grid">
+                  {fleetTabs.map((tab) => (
+                    <TabsTrigger key={tab.value} value={tab.value} className={`relative ${tabTriggerClass}`}>
+                      <span className="text-lg">{tab.icon}</span>
+                      <span>{tab.label}</span>
+                      {tab.hot ? (
+                        <span className="absolute -right-1 -top-1 rounded-full border-2 border-yellow-500 bg-yellow-400 px-2 py-0.5 text-[10px] font-bold leading-none text-red-600 shadow-lg transform rotate-12">
+                          HOT!
+                        </span>
+                      ) : null}
+                    </TabsTrigger>
+                  ))}
+                </TabsList>
+
+                {/* Mobile: Dos filas separadas */}
+                <div className="space-y-2 sm:hidden">
+                  <TabsList className="grid h-auto w-full grid-cols-3 gap-1 bg-transparent p-0">
+                    {fleetTabs.slice(0, 3).map((tab) => (
+                      <TabsTrigger key={tab.value} value={tab.value} className={tabTriggerClassMobile}>
+                        <span className="text-base">{tab.icon}</span>
+                        <span>{tab.label}</span>
+                        {tab.hot ? (
+                          <span className="absolute -right-1 -top-1 rounded-full border-2 border-yellow-500 bg-yellow-400 px-1.5 py-0.5 text-[10px] font-bold leading-none text-red-600 shadow-lg transform rotate-12">
+                            HOT!
+                          </span>
+                        ) : null}
+                      </TabsTrigger>
+                    ))}
+                  </TabsList>
+                  <TabsList className="grid h-auto w-full grid-cols-3 gap-1 bg-transparent p-0">
+                    {fleetTabs.slice(3).map((tab) => (
+                      <TabsTrigger key={tab.value} value={tab.value} className={tabTriggerClassMobile}>
+                        <span className="text-base">{tab.icon}</span>
+                        <span>{tab.label}</span>
+                      </TabsTrigger>
+                    ))}
+                  </TabsList>
                 </div>
-              </TabsTrigger>
-              <TabsTrigger value="coches" className="flex items-center space-x-3 py-4 px-6 text-lg font-semibold rounded-lg transition-all duration-300 hover:bg-white/20 hover:backdrop-blur-sm data-[state=active]:bg-white/40 data-[state=active]:shadow-xl data-[state=active]:border data-[state=active]:border-white/50">
-                <span>🚗</span>
-                <span>{t('rental.cars')}</span>
-              </TabsTrigger>
-              <TabsTrigger value="motos" className="flex items-center space-x-3 py-4 px-6 text-lg font-semibold rounded-lg transition-all duration-300 hover:bg-white/20 hover:backdrop-blur-sm data-[state=active]:bg-white/40 data-[state=active]:shadow-xl data-[state=active]:border data-[state=active]:border-white/50">
-                <span>🏍️</span>
-                <span>{t('rental.motorcycles')}</span>
-              </TabsTrigger>
-              <TabsTrigger value="quads" className="flex items-center space-x-3 py-4 px-6 text-lg font-semibold rounded-lg transition-all duration-300 hover:bg-white/20 hover:backdrop-blur-sm data-[state=active]:bg-white/40 data-[state=active]:shadow-xl data-[state=active]:border data-[state=active]:border-white/50">
-                <span>🏎️</span>
-                <span>{t('rental.quads')}</span>
-              </TabsTrigger>
-              <TabsTrigger value="accesorios" className="flex items-center space-x-3 py-4 px-6 text-lg font-semibold rounded-lg transition-all duration-300 hover:bg-white/20 hover:backdrop-blur-sm data-[state=active]:bg-white/40 data-[state=active]:shadow-xl data-[state=active]:border data-[state=active]:border-white/50">
-                <span>🛍️</span>
-                <span>{t('rental.accessories')}</span>
-              </TabsTrigger>
-            </TabsList>
-            
-            {/* Mobile: Dos filas separadas */}
-             <div className="sm:hidden">
-               <TabsList className="grid w-full grid-cols-3 mb-4 h-16">
-                 <TabsTrigger value="bicicletas" className="flex items-center justify-center space-x-2 h-full px-3 text-sm">
-                   <span>🚴</span>
-                   <span>{t('rental.bicycles')}</span>
-                 </TabsTrigger>
-                 <TabsTrigger value="scooters" className="flex items-center justify-center space-x-2 h-full px-3 text-sm relative">
-                   <span>🛴</span>
-                   <span>{t('rental.scooters')}</span>
-                   <div className="absolute -top-1 -right-1 bg-yellow-400 text-red-600 font-bold text-xs px-1.5 py-0.5 rounded-full border-2 border-yellow-500 shadow-lg transform rotate-12">
-                     HOT!
-                   </div>
-                 </TabsTrigger>
-                 <TabsTrigger value="coches" className="flex items-center justify-center space-x-2 h-full px-3 text-sm">
-                   <span>🚗</span>
-                   <span>{t('rental.cars')}</span>
-                 </TabsTrigger>
-               </TabsList>
-               <TabsList className="grid w-full grid-cols-3 bg-gray-100 h-16">
-                 <TabsTrigger value="motos" className="flex items-center justify-center space-x-2 h-full px-3 text-sm">
-                   <span>🏍️</span>
-                   <span>{t('rental.motorcycles')}</span>
-                 </TabsTrigger>
-                 <TabsTrigger value="quads" className="flex items-center justify-center space-x-2 h-full px-3 text-sm">
-                   <span>🏎️</span>
-                   <span>{t('rental.quads')}</span>
-                 </TabsTrigger>
-                 <TabsTrigger value="accesorios" className="flex items-center justify-center space-x-2 h-full px-3 text-sm">
-                   <span>🛍️</span>
-                   <span>{t('rental.accessories')}</span>
-                 </TabsTrigger>
-               </TabsList>
-             </div>
-          </div>
+              </div>
 
-          {/* Tours/Visitas Button */}
-          <div className="w-full mt-3 mb-3 sm:mt-6 sm:mb-8">
-            <Link href="/tours">
-              <Button className="w-full h-14 bg-gradient-to-r from-yellow-400 to-yellow-500 hover:from-yellow-500 hover:to-yellow-600 text-blue-900 font-bold text-lg shadow-md hover:shadow-lg transition-all duration-200 rounded-lg border border-yellow-300 hover:border-yellow-400">
-                <span className="mr-3 text-xl">🏛️</span>
-                Tours / Visitas
-                <span className="ml-3 text-xl">✨</span>
-              </Button>
-            </Link>
-          </div>
+              {/* Tours/Visitas Button */}
+              <div className="mt-4 sm:mt-6">
+                <Link href="/tours" className="block">
+                  <Button className="h-14 w-full rounded-full bg-gradient-to-r from-yellow-400 to-yellow-500 text-base font-bold text-blue-900 shadow-sm transition hover:from-yellow-300 hover:to-yellow-400 hover:shadow-lg">
+                    <span className="mr-2 text-xl">🏛️</span>
+                    Tours / Visitas
+                    <span className="ml-2 text-xl">✨</span>
+                  </Button>
+                </Link>
+              </div>
 
           {/* Bicicletas Tab */}
           <TabsContent value="bicicletas" className="sm:data-[state=active]:animate-none data-[state=active]:animate-in data-[state=active]:slide-in-from-right-4 data-[state=active]:duration-300">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
               {bicycles.map((bike) => (
-                <Card key={bike.id} className="overflow-hidden shadow-lg hover:shadow-2xl transition-shadow duration-300">
-                  <div className="aspect-video relative">
-                    <Image src={bike.image || "/placeholder.svg"} alt={bike.name as string} fill className="object-cover" />
+                <article key={bike.id} className={cardClass}>
+                  <div className={mediaClass}>
+                    <Image src={bike.image || "/placeholder.svg"} alt={bike.name as string} fill className="object-cover transition duration-700 group-hover:scale-105" />
+                    <div className={overlayClass} />
 
+                    <div className="absolute right-4 top-4">
+                      <span className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-bold text-white shadow-lg ${getStockDisplay(bike.id).color}`}>
+                        {getStockDisplay(bike.id).text}
+                      </span>
+                    </div>
+
+                    <div className="absolute inset-x-4 bottom-4">
+                      <h3 className="text-2xl font-black leading-tight text-white">{bike.name as string}</h3>
+                    </div>
                   </div>
 
-                  <CardHeader>
-                    <div className="flex justify-between items-start mb-2">
-                      <CardTitle className="text-xl text-gray-900">{bike.name as string}</CardTitle>
-                      <Badge className={`${getStockDisplay(bike.id).color} text-white font-bold px-3 py-1`}>
-                        {getStockDisplay(bike.id).text}
-                      </Badge>
-                    </div>
-                    <CardDescription className="text-gray-600">{bike.description as string}</CardDescription>
-                  </CardHeader>
+                  <div className="flex flex-1 flex-col p-5 sm:p-6">
+                    <p className="text-sm leading-relaxed text-slate-600 dark:text-slate-400">{bike.description as string}</p>
 
-                  <CardContent>
                     {/* Features */}
-                    <div className="mb-4">
-                      <h4 className="font-semibold text-gray-900 mb-2">{t('rental.features')}:</h4>
-                      <div className="grid grid-cols-2 gap-1">
+                    <div className="mt-5">
+                      <h4 className={smallHeadingClass}>{t('rental.features')}</h4>
+                      <div className="mt-2 flex flex-wrap gap-2">
                         {bike.features.map((feature, index) => (
-                          <div key={index} className="flex items-center text-sm text-gray-600">
-                            <span className="w-1.5 h-1.5 bg-yellow-500 rounded-full mr-2"></span>
+                          <span key={index} className={chipClass}>
                             {feature as string}
-                          </div>
+                          </span>
                         ))}
                       </div>
                     </div>
 
                     {/* Prices */}
-                    <div className="space-y-3 mb-4">
-                      <h4 className="font-semibold text-gray-900">{t('rental.prices')}:</h4>
-                      <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
-                        {bike.prices.map((price, index) => {
-                          const isSelected = selectedPrices[bike.name as string]?.duration === price.duration as string
-                          return (
-                            <button
-                              key={index}
-                              onClick={() => handlePriceSelection(bike.name as string, price.duration as string, price.price)}
-                              className={`flex flex-col items-center p-3 rounded-lg transition-all duration-200 border-2 ${
-                                isSelected
-                                  ? "bg-blue-600 border-blue-600 shadow-lg transform scale-105"
-                                  : "bg-gray-50 border-transparent hover:bg-gray-100 hover:border-gray-200"
-                              }`}
-                            >
-                              <div className="flex items-center space-x-1 mb-2">
-                                <Clock className={`h-4 w-4 ${isSelected ? "text-white" : "text-gray-500"}`} />
-                                <span className={`text-sm font-semibold ${isSelected ? "text-white" : "text-gray-700"}`}>{price.duration}</span>
-                              </div>
-                              <Badge
-                                variant={price.featured ? "default" : "secondary"}
-                                className={`text-lg font-bold px-3 py-1 pointer-events-none ${
-                                  isSelected
-                                    ? "bg-white text-blue-600"
-                                    : price.featured
-                                      ? "bg-yellow-500 text-blue-900 hover:bg-yellow-600"
-                                      : "bg-blue-100 text-blue-800"
-                                }`}
-                              >
-                                {price.price}
-                              </Badge>
-                            </button>
-                          )
-                        })}
+                    <div className="mt-5">
+                      <h4 className={smallHeadingClass}>{t('rental.prices')}</h4>
+                      <div className="mt-2 grid grid-cols-2 gap-2 sm:grid-cols-3">
+                        {renderPriceOptions(
+                          bike.name as string,
+                          bike.prices as { duration: string; price: string; featured?: boolean }[],
+                        )}
                       </div>
                     </div>
 
-                    <Button 
-                      className={`w-full text-white ${
-                        getAvailableStock(bike.id) === 0 
-                          ? 'bg-gray-400 cursor-not-allowed' 
-                          : 'bg-blue-600 hover:bg-blue-700'
+                    <Button
+                      className={`mt-5 h-12 w-full rounded-full font-bold text-white ${
+                        getAvailableStock(bike.id) === 0
+                          ? 'cursor-not-allowed bg-slate-400'
+                          : 'bg-blue-900 hover:bg-blue-800 dark:bg-yellow-400 dark:text-blue-950 dark:hover:bg-yellow-300'
                       }`}
                       onClick={() => handleReservation(bike.name as string, bike.id)}
                       disabled={!selectedPrices[bike.name as string]}
                     >
-                      {selectedPrices[bike.name as string] 
-                        ? `${t('rental.reserve')} ${selectedPrices[bike.name as string].duration} ${t('rental.for')} ${selectedPrices[bike.name as string].price}` 
+                      {selectedPrices[bike.name as string]
+                        ? `${t('rental.reserve')} ${selectedPrices[bike.name as string].duration} ${t('rental.for')} ${selectedPrices[bike.name as string].price}`
                         : t('rental.selectPrice')
                       }
+                      <ArrowUpRight className="ml-1.5 h-4 w-4" />
                     </Button>
-                  </CardContent>
-                </Card>
+                  </div>
+                </article>
               ))}
             </div>
           </TabsContent>
 
           {/* Coches Tab */}
           <TabsContent value="coches" className="sm:data-[state=active]:animate-none data-[state=active]:animate-in data-[state=active]:slide-in-from-right-4 data-[state=active]:duration-300">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
               {carsLocalized.map((car) => (
-                <Card key={car.id} className="overflow-hidden shadow-lg hover:shadow-2xl transition-shadow duration-300">
-                  <div className="aspect-video relative">
-                    <Image src={car.image || "/placeholder.svg"} alt={car.name as string} fill className="object-cover" />
+                <article key={car.id} className={cardClass}>
+                  <div className={mediaClass}>
+                    <Image src={car.image || "/placeholder.svg"} alt={car.name as string} fill className="object-cover transition duration-700 group-hover:scale-105" />
+                    <div className={overlayClass} />
 
-                    <div className="absolute top-4 right-4">
-                      <Badge className="bg-yellow-500 text-blue-900 font-bold">{car.group}</Badge>
+                    <div className="absolute left-4 top-4">
+                      <span className="inline-flex items-center rounded-full bg-yellow-400 px-3 py-1.5 text-xs font-black uppercase tracking-wide text-blue-950 shadow-lg">
+                        {car.group}
+                      </span>
+                    </div>
+
+                    <div className="absolute inset-x-4 bottom-4">
+                      <h3 className="text-2xl font-black leading-tight text-white">{car.name as string}</h3>
                     </div>
                   </div>
 
-                  <CardHeader>
-                    <CardTitle className="text-xl text-gray-900">{car.name as string}</CardTitle>
-                    <CardDescription className="text-gray-600">{car.description as string}</CardDescription>
-                  </CardHeader>
+                  <div className="flex flex-1 flex-col p-5 sm:p-6">
+                    <p className="text-sm leading-relaxed text-slate-600 dark:text-slate-400">{car.description as string}</p>
 
-                  <CardContent>
                     {/* Features */}
-                    <div className="mb-4">
-                      <h4 className="font-semibold text-gray-900 mb-2">{t('rental.features')}:</h4>
-                      <div className="grid grid-cols-2 gap-1">
+                    <div className="mt-5">
+                      <h4 className={smallHeadingClass}>{t('rental.features')}</h4>
+                      <div className="mt-2 flex flex-wrap gap-2">
                         {car.features.map((feature: string, index: number) => (
-                          <div key={index} className="flex items-center text-sm text-gray-600">
-                            <span className="w-1.5 h-1.5 bg-yellow-500 rounded-full mr-2"></span>
+                          <span key={index} className={chipClass}>
                             {feature}
-                          </div>
+                          </span>
                         ))}
                       </div>
                     </div>
 
                     {/* Prices */}
-                    <div className="space-y-3 mb-4">
-                      <h4 className="font-semibold text-gray-900">{t('rental.prices')}:</h4>
-                      <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
-                        {car.prices.map((price: { duration: string; price: string; featured?: boolean }, index: number) => {
-                          const isSelected = selectedPrices[car.name as string]?.duration === price.duration as string
-                          return (
-                            <button
-                              key={index}
-                              onClick={() => handlePriceSelection(car.name as string, price.duration as string, price.price)}
-                              className={`flex flex-col items-center p-3 rounded-lg transition-all duration-200 border-2 ${
-                                isSelected
-                                  ? "bg-blue-600 border-blue-600 shadow-lg transform scale-105"
-                                  : "bg-gray-50 border-transparent hover:bg-gray-100 hover:border-gray-200"
-                              }`}
-                            >
-                              <div className="flex items-center space-x-1 mb-2">
-                                <Clock className={`h-4 w-4 ${isSelected ? "text-white" : "text-gray-500"}`} />
-                                <span className={`text-sm font-semibold ${isSelected ? "text-white" : "text-gray-700"}`}>{price.duration}</span>
-                              </div>
-                              <Badge
-                                variant={price.featured ? "default" : "secondary"}
-                                className={`text-lg font-bold px-3 py-1 pointer-events-none ${
-                                  isSelected
-                                    ? "bg-white text-blue-600"
-                                    : price.featured
-                                      ? "bg-yellow-500 text-blue-900 hover:bg-yellow-600"
-                                      : "bg-blue-100 text-blue-800"
-                                }`}
-                              >
-                                {price.price}
-                              </Badge>
-                            </button>
-                          )
-                        })}
+                    <div className="mt-5">
+                      <h4 className={smallHeadingClass}>{t('rental.prices')}</h4>
+                      <div className="mt-2 grid grid-cols-2 gap-2 sm:grid-cols-3">
+                        {renderPriceOptions(car.name as string, car.prices)}
                       </div>
                     </div>
 
-                    <Button 
-                      className="w-full bg-blue-600 hover:bg-blue-700 text-white"
+                    <Button
+                      className="mt-5 h-12 w-full rounded-full bg-blue-900 font-bold text-white hover:bg-blue-800 dark:bg-yellow-400 dark:text-blue-950 dark:hover:bg-yellow-300"
                       onClick={() => handleReservation(car.name as string, car.id)}
                       disabled={!selectedPrices[car.name as string]}
                     >
                       {selectedPrices[car.name as string] ? `${t('rental.reserve')} ${selectedPrices[car.name as string].duration} ${t('rental.for')} ${selectedPrices[car.name as string].price}` : t('rental.selectPrice')}
+                      <ArrowUpRight className="ml-1.5 h-4 w-4" />
                     </Button>
-                  </CardContent>
-                </Card>
+                  </div>
+                </article>
               ))}
             </div>
 
             {/* Car Requirements */}
-            <Card className="mt-8 bg-yellow-50 border-yellow-200">
-              <CardHeader>
-                <div className="flex items-center space-x-2">
-                  <span className="text-yellow-600">🚗</span>
-                  <CardTitle className="text-yellow-900">{t('rental.carRequirements.title')}</CardTitle>
-                </div>
-              </CardHeader>
-              <CardContent>
-                <ul className="space-y-2 text-yellow-800">
-                  <li>• {t('rental.carRequirements.license')}</li>
-                  <li>• {t('rental.carRequirements.passport')}</li>
-                  <li>• {t('rental.carRequirements.creditCard')}</li>
-                  <li>• {t('rental.carRequirements.age')}</li>
-                  <li>• {t('rental.carRequirements.models')}</li>
-                </ul>
-              </CardContent>
-            </Card>
+            <div className="mt-8 rounded-[2rem] border border-amber-200 bg-amber-50 p-6 shadow-sm dark:border-amber-400/20 dark:bg-amber-400/10 sm:p-8">
+              <div className="flex items-center gap-3">
+                <span className="flex h-11 w-11 items-center justify-center rounded-full bg-yellow-400/20 text-xl">🚗</span>
+                <h3 className="text-xl font-black tracking-tight text-amber-900 dark:text-amber-100">
+                  {t('rental.carRequirements.title')}
+                </h3>
+              </div>
+              <ul className="mt-5 grid grid-cols-1 gap-2 text-sm font-medium text-amber-900 dark:text-amber-100/90 sm:grid-cols-2">
+                {[
+                  t('rental.carRequirements.license'),
+                  t('rental.carRequirements.passport'),
+                  t('rental.carRequirements.creditCard'),
+                  t('rental.carRequirements.age'),
+                  t('rental.carRequirements.models'),
+                ].map((requirement, index) => (
+                  <li key={index} className="flex items-start gap-2 rounded-2xl bg-white/60 px-3 py-2 dark:bg-white/5">
+                    <Check className="mt-0.5 h-4 w-4 shrink-0 text-amber-600 dark:text-yellow-300" />
+                    <span>{requirement}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
           </TabsContent>
 
           {/* Motos Tab */}
           <TabsContent value="motos" className="sm:data-[state=active]:animate-none data-[state=active]:animate-in data-[state=active]:slide-in-from-right-4 data-[state=active]:duration-300">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
               {motorcyclesLocalized.map((moto) => (
-                <Card key={moto.id} className="overflow-hidden shadow-lg hover:shadow-2xl transition-shadow duration-300">
-                  <div className="aspect-video relative">
-                    <Image src={moto.image || "/placeholder.svg"} alt={moto.name} fill className="object-cover" />
+                <article key={moto.id} className={cardClass}>
+                  <div className={mediaClass}>
+                    <Image src={moto.image || "/placeholder.svg"} alt={moto.name} fill className="object-cover transition duration-700 group-hover:scale-105" />
+                    <div className={overlayClass} />
 
-                    <div className="absolute top-4 right-4">
-                      <Badge className="bg-yellow-500 text-blue-900 font-bold">{moto.cc}</Badge>
+                    <div className="absolute left-4 top-4">
+                      <span className="inline-flex items-center rounded-full bg-yellow-400 px-3 py-1.5 text-xs font-black uppercase tracking-wide text-blue-950 shadow-lg">
+                        {moto.cc}
+                      </span>
+                    </div>
+
+                    <div className="absolute inset-x-4 bottom-4">
+                      <h3 className="text-2xl font-black leading-tight text-white">{moto.name}</h3>
                     </div>
                   </div>
 
-                  <CardHeader>
-                    <CardTitle className="text-xl text-gray-900">{moto.name}</CardTitle>
-                    <CardDescription className="text-gray-600">{moto.description}</CardDescription>
-                  </CardHeader>
+                  <div className="flex flex-1 flex-col p-5 sm:p-6">
+                    <p className="text-sm leading-relaxed text-slate-600 dark:text-slate-400">{moto.description}</p>
 
-                  <CardContent className={moto.id === 'motorbike' || moto.id === 'quad-rental' ? 'flex flex-col h-full' : ''}>
                     {/* Features */}
-                    <div className="mb-4">
-                      <h4 className="font-semibold text-gray-900 mb-2">{t('rental.features')}</h4>
-                      <div className="grid grid-cols-2 gap-1">
+                    <div className="mt-5">
+                      <h4 className={smallHeadingClass}>{t('rental.features')}</h4>
+                      <div className="mt-2 flex flex-wrap gap-2">
                         {moto.features.map((feature: string, index: number) => (
-                          <div key={index} className="flex items-center text-sm text-gray-600">
-                            <span className="w-1.5 h-1.5 bg-yellow-500 rounded-full mr-2"></span>
+                          <span key={index} className={chipClass}>
                             {feature}
-                          </div>
+                          </span>
                         ))}
                       </div>
                     </div>
 
                     {/* Prices */}
-                    <div className={`space-y-3 mb-4 ${moto.id === 'motorbike' || moto.id === 'quad-rental' ? 'flex-grow' : ''}`}>
-                      <h4 className="font-semibold text-gray-900">{t('rental.prices')}</h4>
-                      <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
-                        {moto.prices.map((price: { duration: string; price: string; featured?: boolean }, index: number) => {
-                          const isSelected = selectedPrices[moto.name]?.duration === price.duration as string
-                          return (
-                            <button
-                              key={index}
-                              onClick={() => handlePriceSelection(moto.name, price.duration as string, price.price)}
-                              className={`flex flex-col items-center p-3 rounded-lg transition-all duration-200 border-2 ${
-                                isSelected
-                                  ? "bg-blue-600 border-blue-600 shadow-lg transform scale-105"
-                                  : "bg-gray-50 border-transparent hover:bg-gray-100 hover:border-gray-200"
-                              }`}
-                            >
-                              <div className="flex items-center space-x-1 mb-2">
-                                <Clock className={`h-4 w-4 ${isSelected ? "text-white" : "text-gray-500"}`} />
-                                <span className={`text-sm font-semibold ${isSelected ? "text-white" : "text-gray-700"}`}>{price.duration}</span>
-                              </div>
-                              <Badge
-                                variant={price.featured ? "default" : "secondary"}
-                                className={`text-lg font-bold px-3 py-1 pointer-events-none ${
-                                  isSelected
-                                    ? "bg-white text-blue-600"
-                                    : price.featured
-                                      ? "bg-yellow-500 text-blue-900 hover:bg-yellow-600"
-                                      : "bg-blue-100 text-blue-800"
-                                }`}
-                              >
-                                {price.price}
-                              </Badge>
-                            </button>
-                          )
-                        })}
+                    <div className={`mt-5 ${moto.id === 'motorbike' || moto.id === 'quad-rental' ? 'flex-grow' : ''}`}>
+                      <h4 className={smallHeadingClass}>{t('rental.prices')}</h4>
+                      <div className="mt-2 grid grid-cols-2 gap-2 sm:grid-cols-3">
+                        {renderPriceOptions(moto.name, moto.prices)}
                       </div>
                     </div>
 
-                    <Button 
-                      className="w-full bg-blue-600 hover:bg-blue-700 text-white mt-auto"
+                    <Button
+                      className="mt-5 h-12 w-full rounded-full bg-blue-900 font-bold text-white hover:bg-blue-800 dark:bg-yellow-400 dark:text-blue-950 dark:hover:bg-yellow-300"
                       onClick={() => handleReservation(moto.name, moto.id)}
                       disabled={!selectedPrices[moto.name]}
                     >
                       {selectedPrices[moto.name] ? `${t('rental.reserve')} ${selectedPrices[moto.name].duration} ${t('rental.for')} ${selectedPrices[moto.name].price}` : t('rental.selectPrice')}
+                      <ArrowUpRight className="ml-1.5 h-4 w-4" />
                     </Button>
-                  </CardContent>
-                </Card>
+                  </div>
+                </article>
               ))}
             </div>
 
             {/* Motorcycle Requirements */}
-            <Card className="mt-8 bg-red-50 border-red-200">
-              <CardHeader>
-                <div className="flex items-center space-x-2">
-                  <span className="text-red-600">⚡</span>
-                  <CardTitle className="text-red-900">{t('rental.motorcycleRequirements.title')}</CardTitle>
-                </div>
-              </CardHeader>
-              <CardContent>
-                <ul className="space-y-2 text-red-800">
-                  <li>• {t('rental.motorcycleRequirements.license')}</li>
-                  <li>• {t('rental.motorcycleRequirements.reservation')}</li>
-                  <li>• {t('rental.motorcycleRequirements.id')}</li>
-                  <li>• {t('rental.motorcycleRequirements.minAge')}</li>
-                  <li>• {t('rental.motorcycleRequirements.deposit')}</li>
-                  <li>• {t('rental.motorcycleRequirements.helmet')}</li>
-                </ul>
-              </CardContent>
-            </Card>
+            <div className="mt-8 rounded-[2rem] border border-rose-200 bg-rose-50 p-6 shadow-sm dark:border-rose-400/20 dark:bg-rose-400/10 sm:p-8">
+              <div className="flex items-center gap-3">
+                <span className="flex h-11 w-11 items-center justify-center rounded-full bg-rose-500/15 text-xl">⚡</span>
+                <h3 className="text-xl font-black tracking-tight text-rose-900 dark:text-rose-100">
+                  {t('rental.motorcycleRequirements.title')}
+                </h3>
+              </div>
+              <ul className="mt-5 grid grid-cols-1 gap-2 text-sm font-medium text-rose-900 dark:text-rose-100/90 sm:grid-cols-2">
+                {[
+                  t('rental.motorcycleRequirements.license'),
+                  t('rental.motorcycleRequirements.reservation'),
+                  t('rental.motorcycleRequirements.id'),
+                  t('rental.motorcycleRequirements.minAge'),
+                  t('rental.motorcycleRequirements.deposit'),
+                  t('rental.motorcycleRequirements.helmet'),
+                ].map((requirement, index) => (
+                  <li key={index} className="flex items-start gap-2 rounded-2xl bg-white/60 px-3 py-2 dark:bg-white/5">
+                    <Check className="mt-0.5 h-4 w-4 shrink-0 text-rose-600 dark:text-rose-300" />
+                    <span>{requirement}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
           </TabsContent>
 
           {/* Quads Tab */}
           <TabsContent value="quads" className="sm:data-[state=active]:animate-none data-[state=active]:animate-in data-[state=active]:slide-in-from-right-4 data-[state=active]:duration-300">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
               {quadsLocalized.map((quad) => (
-                <Card key={quad.id} className="overflow-hidden shadow-lg hover:shadow-2xl transition-shadow duration-300">
-                  <div className="aspect-video relative">
-                    <Image src={quad.image || "/placeholder.svg"} alt={quad.name} fill className="object-cover" />
+                <article key={quad.id} className={cardClass}>
+                  <div className={mediaClass}>
+                    <Image src={quad.image || "/placeholder.svg"} alt={quad.name} fill className="object-cover transition duration-700 group-hover:scale-105" />
+                    <div className={overlayClass} />
 
-                    <div className="absolute top-4 right-4">
-                      <Badge className="bg-yellow-500 text-blue-900 font-bold">{quad.cc}</Badge>
+                    <div className="absolute left-4 top-4">
+                      <span className="inline-flex items-center rounded-full bg-yellow-400 px-3 py-1.5 text-xs font-black uppercase tracking-wide text-blue-950 shadow-lg">
+                        {quad.cc}
+                      </span>
+                    </div>
+
+                    <div className="absolute inset-x-4 bottom-4">
+                      <h3 className="text-2xl font-black leading-tight text-white">{quad.name}</h3>
                     </div>
                   </div>
 
-                  <CardHeader>
-                    <CardTitle className="text-xl text-gray-900">{quad.name}</CardTitle>
-                    <CardDescription className="text-gray-600">{quad.description}</CardDescription>
-                  </CardHeader>
+                  <div className="flex flex-1 flex-col p-5 sm:p-6">
+                    <p className="text-sm leading-relaxed text-slate-600 dark:text-slate-400">{quad.description}</p>
 
-                  <CardContent>
                     {/* Features */}
-                    <div className="mb-4">
-                      <h4 className="font-semibold text-gray-900 mb-2">{t('rental.features')}</h4>
-                      <div className="grid grid-cols-2 gap-1">
+                    <div className="mt-5">
+                      <h4 className={smallHeadingClass}>{t('rental.features')}</h4>
+                      <div className="mt-2 flex flex-wrap gap-2">
                         {quad.features.map((feature: string, index: number) => (
-                          <div key={index} className="flex items-center text-sm text-gray-600">
-                            <span className="w-1.5 h-1.5 bg-yellow-500 rounded-full mr-2"></span>
+                          <span key={index} className={chipClass}>
                             {feature}
-                          </div>
+                          </span>
                         ))}
                       </div>
                     </div>
 
                     {/* Prices */}
-                    <div className="space-y-3 mb-4">
-                      <h4 className="font-semibold text-gray-900">{t('rental.prices')}</h4>
-                      <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
-                        {quad.prices.map((price: { duration: string; price: string; featured?: boolean }, index: number) => {
-                          const isSelected = selectedPrices[quad.name]?.duration === price.duration as string
-                          return (
-                            <button
-                              key={index}
-                              onClick={() => handlePriceSelection(quad.name, price.duration as string, price.price)}
-                              className={`flex flex-col items-center p-3 rounded-lg transition-all duration-200 border-2 ${
-                                isSelected
-                                  ? "bg-blue-600 border-blue-600 shadow-lg transform scale-105"
-                                  : "bg-gray-50 border-transparent hover:bg-gray-100 hover:border-gray-200"
-                              }`}
-                            >
-                              <div className="flex items-center space-x-1 mb-2">
-                                <Clock className={`h-4 w-4 ${isSelected ? "text-white" : "text-gray-500"}`} />
-                                <span className={`text-sm font-semibold ${isSelected ? "text-white" : "text-gray-700"}`}>{price.duration}</span>
-                              </div>
-                              <Badge
-                                variant={price.featured ? "default" : "secondary"}
-                                className={`text-lg font-bold px-3 py-1 pointer-events-none ${
-                                  isSelected
-                                    ? "bg-white text-blue-600"
-                                    : price.featured
-                                      ? "bg-yellow-500 text-blue-900 hover:bg-yellow-600"
-                                      : "bg-blue-100 text-blue-800"
-                                }`}
-                              >
-                                {price.price}
-                              </Badge>
-                            </button>
-                          )
-                        })}
+                    <div className="mt-5">
+                      <h4 className={smallHeadingClass}>{t('rental.prices')}</h4>
+                      <div className="mt-2 grid grid-cols-2 gap-2 sm:grid-cols-3">
+                        {renderPriceOptions(quad.name, quad.prices)}
                       </div>
                     </div>
 
-                    <Button 
-                      className="w-full bg-blue-600 hover:bg-blue-700 text-white"
+                    <Button
+                      className="mt-5 h-12 w-full rounded-full bg-blue-900 font-bold text-white hover:bg-blue-800 dark:bg-yellow-400 dark:text-blue-950 dark:hover:bg-yellow-300"
                       onClick={() => handleReservation(quad.name, quad.id)}
                       disabled={!selectedPrices[quad.name]}
                     >
                       {selectedPrices[quad.name] ? `${t('rental.reserve')} ${selectedPrices[quad.name].duration} ${t('rental.for')} ${selectedPrices[quad.name].price}` : t('rental.selectPrice')}
+                      <ArrowUpRight className="ml-1.5 h-4 w-4" />
                     </Button>
-                  </CardContent>
-                </Card>
+                  </div>
+                </article>
               ))}
             </div>
 
             {/* Quad Requirements */}
-            <Card className="mt-8 bg-orange-50 border-orange-200">
-              <CardHeader>
-                <div className="flex items-center space-x-2">
-                  <span className="text-orange-600">🏎️</span>
-                  <CardTitle className="text-orange-900">{t('rental.quadRequirements.title')}</CardTitle>
-                </div>
-              </CardHeader>
-              <CardContent>
-                <ul className="space-y-2 text-orange-800">
-                  <li>• {t('rental.quadRequirements.license')}</li>
-                  <li>• {t('rental.quadRequirements.reservation')}</li>
-                  <li>• {t('rental.quadRequirements.id')}</li>
-                  <li>• {t('rental.quadRequirements.minAge')}</li>
-                  <li>• {t('rental.quadRequirements.deposit')}</li>
-                  <li>• {t('rental.quadRequirements.helmet')}</li>
-                  <li>• {t('rental.quadRequirements.safetyBriefing')}</li>
-                </ul>
-              </CardContent>
-            </Card>
+            <div className="mt-8 rounded-[2rem] border border-orange-200 bg-orange-50 p-6 shadow-sm dark:border-orange-400/20 dark:bg-orange-400/10 sm:p-8">
+              <div className="flex items-center gap-3">
+                <span className="flex h-11 w-11 items-center justify-center rounded-full bg-orange-500/15 text-xl">🏎️</span>
+                <h3 className="text-xl font-black tracking-tight text-orange-900 dark:text-orange-100">
+                  {t('rental.quadRequirements.title')}
+                </h3>
+              </div>
+              <ul className="mt-5 grid grid-cols-1 gap-2 text-sm font-medium text-orange-900 dark:text-orange-100/90 sm:grid-cols-2">
+                {[
+                  t('rental.quadRequirements.license'),
+                  t('rental.quadRequirements.reservation'),
+                  t('rental.quadRequirements.id'),
+                  t('rental.quadRequirements.minAge'),
+                  t('rental.quadRequirements.deposit'),
+                  t('rental.quadRequirements.helmet'),
+                  t('rental.quadRequirements.safetyBriefing'),
+                ].map((requirement, index) => (
+                  <li key={index} className="flex items-start gap-2 rounded-2xl bg-white/60 px-3 py-2 dark:bg-white/5">
+                    <Check className="mt-0.5 h-4 w-4 shrink-0 text-orange-600 dark:text-orange-300" />
+                    <span>{requirement}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
           </TabsContent>
 
           {/* Scooters Tab */}
           <TabsContent value="scooters" className="sm:data-[state=active]:animate-none data-[state=active]:animate-in data-[state=active]:slide-in-from-right-4 data-[state=active]:duration-300">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
               {scootersLocalized.map((scooter) => {
                 const selectedModel = selectedModels[scooter.name] || (scooter.models ? scooter.models[0].id : null)
                 const currentModel = scooter.models ? scooter.models.find((m: any) => m.id === selectedModel) : null
                 const displayPrices = currentModel ? currentModel.prices : scooter.prices || []
                 const displayImage = currentModel?.image || scooter.image || "/placeholder.svg"
-                
+
                 return (
-                  <Card key={scooter.id} className="overflow-hidden shadow-lg hover:shadow-2xl transition-shadow duration-300">
-                    <div className="aspect-video relative">
-                      <Image src={displayImage} alt={currentModel?.name || scooter.name} fill className="object-contain" />
+                  <article key={scooter.id} className={cardClass}>
+                    <div className="relative aspect-video overflow-hidden bg-gradient-to-br from-slate-50 via-slate-100 to-slate-200 dark:from-slate-800 dark:via-slate-900 dark:to-slate-950">
+                      <Image src={displayImage} alt={currentModel?.name || scooter.name} fill className="object-contain p-4 transition duration-700 group-hover:scale-105" />
+                      <div className="absolute inset-0 bg-gradient-to-t from-slate-950/70 via-transparent to-transparent" />
+
+                      <div className="absolute right-4 top-4">
+                        <span className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-bold text-white shadow-lg ${getStockDisplay(scooter.id).color}`}>
+                          {getStockDisplay(scooter.id).text}
+                        </span>
+                      </div>
+
+                      <div className="absolute inset-x-4 bottom-4">
+                        <h3 className="text-2xl font-black leading-tight text-white">{scooter.name}</h3>
+                      </div>
                     </div>
 
-                    <CardHeader>
-                      <div className="flex justify-between items-start mb-2">
-                        <CardTitle className="text-xl text-gray-900">{scooter.name}</CardTitle>
-                        <Badge className={`${getStockDisplay(scooter.id).color} text-white font-bold px-3 py-1`}>
-                          {getStockDisplay(scooter.id).text}
-                        </Badge>
-                      </div>
-                      <CardDescription className="text-gray-600">{scooter.description}</CardDescription>
-                    </CardHeader>
+                    <div className="flex flex-1 flex-col p-5 sm:p-6">
+                      <p className="text-sm leading-relaxed text-slate-600 dark:text-slate-400">{scooter.description}</p>
 
-                    <CardContent>
                       {/* Model Selector */}
                       {scooter.models && (
-                        <div className="mb-4">
-                          <h4 className="font-semibold text-gray-900 mb-2">{t('rental.model')}</h4>
-                          <div className="grid grid-cols-3 gap-2">
+                        <div className="mt-5">
+                          <h4 className={smallHeadingClass}>{t('rental.model')}</h4>
+                          <div className="mt-2 grid grid-cols-3 gap-2">
                             {scooter.models.map((model: any) => {
                               const isSelected = selectedModel === model.id
                               return (
                                 <button
                                   key={model.id}
                                   onClick={() => handleModelSelection(scooter.name, model.id)}
-                                  className={`p-3 rounded-lg border-2 transition-all duration-200 ${
+                                  className={`rounded-2xl border px-2 py-3 transition-all duration-200 ${
                                     isSelected
-                                      ? "bg-yellow-500 border-yellow-500 text-blue-900 shadow-lg"
-                                      : "bg-gray-50 border-gray-200 hover:bg-gray-100 hover:border-gray-300"
+                                      ? 'border-yellow-400 bg-yellow-400 text-blue-950 shadow-lg'
+                                      : 'border-slate-200 bg-slate-50 text-slate-900 hover:-translate-y-0.5 hover:border-blue-300 hover:bg-white dark:border-white/10 dark:bg-white/5 dark:text-slate-100'
                                   }`}
                                 >
-                                  <div className="text-sm font-semibold">{model.name}</div>
-                                  <div className="text-xs mt-1">
+                                  <div className="text-sm font-bold leading-tight">{model.name}</div>
+                                  <div className="mt-1 text-xs font-semibold opacity-80">
                                     <div>{model.autonomy}</div>
                                     <div>{model.speed}</div>
                                   </div>
@@ -1343,84 +1387,52 @@ export default function AlquilerPage() {
                       )}
 
                       {/* Features */}
-                      <div className="mb-4">
-                        <h4 className="font-semibold text-gray-900 mb-2">{t('rental.features')}</h4>
-                        <div className="grid grid-cols-2 gap-1">
+                      <div className="mt-5">
+                        <h4 className={smallHeadingClass}>{t('rental.features')}</h4>
+                        <div className="mt-2 flex flex-wrap gap-2">
                           {scooter.features.map((feature: string, index: number) => (
-                            <div key={index} className="flex items-center text-sm text-gray-600">
-                              <span className="w-1.5 h-1.5 bg-yellow-500 rounded-full mr-2"></span>
+                            <span key={index} className={chipClass}>
                               {feature}
-                            </div>
+                            </span>
                           ))}
                           {currentModel && (
                             <>
-                              <div className="flex items-center text-sm text-gray-600">
-                                <span className="w-1.5 h-1.5 bg-yellow-500 rounded-full mr-2"></span>
+                              <span className={chipClass}>
                                 {t('rental.autonomy')} {currentModel.autonomy}
-                              </div>
-                              <div className="flex items-center text-sm text-gray-600">
-                                <span className="w-1.5 h-1.5 bg-yellow-500 rounded-full mr-2"></span>
+                              </span>
+                              <span className={chipClass}>
                                 {t('rental.speed')} {currentModel.speed}
-                              </div>
+                              </span>
                             </>
                           )}
                         </div>
                       </div>
 
                       {/* Prices */}
-                      <div className="space-y-3 mb-4">
-                        <h4 className="font-semibold text-gray-900">{t('rental.prices')}</h4>
-                        <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
-                          {displayPrices.map((price: { duration: string; price: string; featured?: boolean }, index: number) => {
-                            const isSelected = selectedPrices[scooter.name]?.duration === price.duration as string
-                            return (
-                              <button
-                                key={index}
-                                onClick={() => handlePriceSelection(scooter.name, price.duration as string, price.price)}
-                                className={`flex flex-col items-center p-3 rounded-lg transition-all duration-200 border-2 ${
-                                  isSelected
-                                    ? "bg-blue-600 border-blue-600 shadow-lg transform scale-105"
-                                    : "bg-gray-50 border-transparent hover:bg-gray-100 hover:border-gray-200"
-                                }`}
-                              >
-                                <div className="flex items-center space-x-1 mb-2">
-                                  <Clock className={`h-4 w-4 ${isSelected ? "text-white" : "text-gray-500"}`} />
-                                  <span className={`text-sm font-semibold ${isSelected ? "text-white" : "text-gray-700"}`}>{price.duration}</span>
-                                </div>
-                                <Badge
-                                  variant={price.featured ? "default" : "secondary"}
-                                  className={`text-lg font-bold px-3 py-1 pointer-events-none ${
-                                    isSelected
-                                      ? "bg-white text-blue-600"
-                                      : price.featured
-                                        ? "bg-yellow-500 text-blue-900 hover:bg-yellow-600"
-                                        : "bg-blue-100 text-blue-800"
-                                  }`}
-                                >
-                                  {price.price}
-                                </Badge>
-                              </button>
-                            )
-                          })}
+                      <div className="mt-5">
+                        <h4 className={smallHeadingClass}>{t('rental.prices')}</h4>
+                        <div className="mt-2 grid grid-cols-2 gap-2 sm:grid-cols-3">
+                          {renderPriceOptions(scooter.name, displayPrices)}
                         </div>
                       </div>
 
-                      <Button 
-                        className={`w-full text-white ${
-                          getAvailableStock(scooter.id) === 0 
-                            ? 'bg-gray-400 cursor-not-allowed' 
-                            : 'bg-blue-600 hover:bg-blue-700'
+                      <Button
+                        className={`mt-5 h-12 w-full rounded-full font-bold text-white ${
+                          getAvailableStock(scooter.id) === 0
+                            ? 'cursor-not-allowed bg-slate-400'
+                            : 'bg-blue-900 hover:bg-blue-800 dark:bg-yellow-400 dark:text-blue-950 dark:hover:bg-yellow-300'
                         }`}
                         onClick={() => handleReservation(scooter.name, scooter.id)}
                         disabled={!selectedPrices[scooter.name]}
                       >
-                        {selectedPrices[scooter.name] 
-                          ? `${t('rental.reserve')} ${selectedPrices[scooter.name].duration} ${t('rental.for')} ${selectedPrices[scooter.name].price}` 
+                        {selectedPrices[scooter.name]
+                          ? `${t('rental.reserve')} ${selectedPrices[scooter.name].duration} ${t('rental.for')} ${selectedPrices[scooter.name].price}`
                           : t('rental.selectPrice')
                         }
+                        <ArrowUpRight className="ml-1.5 h-4 w-4" />
                       </Button>
-                    </CardContent>
-                  </Card>
+                    </div>
+                  </article>
                 )
               })}
             </div>
@@ -1428,125 +1440,152 @@ export default function AlquilerPage() {
 
           {/* Accesorios Tab */}
           <TabsContent value="accesorios" className="sm:data-[state=active]:animate-none data-[state=active]:animate-in data-[state=active]:slide-in-from-right-4 data-[state=active]:duration-300">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
               {accessoriesLocalized.map((accessory) => (
-                <Card key={accessory.id} className="shadow-lg hover:shadow-2xl transition-shadow duration-300">
-                  <CardHeader className="text-center">
-                    {accessory.image ? (
-                       <div className="mx-auto mb-4 w-48 h-48 relative">
-                         <Image
-                           src={accessory.image}
-                           alt={accessory.name}
-                           fill
-                           className="object-contain rounded-lg"
-                         />
-                       </div>
-                    ) : (
-                      <div className="mx-auto mb-4 p-4 bg-yellow-100 rounded-full w-16 h-16 flex items-center justify-center">
-                        <span className="text-blue-600 text-2xl">💰</span>
-                      </div>
-                    )}
-                    <CardTitle className="text-xl text-gray-900">{accessory.name}</CardTitle>
-                    <CardDescription className="text-gray-600">{accessory.description}</CardDescription>
-                  </CardHeader>
-
-                  <CardContent>
-                    {/* Features */}
-                    <div className="mb-4">
-                      <h4 className="font-semibold text-gray-900 mb-2">{t('tours.whatIncludes')}</h4>
-                      <div className="space-y-1">
-                        {accessory.features.map((feature: string, index: number) => (
-                          <div key={index} className="flex items-center text-sm text-gray-600">
-                            <span className="w-1.5 h-1.5 bg-yellow-500 rounded-full mr-2"></span>
-                            {feature}
-                          </div>
-                        ))}
-                      </div>
+                <article key={accessory.id} className={`${cardClass} p-6 text-center`}>
+                  {accessory.image ? (
+                    <div className="relative mx-auto mb-5 h-48 w-48">
+                      <Image
+                        src={accessory.image}
+                        alt={accessory.name}
+                        fill
+                        className="rounded-[1.5rem] object-contain transition duration-700 group-hover:scale-105"
+                      />
                     </div>
-
-                    {/* Price */}
-                    <div className="text-center mb-4">
-                      <Badge className="bg-yellow-500 text-blue-900 text-xl font-bold px-6 py-3">
-                        {accessory.price}
-                      </Badge>
+                  ) : (
+                    <div className="mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-full bg-yellow-400/20">
+                      <span className="text-2xl text-blue-900 dark:text-yellow-300">💰</span>
                     </div>
+                  )}
 
-                    <Button 
-                      className="w-full bg-blue-600 hover:bg-blue-700 text-white"
-                      onClick={() => handleReservation(accessory.name, accessory.id)}
-                    >
-                      {t('rental.reserve')}
-                    </Button>
-                  </CardContent>
-                </Card>
+                  <h3 className="text-xl font-black tracking-tight">{accessory.name}</h3>
+                  <p className="mt-2 text-sm leading-relaxed text-slate-600 dark:text-slate-400">{accessory.description}</p>
+
+                  {/* Features */}
+                  <div className="mt-5 text-left">
+                    <h4 className={smallHeadingClass}>{t('tours.whatIncludes')}</h4>
+                    <div className="mt-2 flex flex-wrap justify-center gap-2">
+                      {accessory.features.map((feature: string, index: number) => (
+                        <span key={index} className={chipClass}>
+                          {feature}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Price */}
+                  <div className="mt-5 flex justify-center">
+                    <span className="rounded-full bg-yellow-400 px-5 py-2 text-3xl font-black leading-none text-blue-950 shadow-sm">
+                      {accessory.price}
+                    </span>
+                  </div>
+
+                  <Button
+                    className="mt-5 h-12 w-full rounded-full bg-blue-900 font-bold text-white hover:bg-blue-800 dark:bg-yellow-400 dark:text-blue-950 dark:hover:bg-yellow-300"
+                    onClick={() => handleReservation(accessory.name, accessory.id)}
+                  >
+                    {t('rental.reserve')}
+                    <ArrowUpRight className="ml-1.5 h-4 w-4" />
+                  </Button>
+                </article>
               ))}
             </div>
           </TabsContent>
-        </Tabs>
-
-        {/* Info Section */}
-        <Card className="mt-12 bg-blue-50 border-blue-200">
-          <CardHeader>
-            <div className="flex items-center space-x-2">
-              <Info className="h-5 w-5 text-blue-600" />
-              <CardTitle className="text-blue-900">Información Importante</CardTitle>
-            </div>
-          </CardHeader>
-          <CardContent>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div>
-                <h4 className="font-semibold text-blue-900 mb-3">Incluido en el alquiler:</h4>
-                <ul className="space-y-2 text-blue-800">
-                  <li>• Casco de seguridad homologado</li>
-                  <li>• Seguro básico de responsabilidad civil</li>
-                  <li>• Kit de reparación básico</li>
-                  <li>• Candado de seguridad</li>
-                  <li>• Mapa de rutas recomendadas</li>
-                </ul>
-              </div>
-              <div>
-                <h4 className="font-semibold text-blue-900 mb-3">Condiciones:</h4>
-                <ul className="space-y-2 text-blue-800">
-                  <li>• Documento de identidad obligatorio</li>
-                  <li>• Depósito de seguridad requerido</li>
-                  <li>• Menores acompañados por adulto</li>
-                  <li>• Horario: 9:00 - 22:00 todos los días</li>
-                  <li>• Reserva anticipada recomendada</li>
-                </ul>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Contact CTA */}
-        <div className="mt-8 text-center">
-          <Card className="bg-gradient-to-r from-yellow-400 to-yellow-500 border-0">
-            <CardContent className="py-8">
-              <h3 className="text-2xl font-bold text-blue-900 mb-4">¿Necesitas ayuda para elegir?</h3>
-              <p className="text-blue-800 mb-6">
-                Nuestro equipo te ayudará a encontrar la opción perfecta para tu aventura
-              </p>
-              <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <Button 
-                  size="lg" 
-                  className="bg-blue-600 hover:bg-blue-700 text-white"
-                  onClick={() => window.open('tel:655707412', '_self')}
-                >
-                  Llamar Ahora
-                </Button>
-                <Button
-                  size="lg"
-                  variant="outline"
-                  className="border-blue-600 text-blue-600 hover:bg-blue-600 hover:text-white bg-transparent"
-                  onClick={() => window.open('https://wa.me/34655707412', '_blank')}
-                >
-                  WhatsApp
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
+            </Tabs>
+          </div>
         </div>
-      </div>
+      </section>
+
+      {/* Info Section */}
+      <section id="informacion" className="scroll-mt-24">
+        <div className="container mx-auto px-4 pb-16 md:pb-20">
+          <div className="rounded-[2rem] border border-slate-200 bg-white p-6 shadow-sm dark:border-white/10 dark:bg-slate-900/70 sm:p-8">
+            <SectionHeading
+              align="left"
+              title={
+                <span className="flex items-center gap-3">
+                  <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-yellow-400/20 text-yellow-600 dark:text-yellow-300">
+                    <Info className="h-5 w-5" />
+                  </span>
+                  Información Importante
+                </span>
+              }
+            />
+            <div className="mt-6 grid grid-cols-1 gap-6 md:grid-cols-2">
+              <div className="rounded-2xl bg-slate-50 p-5 dark:bg-white/5">
+                <h4 className="text-xs font-bold uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400">
+                  Incluido en el alquiler:
+                </h4>
+                <ul className="mt-3 space-y-2 text-sm font-medium text-slate-700 dark:text-slate-200">
+                  {[
+                    'Casco de seguridad homologado',
+                    'Seguro básico de responsabilidad civil',
+                    'Kit de reparación básico',
+                    'Candado de seguridad',
+                    'Mapa de rutas recomendadas',
+                  ].map((item) => (
+                    <li key={item} className="flex items-start gap-2">
+                      <Check className="mt-0.5 h-4 w-4 shrink-0 text-emerald-500" />
+                      <span>{item}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              <div className="rounded-2xl bg-slate-50 p-5 dark:bg-white/5">
+                <h4 className="text-xs font-bold uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400">
+                  Condiciones:
+                </h4>
+                <ul className="mt-3 space-y-2 text-sm font-medium text-slate-700 dark:text-slate-200">
+                  {[
+                    'Documento de identidad obligatorio',
+                    'Depósito de seguridad requerido',
+                    'Menores acompañados por adulto',
+                    'Horario: 9:00 - 22:00 todos los días',
+                    'Reserva anticipada recomendada',
+                  ].map((item) => (
+                    <li key={item} className="flex items-start gap-2">
+                      <Check className="mt-0.5 h-4 w-4 shrink-0 text-yellow-500" />
+                      <span>{item}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Contact CTA */}
+      <section id="ayuda" className="scroll-mt-24">
+        <div className="container mx-auto px-4 pb-16 md:pb-20">
+          <div className="rounded-[2rem] bg-gradient-to-r from-yellow-400 to-yellow-500 p-7 text-center shadow-sm sm:p-10">
+            <SectionHeading
+              align="center"
+              title="¿Necesitas ayuda para elegir?"
+              subtitle="Nuestro equipo te ayudará a encontrar la opción perfecta para tu aventura"
+              className="[&_h2]:text-blue-950 [&_p]:text-blue-900"
+            />
+            <div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
+              <Button
+                size="lg"
+                className="h-14 rounded-full bg-blue-900 px-8 font-bold text-white shadow-lg hover:bg-blue-800"
+                onClick={() => window.open('tel:655707412', '_self')}
+              >
+                Llamar Ahora
+              </Button>
+              <Button
+                size="lg"
+                variant="outline"
+                className="h-14 rounded-full border-blue-900/30 bg-white/70 px-8 font-bold text-blue-950 hover:bg-white"
+                onClick={() => window.open('https://wa.me/34655707412', '_blank')}
+              >
+                <MessageCircle className="mr-2 h-5 w-5" />
+                WhatsApp
+              </Button>
+            </div>
+          </div>
+        </div>
+      </section>
 
       {/* Reservation Modal */}
       <ReservationModal
@@ -1605,50 +1644,12 @@ export default function AlquilerPage() {
       )}
 
       {/* Footer */}
-      <footer className="bg-gradient-to-r from-yellow-400 to-yellow-500 text-black py-8">
-        <div className="container mx-auto px-4">
-          <div className="flex flex-col md:flex-row justify-between items-center">
-            <div className="flex items-center space-x-3 mb-4 md:mb-0">
-               <div className="flex items-center space-x-3">
-                 <Image src="/icon/iconf.png" alt="Free Air Street Logo" width={60} height={60} className="rounded" />
-                 <div>
-                   <h3 className="font-bold birthstone-regular">Free Air Street</h3>
-                   <p className="text-sm text-gray-700">Rent & Tours</p>
-                 </div>
-               </div>
-               
-               {/* Instagram Link */}
-               <a
-                 href="https://www.instagram.com/freeairstreet?igsh=d25kaDRkM3QwNGJ6"
-                 target="_blank"
-                 rel="noopener noreferrer"
-                 className="flex items-center space-x-2 bg-gradient-to-r from-purple-500 via-pink-500 to-orange-500 text-white px-4 py-2 rounded-lg hover:shadow-lg transition-all duration-300 transform hover:scale-105"
-               >
-                 <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
-                   <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
-                 </svg>
-                 <span className="font-semibold">freeairstreet</span>
-               </a>
-               
-               {/* WhatsApp Link */}
-               <a
-                 href="https://wa.me/34655707412"
-                 target="_blank"
-                 rel="noopener noreferrer"
-                 className="flex items-center justify-center px-4 py-2 bg-green-500 hover:bg-green-600 text-white rounded-lg hover:shadow-lg transition-all duration-300 transform hover:scale-105"
-               >
-                 <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
-                   <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893A11.821 11.821 0 0020.885 3.488"/>
-                 </svg>
-               </a>
-             </div>
-
-            <div className="text-center md:text-right">
-              <p className="text-gray-700">© 2025 Free Air Street. Todos los derechos reservados.</p>
-            </div>
-          </div>
-        </div>
-      </footer>
+      <SiteFooter
+        tagline="Rent & Tours"
+        rights="© 2025 Free Air Street. Todos los derechos reservados."
+        contactLabel={t('header.contact')}
+        backHomeLabel={language === 'en' ? 'Back to home' : 'Volver al inicio'}
+      />
     </div>
   )
 }

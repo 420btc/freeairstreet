@@ -17,6 +17,7 @@ const translations = {
     // Header
     'header.rental': 'Alquiler',
     'header.tours': 'Visitas Guiadas',
+    'header.routes': 'Rutas',
     'header.shop': 'Tienda',
     'header.contact': 'Contacto',
     'header.scanPrices': 'Rent a Quad',
@@ -371,6 +372,7 @@ const translations = {
     // Header
     'header.rental': 'Rental',
     'header.tours': 'Guided Tours',
+    'header.routes': 'Routes',
     'header.shop': 'Shop',
     'header.contact': 'Contact',
     'header.scanPrices': 'Rent a Quad',

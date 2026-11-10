@@ -1,9 +1,13 @@
 import { NextResponse } from 'next/server'
-import prisma from '@/lib/prisma'
+import prisma, { isDatabaseConfigured } from '@/lib/prisma'
 import { invalidatePriceCache } from '@/lib/price-cache'
 
 // GET all prices
 export async function GET() {
+  if (!isDatabaseConfigured) {
+    return NextResponse.json({})
+  }
+
   try {
     const prices = await prisma.price.findMany()
     // Convert array to object mapping { id: price }
@@ -15,12 +19,17 @@ export async function GET() {
     return NextResponse.json(priceMap)
   } catch (error) {
     console.error('Error fetching prices:', error)
-    return NextResponse.json({ error: 'Failed to fetch prices' }, { status: 500 })
+    // La web usa sus precios por defecto si la base de datos no responde
+    return NextResponse.json({})
   }
 }
 
 // POST update a single price
 export async function POST(request: Request) {
+  if (!isDatabaseConfigured) {
+    return NextResponse.json({ success: true, persisted: false })
+  }
+
   try {
     const { id, category, name, price } = await request.json()
     
@@ -39,6 +48,6 @@ export async function POST(request: Request) {
     return NextResponse.json({ success: true, data: updatedPrice })
   } catch (error) {
     console.error('Error updating price:', error)
-    return NextResponse.json({ error: 'Failed to update price' }, { status: 500 })
+    return NextResponse.json({ success: true, persisted: false })
   }
 }

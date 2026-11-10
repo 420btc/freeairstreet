@@ -3,12 +3,28 @@
 import type React from "react"
 
 import { useState, useEffect } from "react"
-import { ArrowLeft, Phone, Mail, MapPin, Clock, Send, CheckCircle, Menu, X, QrCode } from "lucide-react"
+import {
+  ArrowLeft,
+  CheckCircle,
+  Clock,
+  Mail,
+  MapPin,
+  Menu,
+  MessageCircle,
+  Phone,
+  QrCode,
+  Send,
+  Sparkles,
+  Star,
+  X,
+} from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Label } from "@/components/ui/label"
+import { PageHero } from "@/components/site/PageHero"
+import { SectionHeading } from "@/components/site/SectionHeading"
+import { SiteFooter } from "@/components/site/SiteFooter"
 import Image from "next/image"
 import Link from "next/link"
 import mapboxgl from "mapbox-gl"
@@ -17,8 +33,27 @@ import { ThemeToggle } from '../../components/ThemeToggle'
 import { sendContactEmail, sendAdvertisingEmail, type ContactFormData, type AdvertisingFormData } from '@/lib/emailjs'
 import { useLanguage } from '@/contexts/LanguageContext'
 
+const contactFaqs = [
+  {
+    question: "¿Necesito reservar con antelación?",
+    answer: "Recomendamos reservar con 24h de antelación, especialmente en temporada alta.",
+  },
+  {
+    question: "¿Qué documentos necesito?",
+    answer: "Para bicicletas: DNI. Para coches: carnet de conducir y tarjeta de crédito.",
+  },
+  {
+    question: "¿Incluye seguro?",
+    answer: "Sí, todos nuestros alquileres incluyen seguro básico de responsabilidad civil.",
+  },
+  {
+    question: "¿Puedo cancelar mi reserva?",
+    answer: "Sí, puedes cancelar hasta 24h antes sin coste. Consulta condiciones.",
+  },
+]
+
 export default function ContactoPage() {
-  const { t } = useLanguage()
+  const { t, language } = useLanguage()
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -159,21 +194,21 @@ export default function ContactoPage() {
 
   const contactInfo = [
     {
-      icon: <Phone className="h-6 w-6" />,
+      icon: <Phone className="h-5 w-5" />,
       title: t('contact.phone'),
       info: "655 707 412",
       description: t('contact.phoneHours'),
       href: "tel:+34655707412",
     },
     {
-      icon: <Mail className="h-6 w-6" />,
+      icon: <Mail className="h-5 w-5" />,
       title: t('contact.email'),
       info: "rentairstreet@gmail.com",
       description: t('contact.emailResponse'),
       href: "mailto:rentairstreet@gmail.com",
     },
     {
-      icon: <MapPin className="h-6 w-6" />,
+      icon: <MapPin className="h-5 w-5" />,
       title: t('contact.location'),
       info: "Calle de la Playa, 22",
       description: "29620 - Torremolinos",
@@ -186,57 +221,63 @@ export default function ContactoPage() {
     { day: t('contact.holidays'), hours: t('contact.holidayHours') },
   ]
 
+  const fieldClasses =
+    "mt-1 h-12 rounded-xl border-slate-300 bg-white text-base dark:border-white/15 dark:bg-white/5"
+
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen overflow-x-hidden bg-[#f5f6f8] text-slate-900 dark:bg-[#070d18] dark:text-slate-100">
       {/* Header */}
-      <header className="bg-gradient-to-r from-yellow-400 to-yellow-500 shadow-lg sticky top-0 z-50">
+      <header className="sticky top-0 z-50 bg-gradient-to-r from-yellow-400 to-yellow-500 shadow-lg">
         <div className="container mx-auto px-4">
-          <div className="flex items-center h-16">
+          <div className="flex h-16 items-center">
              {/* Back Arrow */}
               <Link href="/">
-                <Button variant="ghost" size="lg" className="text-blue-900 hover:text-blue-700 navbar-back-button p-4">
+                <Button variant="ghost" size="lg" className="navbar-back-button p-4 text-blue-900 hover:text-blue-700">
                   <ArrowLeft className="h-12 w-12" />
                 </Button>
               </Link>
 
             {/* Logo */}
-            <Link href="/" className="flex items-center justify-center sm:justify-start leading-3 font-mono italic tracking-tighter space-x-4 sm:space-x-12 hover:opacity-80 transition-opacity cursor-pointer">
+            <Link href="/" className="flex cursor-pointer items-center justify-center space-x-4 font-mono italic leading-3 tracking-tighter transition-opacity hover:opacity-80 sm:justify-start lg:space-x-8">
               <Image src="/icon/iconf.png" alt="Free Air Street Logo" width={64} height={64} className="rounded" />
-              <div className="hidden md:block text-center sm:text-left">
-                <h1 className="text-2xl sm:text-4xl font-black text-blue-900 navbar-title birthstone-regular leading-tight">Free Air Street</h1>
-                <p className="hidden sm:block text-2xl text-blue-800 navbar-subtitle birthstone-regular -mt-3">Rent & Tours</p>
+              <div className="hidden text-center sm:text-left md:block">
+                <h1 className="birthstone-regular navbar-title text-2xl font-black leading-tight text-blue-900 sm:text-4xl">Free Air Street</h1>
+                <p className="birthstone-regular navbar-subtitle -mt-3 hidden text-2xl text-blue-800 sm:block">Rent &amp; Tours</p>
               </div>
             </Link>
 
              {/* Desktop Navigation - Centered */}
-             <nav className="hidden md:flex space-x-8 flex-1 justify-center">
-               <Link href="/alquiler" className="text-blue-900 hover:text-blue-700 navbar-desktop-link font-medium transition-colors">
+             <nav className="hidden flex-1 justify-center space-x-4 md:flex lg:space-x-8">
+               <Link href="/alquiler" className="navbar-desktop-link font-medium text-blue-900 transition-colors hover:text-blue-700">
                  {t('header.rental')}
                </Link>
-               <Link href="/tours" className="text-blue-900 hover:text-blue-700 navbar-desktop-link font-medium transition-colors">
+               <Link href="/tours" className="navbar-desktop-link font-medium text-blue-900 transition-colors hover:text-blue-700">
                  {t('header.tours')}
                </Link>
-               <Link href="/tienda" className="text-blue-900 hover:text-blue-700 navbar-desktop-link font-medium transition-colors">
+               <Link href="/rutas" className="navbar-desktop-link font-medium text-blue-900 transition-colors hover:text-blue-700">
+                 {t('header.routes')}
+               </Link>
+               <Link href="/tienda" className="navbar-desktop-link font-medium text-blue-900 transition-colors hover:text-blue-700">
                  {t('header.shop')}
                </Link>
-               <Link href="/contacto" className="text-blue-900 hover:text-blue-700 navbar-desktop-link font-medium transition-colors border-b-2 border-blue-900">
+               <Link href="/contacto" className="navbar-desktop-link border-b-2 border-blue-900 font-medium text-blue-900 transition-colors hover:text-blue-700">
                  {t('header.contact')}
                </Link>
              </nav>
 
              {/* Page Title for Mobile - Centered */}
-             <div className="md:hidden flex-1 text-center">
-               <h1 className="text-lg font-bold text-blue-900 navbar-title">{t('header.contact')}</h1>
+             <div className="flex-1 text-center md:hidden">
+               <h1 className="navbar-title text-lg font-bold text-blue-900">{t('header.contact')}</h1>
              </div>
 
              {/* QR Code, Language Toggle and Mobile Menu */}
              <div className="flex items-center space-x-4">
                <div 
-                 className="hidden sm:flex items-center space-x-2 bg-white/20 rounded-lg px-3 py-2 cursor-pointer hover:bg-white/30 transition-colors"
+                 className="hidden cursor-pointer items-center space-x-2 rounded-lg border border-white/20 bg-white/20 px-3 py-2 transition-colors hover:bg-white/30 sm:flex"
                  onClick={() => setIsQrModalOpen(true)}
                >
                  <QrCode className="h-5 w-5 text-blue-900" />
-                 <span className="text-sm text-blue-900 font-medium">Rent a Quad</span>
+                 <span className="text-sm font-medium text-blue-900">Rent a Quad</span>
                </div>
 
                {/* Language Toggle and Theme Toggle */}
@@ -247,45 +288,56 @@ export default function ContactoPage() {
                  </div>
                </div>
 
-               <button className="md:hidden text-blue-900 navbar-mobile-button" onClick={() => setIsMenuOpen(!isMenuOpen)}>
-                 {isMenuOpen ? <X className="h-6 w-6 navbar-mobile-icon" /> : <Menu className="h-6 w-6 navbar-mobile-icon" />}
+               <button
+                 className="navbar-mobile-button text-blue-900 md:hidden"
+                 onClick={() => setIsMenuOpen(!isMenuOpen)}
+                 aria-label="Menu"
+               >
+                 {isMenuOpen ? <X className="navbar-mobile-icon h-6 w-6" /> : <Menu className="navbar-mobile-icon h-6 w-6" />}
                </button>
              </div>
            </div>
 
           {/* Mobile Navigation */}
           {isMenuOpen && (
-            <div className="md:hidden py-4 border-t border-yellow-500 animate-slideDown">
+            <div className="animate-slideDown border-t border-yellow-600 py-4 md:hidden">
               <nav className="flex flex-col space-y-4">
                 <Link 
                   href="/alquiler" 
-                  className="text-blue-900 hover:text-blue-700 navbar-mobile-text font-medium animate-fadeInUp"
+                  className="navbar-mobile-text font-medium text-blue-900 hover:text-blue-700 animate-fadeInUp"
                   style={{ animationDelay: '0.1s' }}
                 >
                   <span className="animate-typewriter">{t('header.rental')}</span>
                 </Link>
                 <Link 
                   href="/tours" 
-                  className="text-blue-900 hover:text-blue-700 navbar-mobile-text font-medium animate-fadeInUp"
+                  className="navbar-mobile-text font-medium text-blue-900 hover:text-blue-700 animate-fadeInUp"
                   style={{ animationDelay: '0.2s' }}
                 >
                   <span className="animate-typewriter" style={{ animationDelay: '0.2s' }}>{t('header.tours')}</span>
                 </Link>
                 <Link 
-                  href="/tienda" 
-                  className="text-blue-900 hover:text-blue-700 navbar-mobile-text font-medium animate-fadeInUp"
+                  href="/rutas" 
+                  className="navbar-mobile-text font-medium text-blue-900 hover:text-blue-700 animate-fadeInUp"
                   style={{ animationDelay: '0.3s' }}
                 >
-                  <span className="animate-typewriter" style={{ animationDelay: '0.3s' }}>{t('header.shop')}</span>
+                  <span className="animate-typewriter" style={{ animationDelay: '0.3s' }}>{t('header.routes')}</span>
+                </Link>
+                <Link 
+                  href="/tienda" 
+                  className="navbar-mobile-text font-medium text-blue-900 hover:text-blue-700 animate-fadeInUp"
+                  style={{ animationDelay: '0.4s' }}
+                >
+                  <span className="animate-typewriter" style={{ animationDelay: '0.4s' }}>{t('header.shop')}</span>
                 </Link>
                 <Link 
                   href="/contacto" 
-                  className="text-blue-900 hover:text-blue-700 navbar-mobile-text font-medium border-l-4 border-blue-900 pl-2 animate-fadeInUp"
-                  style={{ animationDelay: '0.4s' }}
+                  className="navbar-mobile-text border-l-4 border-blue-900 pl-2 font-medium text-blue-900 animate-fadeInUp"
+                  style={{ animationDelay: '0.5s' }}
                 >
-                  <span className="animate-typewriter" style={{ animationDelay: '0.4s' }}>{t('header.contact')}</span>
+                  <span className="animate-typewriter" style={{ animationDelay: '0.5s' }}>{t('header.contact')}</span>
                 </Link>
-                <div className="flex items-center space-x-4 pt-4 border-t border-yellow-500 animate-fadeInUp" style={{ animationDelay: '0.5s' }}>
+                <div className="flex items-center space-x-4 border-t border-yellow-600 pt-4 animate-fadeInUp" style={{ animationDelay: '0.6s' }}>
                   <LanguageToggle />
                   <ThemeToggle />
                 </div>
@@ -295,207 +347,297 @@ export default function ContactoPage() {
         </div>
       </header>
 
-      <div className="container mx-auto px-4 py-6">
-        {/* Título y Subtítulo */}
-        <div className="text-center mb-12">
-          <h1 className="text-4xl md:text-5xl font-bold text-black mb-4">
-            {t('contact.title')}
-          </h1>
-          <p className="text-lg md:text-xl text-gray-700 max-w-3xl mx-auto mb-8">
-            {t('contact.subtitle')}
-          </p>
-          
-          {/* Imagen Banana World y Texto */}
-          <div className="flex flex-col lg:flex-row items-center gap-8 mb-8">
-            {/* Imagen a la izquierda en desktop */}
-            <div className="lg:w-1/2">
-              <Image 
-                src="/banana-world-hero.png" 
-                alt="Banana World" 
-                width={800} 
-                height={400} 
-                className="max-w-full h-auto"
-                priority
-              />
-            </div>
-            
-            {/* Texto a la derecha en desktop */}
-            <div className="lg:w-1/2 text-center lg:text-left">
-              <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-4">
-                 Únete a nosotros para vivir la aventura perfecta
-               </h2>
-              <p className="text-lg md:text-xl text-gray-600 leading-relaxed">
-                Descubre Málaga de una forma única con nuestros vehículos de alquiler. 
-                Desde bicicletas eléctricas hasta quads, tenemos todo lo que necesitas 
-                para explorar la ciudad y sus alrededores con total libertad.
-              </p>
-            </div>
+      {/* Hero */}
+      <PageHero
+        badge={
+          <>
+            <Sparkles className="h-4 w-4" />
+            {language === 'en' ? 'We are here' : 'Estamos aquí'}
+          </>
+        }
+        title={t('contact.title')}
+        subtitle={t('contact.subtitle')}
+        image="/hero.png"
+        imageAlt="Free Air Street · Torremolinos"
+        stats={[
+          { value: "24h", label: t('contact.emailResponse'), icon: <Mail className="h-5 w-5" /> },
+          { value: "9:00 – 22:00", label: t('contact.hours'), icon: <Clock className="h-5 w-5" /> },
+          { value: "655 707 412", label: "WhatsApp", icon: <MessageCircle className="h-5 w-5" /> },
+          { value: "Torremolinos", label: t('contact.location'), icon: <MapPin className="h-5 w-5" /> },
+        ]}
+        actions={
+          <>
+            <Button asChild className="h-14 rounded-full bg-yellow-400 px-8 text-base font-bold text-blue-950 shadow-xl shadow-yellow-400/20 hover:-translate-y-0.5 hover:bg-yellow-300">
+              <a href="#contacto">
+                <Send className="h-5 w-5" />
+                {t('contact.form.send')}
+              </a>
+            </Button>
+            <Button asChild variant="outline" className="h-14 rounded-full border-white/25 bg-white/5 px-8 text-base font-semibold text-white backdrop-blur-md hover:bg-white/15 hover:text-white">
+              <a href="https://wa.me/34655707412" target="_blank" rel="noopener noreferrer">
+                <MessageCircle className="h-5 w-5" />
+                WhatsApp
+              </a>
+            </Button>
+          </>
+        }
+      />
+
+      {/* Presentación */}
+      <section className="container mx-auto px-4 py-14 md:py-16">
+        <div className="grid overflow-hidden rounded-[2rem] border border-slate-200 bg-white shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl dark:border-white/10 dark:bg-slate-900/70 lg:grid-cols-2 lg:items-center">
+          <div className="relative flex items-center justify-center bg-gradient-to-br from-blue-950 via-blue-900 to-slate-900 p-4">
+            <Image
+              src="/banana-world-hero.png"
+              alt="Banana World"
+              width={800}
+              height={400}
+              className="h-auto w-full max-w-full object-contain"
+              priority
+            />
+          </div>
+
+          <div className="p-6 sm:p-10 lg:py-12">
+            <span className="inline-flex items-center gap-2 rounded-full border border-yellow-300/40 bg-yellow-400/15 px-3 py-1.5 text-[11px] font-bold uppercase tracking-[0.18em] text-yellow-700 dark:text-yellow-300">
+              <Star className="h-3.5 w-3.5" />
+              Free Air Street
+            </span>
+            <h2 className="mt-4 text-3xl font-black leading-tight tracking-tight md:text-4xl">
+              Únete a nosotros para vivir la aventura perfecta
+            </h2>
+            <p className="mt-4 text-base leading-relaxed text-slate-600 dark:text-slate-400 sm:text-lg">
+              Descubre Málaga de una forma única con nuestros vehículos de alquiler. 
+              Desde bicicletas eléctricas hasta quads, tenemos todo lo que necesitas 
+              para explorar la ciudad y sus alrededores con total libertad.
+            </p>
           </div>
         </div>
+      </section>
 
-        <div className="grid grid-cols-1 xl:grid-cols-4 lg:grid-cols-3 gap-6">
+      {/* Contacto */}
+      <section id="contacto" className="container mx-auto scroll-mt-24 px-4 pb-16 md:pb-20">
+        <SectionHeading
+          eyebrow={t('contact.info.title')}
+          title={t('contact.form.title')}
+          subtitle={t('contact.form.description')}
+        />
+
+        <div className="mt-10 grid grid-cols-1 gap-6 lg:grid-cols-3">
           {/* Contact Form */}
-          <Card className="order-2 lg:order-1 xl:col-span-3 lg:col-span-2">
-            <CardHeader>
-              <CardTitle className="text-xl text-gray-900">{t('contact.form.title')}</CardTitle>
-              <CardDescription>
-                {t('contact.form.description')}
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
+          <div className="lg:col-span-2">
+            <div className="h-full rounded-[2rem] border border-slate-200 bg-white p-6 shadow-sm dark:border-white/10 dark:bg-slate-900/70 sm:p-8">
               {isSubmitted ? (
-                <div className="text-center py-8">
-                  <CheckCircle className="h-16 w-16 text-green-500 mx-auto mb-4" />
-                  <h3 className="text-xl font-semibold text-gray-900 mb-2">{t('contact.form.success')}</h3>
-                  <p className="text-gray-600 mb-4">
+                <div className="flex h-full flex-col items-center justify-center py-10 text-center">
+                  <span className="flex h-16 w-16 items-center justify-center rounded-full bg-emerald-500/15 text-emerald-600 dark:text-emerald-300">
+                    <CheckCircle className="h-8 w-8" />
+                  </span>
+                  <h3 className="mt-5 text-2xl font-black">{t('contact.form.success')}</h3>
+                  <p className="mt-2 max-w-md text-slate-600 dark:text-slate-400">
                     {t('contact.form.successMessage')}
                   </p>
-                  <Button onClick={() => {
-                    setIsSubmitted(false)
-                    setSubmitError(null)
-                  }} className="bg-blue-600 hover:bg-blue-700">
+                  <Button
+                    onClick={() => {
+                      setIsSubmitted(false)
+                      setSubmitError(null)
+                    }}
+                    className="mt-6 h-12 rounded-full bg-blue-900 px-6 font-semibold text-white hover:bg-blue-800 dark:bg-yellow-400 dark:text-blue-950 dark:hover:bg-yellow-300"
+                  >
                     {t('contact.form.sendAnother')}
                   </Button>
                 </div>
               ) : (
                 <>
                   {submitError && (
-                    <div className="mb-4 p-4 bg-red-50 rounded-lg border border-red-200">
-                      <p className="text-red-700">{submitError}</p>
+                    <div className="mb-6 rounded-2xl border border-red-200 bg-red-50 p-4 dark:border-red-500/30 dark:bg-red-500/10">
+                      <p className="text-sm font-medium text-red-700 dark:text-red-300">{submitError}</p>
                     </div>
                   )}
                   <form onSubmit={handleSubmit} className="space-y-6">
-                  <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+                    <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
+                      <div>
+                        <Label htmlFor="name" className="text-sm font-semibold">{t('contact.form.name')} *</Label>
+                        <Input
+                          id="name"
+                          name="name"
+                          type="text"
+                          value={formData.name}
+                          onChange={handleInputChange}
+                          required
+                          className={fieldClasses}
+                          placeholder={t('contact.form.namePlaceholder') as string}
+                        />
+                      </div>
+                      <div>
+                        <Label htmlFor="phone" className="text-sm font-semibold">{t('contact.form.phone')} *</Label>
+                        <Input
+                          id="phone"
+                          name="phone"
+                          type="tel"
+                          value={formData.phone}
+                          onChange={handleInputChange}
+                          required
+                          className={fieldClasses}
+                          placeholder={t('contact.form.phonePlaceholder') as string}
+                        />
+                      </div>
+                      <div>
+                        <Label htmlFor="email" className="text-sm font-semibold">{t('contact.form.email')} *</Label>
+                        <Input
+                          id="email"
+                          name="email"
+                          type="email"
+                          value={formData.email}
+                          onChange={handleInputChange}
+                          required
+                          className={fieldClasses}
+                          placeholder={t('contact.form.emailPlaceholder') as string}
+                        />
+                      </div>
+                    </div>
+
                     <div>
-                      <Label htmlFor="name" className="text-base font-medium">{t('contact.form.name')} *</Label>
+                      <Label htmlFor="subject" className="text-sm font-semibold">{t('contact.form.subject')} *</Label>
                       <Input
-                        id="name"
-                        name="name"
+                        id="subject"
+                        name="subject"
                         type="text"
-                        value={formData.name}
+                        value={formData.subject}
                         onChange={handleInputChange}
                         required
-                        className="mt-1 h-11"
-                        placeholder={t('contact.form.namePlaceholder') as string}
+                        className={fieldClasses}
+                        placeholder={t('contact.form.subjectPlaceholder') as string}
                       />
                     </div>
+
                     <div>
-                      <Label htmlFor="phone" className="text-base font-medium">{t('contact.form.phone')} *</Label>
-                      <Input
-                        id="phone"
-                        name="phone"
-                        type="tel"
-                        value={formData.phone}
+                      <Label htmlFor="message" className="text-sm font-semibold">{t('contact.form.message')} *</Label>
+                      <Textarea
+                        id="message"
+                        name="message"
+                        value={formData.message}
                         onChange={handleInputChange}
                         required
-                        className="mt-1 h-11"
-                        placeholder={t('contact.form.phonePlaceholder') as string}
+                        className="mt-1 min-h-[140px] rounded-xl border-slate-300 bg-white text-base dark:border-white/15 dark:bg-white/5"
+                        placeholder={t('contact.form.messagePlaceholder') as string}
                       />
                     </div>
-                    <div>
-                      <Label htmlFor="email" className="text-base font-medium">{t('contact.form.email')} *</Label>
-                      <Input
-                        id="email"
-                        name="email"
-                        type="email"
-                        value={formData.email}
-                        onChange={handleInputChange}
-                        required
-                        className="mt-1 h-11"
-                        placeholder={t('contact.form.emailPlaceholder') as string}
-                      />
-                    </div>
-                  </div>
 
-                  <div>
-                    <Label htmlFor="subject" className="text-base font-medium">{t('contact.form.subject')} *</Label>
-                    <Input
-                      id="subject"
-                      name="subject"
-                      type="text"
-                      value={formData.subject}
-                      onChange={handleInputChange}
-                      required
-                      className="mt-1 h-11"
-                      placeholder={t('contact.form.subjectPlaceholder') as string}
-                    />
-                  </div>
-
-                  <div>
-                    <Label htmlFor="message" className="text-base font-medium">{t('contact.form.message')} *</Label>
-                    <Textarea
-                      id="message"
-                      name="message"
-                      value={formData.message}
-                      onChange={handleInputChange}
-                      required
-                      className="mt-1 min-h-[120px] text-base"
-                      placeholder={t('contact.form.messagePlaceholder') as string}
-                    />
-                  </div>
-
-                  <Button
-                    type="submit"
-                    disabled={isSubmitting}
-                    className="w-full bg-blue-600 hover:bg-blue-700 text-white h-12 text-base font-semibold"
-                  >
-                    {isSubmitting ? (
-                      <>
-                        <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-                        {t('contact.form.sending')}
-                      </>
-                    ) : (
-                      <>
-                        <Send className="h-4 w-4 mr-2" />
-                        {t('contact.form.send')}
-                      </>
-                    )}
-                  </Button>
-                </form>
+                    <Button
+                      type="submit"
+                      disabled={isSubmitting}
+                      className="h-14 w-full rounded-full bg-blue-900 text-base font-bold text-white shadow-lg transition hover:-translate-y-0.5 hover:bg-blue-800 dark:bg-yellow-400 dark:text-blue-950 dark:hover:bg-yellow-300"
+                    >
+                      {isSubmitting ? (
+                        <>
+                          <span className="mr-2 h-4 w-4 animate-spin rounded-full border-b-2 border-white dark:border-blue-950"></span>
+                          {t('contact.form.sending')}
+                        </>
+                      ) : (
+                        <>
+                          <Send className="h-5 w-5" />
+                          {t('contact.form.send')}
+                        </>
+                      )}
+                    </Button>
+                  </form>
                 </>
               )}
-            </CardContent>
-          </Card>
+            </div>
+          </div>
 
-          {/* Advertising Request Form */}
-          <Card className="order-3 xl:col-span-4 lg:col-span-3 col-span-1 mt-6 bg-gradient-to-br from-orange-50 to-yellow-50 border-orange-200">
-            <CardHeader>
-              <CardTitle className="text-xl text-orange-800 flex items-center">
-                <svg className="w-6 h-6 mr-2" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
-                </svg>
-                Solicitar Publicidad
-              </CardTitle>
-              <CardDescription className="text-orange-700">
-                ¿Tienes un negocio? Solicita información sobre nuestros espacios publicitarios en la web y en nuestra tienda física.
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
+          {/* Contact Information */}
+          <aside className="space-y-4">
+            {contactInfo.map((contact, index) => (
+              <div
+                key={index}
+                className="rounded-[2rem] border border-slate-200 bg-white p-5 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl dark:border-white/10 dark:bg-slate-900/70"
+              >
+                <div className="flex items-start gap-3">
+                  <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-yellow-400 text-blue-950">
+                    {contact.icon}
+                  </span>
+                  <div className="min-w-0 flex-1">
+                    <h3 className="text-[11px] font-bold uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400">
+                      {contact.title}
+                    </h3>
+                    <a
+                      href={contact.href}
+                      className="mt-1 block break-words text-sm font-bold text-blue-900 transition hover:text-blue-700 dark:text-yellow-300 dark:hover:text-yellow-200"
+                      target={contact.href.startsWith("http") ? "_blank" : undefined}
+                      rel={contact.href.startsWith("http") ? "noopener noreferrer" : undefined}
+                    >
+                      {contact.info}
+                    </a>
+                    <p className="mt-0.5 text-xs text-slate-600 dark:text-slate-400">{contact.description}</p>
+                  </div>
+                </div>
+              </div>
+            ))}
+
+            {/* Business Hours */}
+            <div className="rounded-[2rem] border border-slate-200 bg-white p-5 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl dark:border-white/10 dark:bg-slate-900/70">
+              <div className="flex items-center gap-3">
+                <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-yellow-400 text-blue-950">
+                  <Clock className="h-5 w-5" />
+                </span>
+                <h3 className="text-[11px] font-bold uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400">
+                  {t('contact.hours')}
+                </h3>
+              </div>
+              <div className="mt-4 space-y-2">
+                {businessHours.map((schedule, index) => (
+                  <div key={index} className="flex items-center justify-between gap-3 border-b border-slate-100 pb-2 last:border-0 last:pb-0 dark:border-white/10">
+                    <span className="text-xs text-slate-600 dark:text-slate-400">{schedule.day}</span>
+                    <span className="text-xs font-bold">{schedule.hours}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </aside>
+        </div>
+      </section>
+
+      {/* Advertising Request Form */}
+      <section className="border-y border-slate-200/70 bg-white/60 py-14 backdrop-blur-sm dark:border-white/5 dark:bg-white/[0.02] md:py-20">
+        <div className="container mx-auto px-4">
+          <SectionHeading
+            eyebrow={language === 'en' ? 'Business' : 'Negocios'}
+            title="Solicitar Publicidad"
+            subtitle="¿Tienes un negocio? Solicita información sobre nuestros espacios publicitarios en la web y en nuestra tienda física."
+          />
+
+          <div className="mx-auto mt-10 max-w-5xl overflow-hidden rounded-[2rem] border border-amber-200/80 bg-gradient-to-br from-amber-50 via-white to-yellow-50 shadow-sm dark:border-amber-400/20 dark:from-slate-900/80 dark:via-slate-900/70 dark:to-slate-900/60">
+            <div className="p-6 sm:p-8">
               {isAdvertisingSubmitted ? (
-                <div className="text-center py-6">
-                  <CheckCircle className="h-12 w-12 text-green-500 mx-auto mb-3" />
-                  <h3 className="text-lg font-semibold text-gray-900 mb-2">¡Solicitud Enviada!</h3>
-                  <p className="text-gray-600 mb-4">
+                <div className="flex flex-col items-center justify-center py-8 text-center">
+                  <span className="flex h-14 w-14 items-center justify-center rounded-full bg-emerald-500/15 text-emerald-600 dark:text-emerald-300">
+                    <CheckCircle className="h-7 w-7" />
+                  </span>
+                  <h3 className="mt-4 text-2xl font-black">¡Solicitud Enviada!</h3>
+                  <p className="mt-2 max-w-md text-slate-600 dark:text-slate-400">
                     Hemos recibido tu solicitud de publicidad. Te contactaremos pronto con más información.
                   </p>
-                  <Button onClick={() => {
-                    setIsAdvertisingSubmitted(false)
-                    setAdvertisingSubmitError(null)
-                  }} className="bg-orange-600 hover:bg-orange-700">
+                  <Button
+                    onClick={() => {
+                      setIsAdvertisingSubmitted(false)
+                      setAdvertisingSubmitError(null)
+                    }}
+                    className="mt-6 h-12 rounded-full bg-orange-600 px-6 font-semibold text-white hover:bg-orange-700"
+                  >
                     Enviar Otra Solicitud
                   </Button>
                 </div>
               ) : (
                 <>
                   {advertisingSubmitError && (
-                    <div className="mb-4 p-3 bg-red-50 rounded-lg border border-red-200">
-                      <p className="text-red-700 text-sm">{advertisingSubmitError}</p>
+                    <div className="mb-6 rounded-2xl border border-red-200 bg-red-50 p-4 dark:border-red-500/30 dark:bg-red-500/10">
+                      <p className="text-sm font-medium text-red-700 dark:text-red-300">{advertisingSubmitError}</p>
                     </div>
                   )}
-                  <form onSubmit={handleAdvertisingSubmit} className="space-y-4">
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                  <form onSubmit={handleAdvertisingSubmit} className="space-y-5">
+                    <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                       <div>
-                        <Label htmlFor="adv-name" className="text-sm font-medium text-orange-800">Nombre del Negocio *</Label>
+                        <Label htmlFor="adv-name" className="text-sm font-semibold">Nombre del Negocio *</Label>
                         <Input
                           id="adv-name"
                           name="businessName"
@@ -503,12 +645,12 @@ export default function ContactoPage() {
                           value={advertisingFormData.businessName}
                           onChange={handleAdvertisingInputChange}
                           required
-                          className="mt-1 h-10 border-orange-200 focus:border-orange-400"
+                          className={fieldClasses}
                           placeholder="Nombre de tu empresa o negocio"
                         />
                       </div>
                       <div>
-                        <Label htmlFor="adv-contact" className="text-sm font-medium text-orange-800">Contacto *</Label>
+                        <Label htmlFor="adv-contact" className="text-sm font-semibold">Contacto *</Label>
                         <Input
                           id="adv-contact"
                           name="contactPerson"
@@ -516,15 +658,15 @@ export default function ContactoPage() {
                           value={advertisingFormData.contactPerson}
                           onChange={handleAdvertisingInputChange}
                           required
-                          className="mt-1 h-10 border-orange-200 focus:border-orange-400"
+                          className={fieldClasses}
                           placeholder="Tu nombre"
                         />
                       </div>
                     </div>
                     
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                    <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                       <div>
-                        <Label htmlFor="adv-email" className="text-sm font-medium text-orange-800">Email *</Label>
+                        <Label htmlFor="adv-email" className="text-sm font-semibold">Email *</Label>
                         <Input
                           id="adv-email"
                           name="email"
@@ -532,33 +674,33 @@ export default function ContactoPage() {
                           value={advertisingFormData.email}
                           onChange={handleAdvertisingInputChange}
                           required
-                          className="mt-1 h-10 border-orange-200 focus:border-orange-400"
+                          className={fieldClasses}
                           placeholder="tu@email.com"
                         />
                       </div>
                       <div>
-                        <Label htmlFor="adv-phone" className="text-sm font-medium text-orange-800">Teléfono</Label>
+                        <Label htmlFor="adv-phone" className="text-sm font-semibold">Teléfono</Label>
                         <Input
                           id="adv-phone"
                           name="phone"
                           type="tel"
                           value={advertisingFormData.phone}
                           onChange={handleAdvertisingInputChange}
-                          className="mt-1 h-10 border-orange-200 focus:border-orange-400"
+                          className={fieldClasses}
                           placeholder="655 123 456"
                         />
                       </div>
                     </div>
 
-                    <div className="lg:col-span-2 xl:col-span-3">
-                      <Label htmlFor="adv-type" className="text-sm font-medium text-orange-800">Tipo de Publicidad *</Label>
+                    <div>
+                      <Label htmlFor="adv-type" className="text-sm font-semibold">Tipo de Publicidad *</Label>
                       <select
                         id="adv-type"
                         name="advertisingType"
                         value={advertisingFormData.advertisingType}
                         onChange={handleAdvertisingInputChange}
                         required
-                        className="mt-1 w-full h-10 px-3 border border-orange-200 rounded-md focus:border-orange-400 focus:ring-1 focus:ring-orange-400"
+                        className="mt-1 h-12 w-full rounded-xl border border-slate-300 bg-white px-3 text-sm outline-none transition focus:border-yellow-400 focus:ring-2 focus:ring-yellow-300/50 dark:border-white/15 dark:bg-slate-900"
                       >
                         <option value="">Selecciona una opción</option>
                         <option value="web">Solo en la web</option>
@@ -568,13 +710,13 @@ export default function ContactoPage() {
                     </div>
 
                     <div>
-                      <Label htmlFor="adv-message" className="text-sm font-medium text-orange-800">Mensaje</Label>
+                      <Label htmlFor="adv-message" className="text-sm font-semibold">Mensaje</Label>
                       <Textarea
                         id="adv-message"
                         name="message"
                         value={advertisingFormData.message}
                         onChange={handleAdvertisingInputChange}
-                        className="mt-1 min-h-[80px] text-sm border-orange-200 focus:border-orange-400"
+                        className="mt-1 min-h-[110px] rounded-xl border-slate-300 bg-white text-base dark:border-white/15 dark:bg-white/5"
                         placeholder="Cuéntanos sobre tu negocio y qué tipo de publicidad te interesa..."
                       />
                     </div>
@@ -582,18 +724,16 @@ export default function ContactoPage() {
                     <Button
                       type="submit"
                       disabled={isAdvertisingSubmitting}
-                      className="w-full bg-orange-600 hover:bg-orange-700 text-white h-10 text-sm font-semibold"
+                      className="h-14 w-full rounded-full bg-orange-600 text-base font-bold text-white shadow-lg transition hover:-translate-y-0.5 hover:bg-orange-700"
                     >
                       {isAdvertisingSubmitting ? (
                         <>
-                          <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                          <span className="mr-2 h-4 w-4 animate-spin rounded-full border-b-2 border-white"></span>
                           Enviando...
                         </>
                       ) : (
                         <>
-                          <svg className="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 24 24">
-                            <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>
-                          </svg>
+                          <Send className="h-5 w-5" />
                           Solicitar Información
                         </>
                       )}
@@ -601,132 +741,92 @@ export default function ContactoPage() {
                   </form>
                 </>
               )}
-            </CardContent>
-          </Card>
-
-          {/* Contact Information */}
-          <div className="order-1 lg:order-2 space-y-4">
-            {/* Contact Cards */}
-            <div className="space-y-3">
-              {contactInfo.map((contact, index) => (
-                <Card key={index} className="hover:shadow-lg transition-shadow">
-                  <CardContent className="p-4">
-                    <div className="flex items-center space-x-3">
-                      <div className="p-2 bg-yellow-400 rounded-full text-blue-600">{contact.icon}</div>
-                      <div className="flex-1 min-w-0">
-                        <h3 className="font-semibold text-gray-900 text-sm mb-1">{contact.title}</h3>
-                        <a
-                          href={contact.href}
-                          className="text-blue-600 hover:text-blue-700 font-medium block mb-1 text-sm truncate"
-                          target={contact.href.startsWith("http") ? "_blank" : undefined}
-                          rel={contact.href.startsWith("http") ? "noopener noreferrer" : undefined}
-                        >
-                          {contact.info}
-                        </a>
-                        <p className="text-xs text-gray-600">{contact.description}</p>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              ))}
             </div>
-
-            {/* Business Hours */}
-            <Card className="hover:shadow-lg transition-shadow">
-              <CardContent className="p-4">
-                <div className="flex items-center space-x-3">
-                  <div className="p-2 bg-yellow-400 rounded-full text-blue-600">
-                    <Clock className="h-6 w-6" />
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <h3 className="font-semibold text-gray-900 text-sm mb-1">{t('contact.hours')}</h3>
-                    <div className="space-y-1">
-                      {businessHours.map((schedule, index) => (
-                        <div key={index} className="flex justify-between items-center">
-                          <span className="text-gray-600 text-xs">{schedule.day}</span>
-                          <span className="text-gray-700 text-xs font-medium">{schedule.hours}</span>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-
-
           </div>
         </div>
+      </section>
 
-        {/* Location Map */}
-        <Card className="mt-8">
-          <CardHeader>
-            <CardTitle className="text-gray-900 text-xl">Nuestra Ubicación</CardTitle>
-            <CardDescription className="text-base">Calle de la Playa, 22 - 29620 Torremolinos</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div id="contact-mapbox-container" className="aspect-video rounded-lg overflow-hidden shadow-lg mb-4"></div>
+      {/* Location Map */}
+      <section className="container mx-auto px-4 py-16 md:py-20">
+        <div className="overflow-hidden rounded-[2rem] border border-slate-200 bg-white shadow-sm dark:border-white/10 dark:bg-slate-900/70">
+          <div className="flex flex-col gap-3 border-b border-slate-200 p-6 dark:border-white/10 sm:p-8 md:flex-row md:items-end md:justify-between">
+            <div>
+              <p className="text-xs font-bold uppercase tracking-[0.24em] text-yellow-600 dark:text-yellow-400">Cómo llegar</p>
+              <h2 className="mt-2 text-3xl font-black tracking-tight md:text-4xl">Nuestra Ubicación</h2>
+              <p className="mt-2 text-sm text-slate-600 dark:text-slate-400 sm:text-base">
+                Calle de la Playa, 22 - 29620 Torremolinos
+              </p>
+            </div>
+            <span className="inline-flex w-fit items-center gap-2 rounded-full border border-slate-200 px-3 py-1.5 text-xs font-semibold text-slate-600 dark:border-white/10 dark:text-slate-300">
+              <MapPin className="h-3.5 w-3.5 text-yellow-500" />
+              La Colina · Torremolinos
+            </span>
+          </div>
+          <div className="p-4 sm:p-6">
+            <div
+              id="contact-mapbox-container"
+              className="aspect-video w-full overflow-hidden rounded-2xl border border-slate-200 shadow-inner dark:border-white/10"
+            ></div>
             <Button
-              className="w-full bg-blue-600 hover:bg-blue-700 text-white py-3"
+              className="mt-4 h-14 w-full rounded-full bg-blue-900 text-base font-bold text-white shadow-lg transition hover:-translate-y-0.5 hover:bg-blue-800 dark:bg-yellow-400 dark:text-blue-950 dark:hover:bg-yellow-300"
               onClick={() => window.open("https://maps.google.com/?q=Calle+de+la+Playa+22+Torremolinos", "_blank")}
             >
-              <MapPin className="h-5 w-5 mr-2" />
+              <MapPin className="h-5 w-5" />
               Ver en Google Maps
             </Button>
-          </CardContent>
-        </Card>
+          </div>
+        </div>
+      </section>
 
-        {/* FAQ Section */}
-        <Card className="mt-8 bg-blue-50 border-blue-200">
-          <CardHeader className="pb-4">
-            <CardTitle className="text-blue-900 text-lg">Preguntas Frecuentes</CardTitle>
-            <CardDescription className="text-sm">Respuestas rápidas a las consultas más comunes</CardDescription>
-          </CardHeader>
-          <CardContent className="pt-0">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-              <div>
-                <h4 className="font-semibold text-blue-900 mb-1 text-sm">¿Necesito reservar con antelación?</h4>
-                <p className="text-blue-800 text-xs mb-3">
-                  Recomendamos reservar con 24h de antelación, especialmente en temporada alta.
-                </p>
+      {/* FAQ */}
+      <section className="border-t border-slate-200/70 bg-white/60 py-16 backdrop-blur-sm dark:border-white/5 dark:bg-white/[0.02] md:py-20">
+        <div className="container mx-auto px-4">
+          <SectionHeading
+            eyebrow={language === 'en' ? 'FAQ' : 'Dudas frecuentes'}
+            title="Preguntas Frecuentes"
+            subtitle="Respuestas rápidas a las consultas más comunes"
+          />
+
+          <div className="mt-10 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            {contactFaqs.map((faq, index) => (
+              <div
+                key={faq.question}
+                className="rounded-[2rem] border border-slate-200 bg-white p-5 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl dark:border-white/10 dark:bg-slate-900/70"
+              >
+                <span className="flex h-9 w-9 items-center justify-center rounded-full bg-blue-900 text-xs font-black text-white dark:bg-yellow-400 dark:text-blue-950">
+                  {String(index + 1).padStart(2, "0")}
+                </span>
+                <h4 className="mt-3 text-sm font-bold leading-snug">{faq.question}</h4>
+                <p className="mt-2 text-xs leading-relaxed text-slate-600 dark:text-slate-400">{faq.answer}</p>
               </div>
-              <div>
-                <h4 className="font-semibold text-blue-900 mb-1 text-sm">¿Qué documentos necesito?</h4>
-                <p className="text-blue-800 text-xs mb-3">
-                  Para bicicletas: DNI. Para coches: carnet de conducir y tarjeta de crédito.
-                </p>
-              </div>
-              <div>
-                <h4 className="font-semibold text-blue-900 mb-1 text-sm">¿Incluye seguro?</h4>
-                <p className="text-blue-800 text-xs mb-3">
-                  Sí, todos nuestros alquileres incluyen seguro básico de responsabilidad civil.
-                </p>
-              </div>
-              <div>
-                <h4 className="font-semibold text-blue-900 mb-1 text-sm">¿Puedo cancelar mi reserva?</h4>
-                <p className="text-blue-800 text-xs">
-                  Sí, puedes cancelar hasta 24h antes sin coste. Consulta condiciones.
-                </p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <SiteFooter
+        tagline="Rent & Tours"
+        rights={t('footer.rights')}
+        contactLabel={t('header.contact')}
+        backHomeLabel="Volver al inicio"
+      />
 
       {/* QR Modal */}
       {isQrModalOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-gradient-to-br from-white via-blue-50 to-yellow-50 rounded-lg p-8 max-w-md w-full mx-4 relative">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/70 p-4 backdrop-blur-sm">
+          <div className="relative w-full max-w-md rounded-[2rem] border border-slate-200 bg-white p-6 shadow-2xl dark:border-white/10 dark:bg-slate-900 sm:p-8">
             <button
               onClick={() => setIsQrModalOpen(false)}
-              className="absolute top-4 right-4 text-gray-500 hover:text-gray-700 text-2xl font-bold"
+              className="absolute right-4 top-4 flex h-11 w-11 items-center justify-center rounded-full border border-slate-200 text-slate-500 transition hover:bg-slate-100 hover:text-slate-900 dark:border-white/10 dark:text-slate-400 dark:hover:bg-white/10 dark:hover:text-white"
+              aria-label="Close"
             >
-              ×
+              <X className="h-5 w-5" />
             </button>
             
             <div className="text-center">
-              <h3 className="text-2xl font-bold text-orange-600 mb-4">Rent a Quad</h3>
+              <h3 className="text-2xl font-black text-orange-600">Rent a Quad</h3>
               
-              <div className="mb-6">
+              <div className="mt-5">
                 <Image
                   src="/rentwuad.png"
                   alt="Rent Quad Logo"
@@ -736,7 +836,7 @@ export default function ContactoPage() {
                 />
               </div>
               
-              <div className="bg-white p-4 rounded-lg shadow-lg mb-6">
+              <div className="mt-5 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
                 <Image
                   src="/rentqr.png"
                   alt="Rent a Quad QR Code"
@@ -748,7 +848,7 @@ export default function ContactoPage() {
               
               <Button
                 onClick={() => window.open('https://quadaventuracostadelsol.com/actividades-de-aventura', '_blank')}
-                className="w-full bg-orange-600 hover:bg-orange-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors"
+                className="mt-6 h-12 w-full rounded-full bg-orange-600 font-semibold text-white transition-colors hover:bg-orange-700"
               >
                 Acceder a Quad Aventura
               </Button>
@@ -756,52 +856,6 @@ export default function ContactoPage() {
           </div>
         </div>
       )}
-
-      {/* Footer */}
-      <footer className="bg-gradient-to-r from-yellow-400 to-yellow-500 text-black py-8">
-        <div className="container mx-auto px-4">
-          <div className="flex flex-col md:flex-row justify-between items-center">
-            <div className="flex items-center space-x-3 mb-4 md:mb-0">
-               <div className="flex items-center space-x-3">
-                 <Image src="/icon/iconf.png" alt="Free Air Street Logo" width={60} height={60} className="rounded" />
-                 <div>
-                   <h3 className="font-bold birthstone-regular">Free Air Street</h3>
-                   <p className="text-sm text-gray-700">Rent & Tours</p>
-                 </div>
-               </div>
-               
-               {/* Instagram Link */}
-               <a
-                 href="https://www.instagram.com/freeairstreet?igsh=d25kaDRkM3QwNGJ6"
-                 target="_blank"
-                 rel="noopener noreferrer"
-                 className="flex items-center space-x-2 bg-gradient-to-r from-purple-500 via-pink-500 to-orange-500 text-white px-4 py-2 rounded-lg hover:shadow-lg transition-all duration-300 transform hover:scale-105"
-               >
-                 <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
-                   <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
-                 </svg>
-                 <span className="font-semibold">freeairstreet</span>
-               </a>
-               
-               {/* WhatsApp Link */}
-               <a
-                 href="https://wa.me/34655707412"
-                 target="_blank"
-                 rel="noopener noreferrer"
-                 className="flex items-center justify-center px-4 py-2 bg-green-500 hover:bg-green-600 text-white rounded-lg hover:shadow-lg transition-all duration-300 transform hover:scale-105"
-               >
-                 <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
-                   <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893A11.821 11.821 0 0020.885 3.488"/>
-                 </svg>
-               </a>
-             </div>
-
-            <div className="text-center md:text-right">
-              <p className="text-gray-700">© 2025 Free Air Street. Todos los derechos reservados.</p>
-            </div>
-          </div>
-        </div>
-      </footer>
     </div>
   )
 }

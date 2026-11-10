@@ -588,7 +588,7 @@ export function ReservationModal({ isOpen, onClose, type, itemName, itemPrice, i
                   <Label htmlFor="participants" className="text-gray-700 dark:text-gray-300">
                     {isRental ? t.numberOfVehicles : t.numberOfParticipants} *
                   </Label>
-                  <Select onValueChange={(value) => handleInputChange("participants", value)} defaultValue="1">
+                  <Select onValueChange={(value) => handleInputChange("participants", value)} value={formData.participants}>
                     <SelectTrigger className="border-gray-300 focus:border-blue-500 dark:border-gray-600 dark:bg-gray-800">
                       <SelectValue />
                     </SelectTrigger>

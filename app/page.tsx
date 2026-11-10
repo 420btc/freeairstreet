@@ -1,10 +1,8 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { Menu, X, Phone, Mail, MapPin, QrCode, Clock, Users, Car, Bike, Zap, Wrench, ChevronDown, Store } from "lucide-react"
+import { Menu, X, Phone, Mail, MapPin, QrCode, Clock, Users, Car, Bike, Zap, Wrench, Store } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
 import Image from "next/image"
 import Link from "next/link"
 import mapboxgl from 'mapbox-gl'
@@ -15,6 +13,8 @@ import { LanguageToggle } from '../components/LanguageToggle'
 import { ThemeToggle } from '../components/ThemeToggle'
 import RoutesComponent from '../components/RoutesComponent'
 import QuickRentalSection from '../components/QuickRentalSection'
+import { SectionHeading } from "@/components/site/SectionHeading"
+import { SiteFooter } from "@/components/site/SiteFooter"
 
 
 
@@ -374,8 +374,25 @@ export default function HomePage() {
     },
   ]
 
+  const renderServiceCard = (service: (typeof services)[number]) => (
+    <Link
+      key={service.href}
+      href={service.href}
+      className="group flex h-full flex-col rounded-[2rem] border border-slate-200 bg-white p-6 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl dark:border-white/10 dark:bg-slate-900/70"
+    >
+      <span className="mb-5 flex h-14 w-14 items-center justify-center rounded-2xl bg-yellow-400 text-blue-950 transition group-hover:bg-yellow-300">
+        {service.icon}
+      </span>
+      <h3 className="text-xl font-black leading-tight text-slate-900 dark:text-white">{service.title}</h3>
+      <p className="mt-2 flex-1 text-sm leading-relaxed text-slate-600 dark:text-slate-400">{service.description}</p>
+      <span className="mt-4 inline-flex items-center gap-1 text-sm font-semibold text-blue-900 transition-all group-hover:gap-2 dark:text-yellow-300">
+        {t('common.seeMore')}
+      </span>
+    </Link>
+  )
+
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen overflow-x-hidden bg-[#f5f6f8] text-slate-900 dark:bg-[#070d18] dark:text-slate-100">
       {/* Header */}
       <header className="bg-gradient-to-r from-yellow-400 to-yellow-500 shadow-lg sticky top-0 z-50">
         <div className="container mx-auto px-4">
@@ -390,12 +407,15 @@ export default function HomePage() {
             </Link>
 
             {/* Desktop Navigation */}
-            <nav className="hidden md:flex space-x-8">
+            <nav className="hidden md:flex space-x-4 lg:space-x-8">
               <Link href="/alquiler" className="text-blue-900 hover:text-blue-700 navbar-desktop-link font-medium transition-colors">
                 {t('header.rental')}
               </Link>
               <Link href="/tours" className="text-blue-900 hover:text-blue-700 navbar-desktop-link font-medium transition-colors">
                 {t('header.tours')}
+              </Link>
+              <Link href="/rutas" className="text-blue-900 hover:text-blue-700 navbar-desktop-link font-medium transition-colors">
+                {t('header.routes')}
               </Link>
               <Link href="/tienda" className="text-blue-900 hover:text-blue-700 navbar-desktop-link font-medium transition-colors">
                 {t('header.shop')}
@@ -448,26 +468,33 @@ export default function HomePage() {
                   <span className="animate-typewriter" style={{ animationDelay: '0.2s' }}>{t('header.tours')}</span>
                 </Link>
                 <Link 
-                  href="/tienda" 
+                  href="/rutas" 
                   className="text-blue-900 hover:text-blue-700 navbar-mobile-text font-medium animate-fadeInUp"
                   style={{ animationDelay: '0.3s' }}
                 >
-                  <span className="animate-typewriter" style={{ animationDelay: '0.3s' }}>{t('header.shop')}</span>
+                  <span className="animate-typewriter" style={{ animationDelay: '0.3s' }}>{t('header.routes')}</span>
+                </Link>
+                <Link 
+                  href="/tienda" 
+                  className="text-blue-900 hover:text-blue-700 navbar-mobile-text font-medium animate-fadeInUp"
+                  style={{ animationDelay: '0.4s' }}
+                >
+                  <span className="animate-typewriter" style={{ animationDelay: '0.4s' }}>{t('header.shop')}</span>
                 </Link>
                 <Link 
                   href="/contacto" 
                   className="text-blue-900 hover:text-blue-700 navbar-mobile-text font-medium animate-fadeInUp"
-                  style={{ animationDelay: '0.4s' }}
+                  style={{ animationDelay: '0.5s' }}
                 >
-                  <span className="animate-typewriter" style={{ animationDelay: '0.4s' }}>{t('header.contact')}</span>
+                  <span className="animate-typewriter" style={{ animationDelay: '0.5s' }}>{t('header.contact')}</span>
                 </Link>
                 <button 
                   onClick={() => setIsQrModalOpen(true)}
                   className="text-left text-blue-900 hover:text-blue-700 navbar-mobile-text font-medium animate-fadeInUp flex items-center space-x-2"
-                  style={{ animationDelay: '0.5s' }}
+                  style={{ animationDelay: '0.6s' }}
                 >
                   <QrCode className="h-5 w-5" />
-                  <span className="animate-typewriter" style={{ animationDelay: '0.5s' }}>Rent a Quad</span>
+                  <span className="animate-typewriter" style={{ animationDelay: '0.6s' }}>Rent a Quad</span>
                 </button>
               </nav>
             </div>
@@ -476,7 +503,7 @@ export default function HomePage() {
       </header>
 
       {/* Hero Section */}
-      <section className="relative py-32 md:py-56 overflow-hidden">
+      <section className="relative isolate overflow-hidden bg-[#04122b] py-24 md:py-36">
         <div 
           className="absolute inset-0 z-0"
           ref={(el) => {
@@ -530,26 +557,64 @@ export default function HomePage() {
           </video>
           <div className="absolute inset-0 bg-black/30"></div>
         </div>
-        <div className="container mx-auto px-4 text-center relative z-10">
-          <h1 className="text-4xl md:text-6xl font-bold text-white mb-6 drop-shadow-2xl" style={{textShadow: '2px 2px 4px rgba(0,0,0,0.8), 0 0 10px rgba(0,0,0,0.5)'}}>{t('hero.title')}</h1>
-          <p className="text-xl md:text-2xl text-white font-medium mb-8 max-w-3xl mx-auto drop-shadow-lg" style={{textShadow: '2px 2px 4px rgba(0,0,0,0.8), 0 0 8px rgba(0,0,0,0.6)'}}>
+        <div className="pointer-events-none absolute inset-0 z-[1] bg-gradient-to-b from-[#04122b]/85 via-[#04122b]/70 to-[#04122b]" />
+        <div className="container relative z-10 mx-auto px-4 text-center">
+          <span className="inline-flex items-center gap-2 rounded-full border border-yellow-300/30 bg-yellow-300/10 px-4 py-2 text-[11px] font-semibold uppercase tracking-[0.16em] text-yellow-200 backdrop-blur-md sm:text-xs">
+            <Zap className="h-4 w-4" />
+            Rent &amp; Tours · Torremolinos
+          </span>
+
+          <h1 className="mx-auto mt-6 max-w-4xl text-5xl font-black leading-[0.95] tracking-tight text-white drop-shadow-2xl sm:text-6xl md:text-7xl">
+            {t('hero.title')}
+          </h1>
+
+          <p className="mx-auto mt-6 max-w-2xl text-base leading-relaxed text-blue-100/90 sm:text-lg">
             {t('hero.subtitle')}
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link href="/alquiler">
-              <Button size="xl" className="bg-blue-600 hover:bg-blue-700 text-white px-10 py-6 md:px-12 md:py-7 md:text-xl shadow-2xl hover:shadow-3xl transition-shadow duration-300">
+
+          <div className="mx-auto mt-9 flex max-w-xl flex-col items-stretch justify-center gap-3 sm:flex-row sm:items-center">
+            <Link href="/alquiler" className="sm:flex-1">
+              <Button className="h-14 w-full rounded-full bg-yellow-400 px-8 text-base font-bold text-blue-950 shadow-xl shadow-yellow-400/20 transition hover:-translate-y-0.5 hover:bg-yellow-300">
                 {t('hero.viewRentals')}
               </Button>
             </Link>
-            <Link href="/tours">
+            <Link href="/tours" className="sm:flex-1">
               <Button
-                size="xl"
                 variant="outline"
-                className="border-white text-white hover:bg-white hover:text-blue-600 px-10 py-6 bg-transparent md:bg-white md:text-blue-600 md:border-blue-600 md:hover:bg-blue-50 md:px-12 md:py-7 md:text-xl shadow-2xl hover:shadow-3xl transition-shadow duration-300"
+                className="h-14 w-full rounded-full border-white/25 bg-white/5 px-8 text-base font-semibold text-white backdrop-blur-md hover:bg-white/15 hover:text-white"
               >
                 {t('hero.bookTour')}
               </Button>
             </Link>
+          </div>
+
+          <div className="mx-auto mt-12 grid max-w-4xl grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
+            {[
+              { icon: Clock, value: t('location.hours') },
+              { icon: MapPin, value: t('location.address') },
+              { icon: Phone, value: t('location.phone') },
+              { icon: Mail, value: t('location.email'), isEmail: true },
+            ].map((stat, index) => (
+              <div
+                key={index}
+                className="flex min-w-0 flex-col items-center justify-center gap-2 rounded-2xl border border-white/10 bg-white/5 px-4 py-4 text-center backdrop-blur-md transition hover:border-yellow-300/40 hover:bg-white/10"
+              >
+                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-yellow-400/15 text-yellow-300">
+                  <stat.icon className="h-4 w-4" />
+                </span>
+                {stat.isEmail ? (
+                  <a
+                    href={`mailto:${String(stat.value)}`}
+                    className="max-w-full break-all text-sm font-semibold leading-snug text-white underline-offset-4 transition hover:text-yellow-300 hover:underline"
+                    aria-label={`Enviar email a ${String(stat.value)}`}
+                  >
+                    {stat.value}
+                  </a>
+                ) : (
+                  <p className="max-w-full break-words text-sm font-semibold leading-snug text-white">{stat.value}</p>
+                )}
+              </div>
+            ))}
           </div>
         </div>
       </section>
@@ -558,18 +623,25 @@ export default function HomePage() {
       <QuickRentalSection />
 
       {/* Where We Are Section */}
-      <section className="pt-8 pb-16 bg-white">
+      <section className="pb-16 pt-8">
         <div className="container mx-auto px-4">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-4">{t('location.title')}</h2>
-            <p className="text-lg text-gray-600 max-w-2xl mx-auto mb-8">
-              {t('location.description.before')}
-              <Badge className="bg-yellow-400 text-blue-600 hover:bg-yellow-500 text-lg">Torremolinos</Badge>
-              {t('location.description.after')}
-            </p>
+          <div className="mb-12">
+            <SectionHeading
+              eyebrow={t('location.ourLocation')}
+              title={t('location.title')}
+              subtitle={
+                <>
+                  {t('location.description.before')}
+                  <span className="mx-1 inline-flex items-center rounded-full bg-yellow-400 px-2.5 py-0.5 text-sm font-bold text-blue-950">
+                    Torremolinos
+                  </span>
+                  {t('location.description.after')}
+                </>
+              }
+            />
             
             {/* Imagen Banana World y Texto */}
-            <div className="flex flex-col lg:flex-row items-center gap-8 mb-12">
+            <div className="mt-12 flex flex-col lg:flex-row items-center gap-8">
               {/* Imagen a la izquierda en desktop */}
               <div className="lg:w-1/2">
                 <Image 
@@ -584,22 +656,22 @@ export default function HomePage() {
               
               {/* Texto a la derecha en desktop */}
               <div className="lg:w-1/2 text-center lg:text-left">
-                <h3 className="text-2xl md:text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
+                <h3 className="text-2xl md:text-3xl lg:text-4xl font-black text-slate-900 dark:text-white mb-4">
                    {t('location.discover')}
                  </h3>
-                <p className="text-lg md:text-xl text-gray-600 leading-relaxed">
+                <p className="text-lg md:text-xl text-slate-600 dark:text-slate-400 leading-relaxed">
                    {t('location.discoverDesc')}
                  </p>
               </div>
             </div>
           </div>
           
-          <div className="relative w-full h-[400px] md:h-[500px] rounded-lg overflow-hidden shadow-lg">
+          <div className="relative w-full h-[400px] md:h-[500px] overflow-hidden rounded-[2rem] border border-slate-200 shadow-sm dark:border-white/10">
             <div id="mapbox-container" className="w-full h-full"></div>
             
             {/* Mobile activation notice */}
             {isMobile && !isMapActive && (
-              <div className="absolute bottom-2 right-2 bg-black bg-opacity-80 text-white px-2 py-1 rounded text-xs shadow-md z-10 pointer-events-none">
+              <div className="absolute bottom-3 right-3 rounded-full bg-[#04122b]/90 px-3 py-1.5 text-white text-xs shadow-md z-10 pointer-events-none">
                 <span className="flex items-center gap-1">
                   <span className="text-yellow-400 text-xs">👆</span>
                   {t('map.doubleClickToActivate') || '2 toques para activar'}
@@ -619,16 +691,18 @@ export default function HomePage() {
           </div>
           
           <div className="mt-8">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
               {/* Location Info */}
-              <div className="bg-gray-50 rounded-lg p-8 shadow-lg border">
-                <h3 className="text-2xl font-bold text-gray-900 mb-6 flex items-center">
-                  <MapPin className="h-6 w-6 mr-2 text-blue-600" />
+              <div className="rounded-[2rem] border border-slate-200 bg-white p-6 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl dark:border-white/10 dark:bg-slate-900/70 sm:p-8">
+                <h3 className="mb-6 flex items-center text-xl font-black text-slate-900 dark:text-white">
+                  <span className="mr-3 flex h-10 w-10 items-center justify-center rounded-full bg-yellow-400/15 text-yellow-600 dark:text-yellow-300">
+                    <MapPin className="h-5 w-5" />
+                  </span>
                   {t('location.ourLocation')}
                 </h3>
-                <div className="space-y-3 text-gray-700">
+                <div className="space-y-3 text-slate-600 dark:text-slate-300">
                   <p className="flex items-start">
-                    <span className="font-semibold text-gray-900 min-w-0 flex-1">
+                    <span className="font-semibold text-slate-900 dark:text-white min-w-0 flex-1">
                       {t('location.address')}<br/>
                       {t('location.city')}<br/>
                       {t('location.country')}
@@ -640,7 +714,7 @@ export default function HomePage() {
                     href="https://www.google.com/local/place/fid/0xd72fbe7f18b7617:0x749a1052ecf23196/photosphere?iu=https://streetviewpixels-pa.googleapis.com/v1/thumbnail?panoid%3Dya1f82-P9e7HTdzyoS5egg%26cb_client%3Dsearch.gws-prod.gps%26yaw%3D348.13068%26pitch%3D0%26thumbfov%3D100%26w%3D0%26h%3D0&ik=CAISFnlhMWY4Mi1QOWU3SFRkenlvUzVlZ2c%3D&sa=X&ved=2ahUKEwitnuPJ1PSOAxVaS_EDHX-WKOQQpx96BAggEBA"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm font-medium"
+                    className="inline-flex h-12 items-center rounded-full bg-blue-900 px-5 text-sm font-semibold text-white transition hover:bg-blue-800 dark:bg-yellow-400 dark:text-blue-950 dark:hover:bg-yellow-300"
                   >
                     <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
@@ -651,24 +725,26 @@ export default function HomePage() {
               </div>
 
               {/* Contact Info */}
-              <div className="bg-blue-50 rounded-lg p-8 shadow-lg border">
-                <h3 className="text-2xl font-bold text-gray-900 mb-6 flex items-center">
-                   <Phone className="h-6 w-6 mr-2 text-blue-600" />
+              <div className="rounded-[2rem] border border-slate-200 bg-white p-6 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl dark:border-white/10 dark:bg-slate-900/70 sm:p-8">
+                <h3 className="mb-6 flex items-center text-xl font-black text-slate-900 dark:text-white">
+                   <span className="mr-3 flex h-10 w-10 items-center justify-center rounded-full bg-yellow-400/15 text-yellow-600 dark:text-yellow-300">
+                     <Phone className="h-5 w-5" />
+                   </span>
                    {t('contact.title')}
                  </h3>
-                <div className="space-y-4 text-gray-700">
+                <div className="space-y-4 text-slate-600 dark:text-slate-300">
                   <div className="flex items-center">
-                    <Phone className="h-5 w-5 mr-3 text-blue-600 flex-shrink-0" />
+                    <Phone className="h-5 w-5 mr-3 text-yellow-500 flex-shrink-0" />
                     <div>
-                      <p className="font-semibold text-gray-900">{t('location.phone')}</p>
-                      <p className="text-sm text-gray-600">{t('location.hours')}</p>
+                      <p className="font-semibold text-slate-900 dark:text-white">{t('location.phone')}</p>
+                      <p className="text-sm text-slate-500 dark:text-slate-400">{t('location.hours')}</p>
                     </div>
                   </div>
                   <div className="flex items-center">
-                    <Mail className="h-5 w-5 mr-3 text-blue-600 flex-shrink-0" />
+                    <Mail className="h-5 w-5 mr-3 text-yellow-500 flex-shrink-0" />
                     <div>
-                       <p className="font-semibold text-gray-900">{t('location.email')}</p>
-                       <p className="text-sm text-gray-600">{t('contact.emailResponse')}</p>
+                       <p className="font-semibold text-slate-900 dark:text-white">{t('location.email')}</p>
+                       <p className="text-sm text-slate-500 dark:text-slate-400">{t('contact.emailResponse')}</p>
                      </div>
                   </div>
                 </div>
@@ -679,112 +755,37 @@ export default function HomePage() {
       </section>
 
       {/* Services Section */}
-      <section id="servicios" className="py-16 bg-gray-50">
+      <section id="servicios" className="py-16 md:py-20">
         <div className="container mx-auto px-4">
-          <div className="text-center mb-12">
-            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
-                {t('services.title')}
-              </h2>
-              <p className="text-lg md:text-xl text-gray-600 max-w-2xl mx-auto">
-                {t('services.subtitle')}
-              </p>
+          <div className="mb-12">
+            <SectionHeading title={t('services.title')} subtitle={t('services.subtitle')} />
           </div>
 
           {/* Desktop (md+) layout: keep existing structure and include Store card */}
           <div className="hidden md:grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {/* First row: 2 cards */}
-            {services.slice(0, 2).map((service, index) => (
-              <Link key={index} href={service.href}>
-                <Card className="hover:shadow-lg hover:scale-105 transition-all duration-200 cursor-pointer group h-full border-2 border-transparent hover:border-yellow-400 max-w-sm md:max-w-none mx-auto">
-                  <CardHeader className="text-center">
-                    <div className="mx-auto mb-4 p-4 bg-yellow-400 rounded-full text-blue-600 group-hover:bg-yellow-500 transition-colors">
-                      <div className="h-10 w-10 flex items-center justify-center">
-                        {service.icon}
-                      </div>
-                    </div>
-                    <CardTitle className="text-2xl text-gray-900 group-hover:text-blue-600 transition-colors">{service.title}</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <CardDescription className="text-center text-lg text-gray-600 group-hover:text-gray-800 transition-colors">{service.description}</CardDescription>
-                    <div className="text-center mt-3">
-                      <span className="text-sm text-blue-600 group-hover:text-blue-800 font-medium opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-                        {t('common.seeMore')}
-                      </span>
-                    </div>
-                  </CardContent>
-                </Card>
-              </Link>
-            ))}
+            {services.slice(0, 2).map(renderServiceCard)}
 
             {/* Second row: Repair Service (2 cols) */}
-            <div className="lg:col-span-2">
-              <Link href={services[4].href}>
-                <Card className="hover:shadow-lg hover:scale-105 transition-all duration-200 cursor-pointer group h-full border-2 border-transparent hover:border-yellow-400 max-w-sm md:max-w-none mx-auto">
-                  <CardHeader className="text-center">
-                    <div className="mx-auto mb-4 p-4 bg-yellow-400 rounded-full text-blue-600 group-hover:bg-yellow-500 transition-colors">
-                      <div className="h-10 w-10 flex items-center justify-center">
-                        {services[4].icon}
-                      </div>
-                    </div>
-                    <CardTitle className="text-2xl text-gray-900 group-hover:text-blue-600 transition-colors">{services[4].title}</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <CardDescription className="text-center text-lg text-gray-600 group-hover:text-gray-800 transition-colors">{services[4].description}</CardDescription>
-                    <div className="text-center mt-3">
-                      <span className="text-sm text-blue-600 group-hover:text-blue-800 font-medium opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-                        {t('common.seeMore')}
-                      </span>
-                    </div>
-                  </CardContent>
-                </Card>
-              </Link>
-            </div>
+            <div className="lg:col-span-2">{renderServiceCard(services[4])}</div>
 
             {/* Second row: Car and Motos cards */}
-            {services.slice(2, 4).map((service, index) => (
-              <Link key={index} href={service.href}>
-                <Card className="hover:shadow-lg hover:scale-105 transition-all duration-200 cursor-pointer group h-full border-2 border-transparent hover:border-yellow-400 max-w-sm md:max-w-none mx-auto">
-                  <CardHeader className="text-center">
-                    <div className="mx-auto mb-4 p-4 bg-yellow-400 rounded-full text-blue-600 group-hover:bg-yellow-500 transition-colors">
-                      <div className="h-10 w-10 flex items-center justify-center">
-                        {service.icon}
-                      </div>
-                    </div>
-                    <CardTitle className="text-2xl text-gray-900 group-hover:text-blue-600 transition-colors">{service.title}</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <CardDescription className="text-center text-lg text-gray-600 group-hover:text-gray-800 transition-colors">{service.description}</CardDescription>
-                    <div className="text-center mt-3">
-                      <span className="text-sm text-blue-600 group-hover:text-blue-800 font-medium opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-                        {t('common.seeMore')}
-                      </span>
-                    </div>
-                  </CardContent>
-                </Card>
-              </Link>
-            ))}
+            {services.slice(2, 4).map(renderServiceCard)}
 
             {/* Store Card (desktop only visible due to parent) */}
             <div className="lg:col-span-2">
-              <Link href="/tienda?tab=store">
-                <Card className="hover:shadow-lg hover:scale-105 transition-all duration-200 cursor-pointer group h-full border-2 border-transparent hover:border-yellow-400 max-w-sm md:max-w-none mx-auto">
-                  <CardHeader className="text-center">
-                    <div className="mx-auto mb-4 p-4 bg-yellow-400 rounded-full text-blue-600 group-hover:bg-yellow-500 transition-colors">
-                      <div className="h-10 w-10 flex items-center justify-center">
-                        <Store className="h-10 w-10" />
-                      </div>
-                    </div>
-                    <CardTitle className="text-2xl text-gray-900 group-hover:text-blue-600 transition-colors">{t('services.store')}</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <CardDescription className="text-center text-lg text-gray-600 group-hover:text-gray-800 transition-colors">{t('services.storeDescription')}</CardDescription>
-                    <div className="text-center mt-3">
-                      <span className="text-sm text-blue-600 group-hover:text-blue-800 font-medium opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-                        {t('common.seeMore')}
-                      </span>
-                    </div>
-                  </CardContent>
-                </Card>
+              <Link
+                href="/tienda?tab=store"
+                className="group flex h-full flex-col rounded-[2rem] border border-slate-200 bg-white p-6 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl dark:border-white/10 dark:bg-slate-900/70"
+              >
+                <span className="mb-5 flex h-14 w-14 items-center justify-center rounded-2xl bg-yellow-400 text-blue-950 transition group-hover:bg-yellow-300">
+                  <Store className="h-10 w-10" />
+                </span>
+                <h3 className="text-xl font-black leading-tight text-slate-900 dark:text-white">{t('services.store')}</h3>
+                <p className="mt-2 flex-1 text-sm leading-relaxed text-slate-600 dark:text-slate-400">{t('services.storeDescription')}</p>
+                <span className="mt-4 inline-flex items-center gap-1 text-sm font-semibold text-blue-900 transition-all group-hover:gap-2 dark:text-yellow-300">
+                  {t('common.seeMore')}
+                </span>
               </Link>
             </div>
           </div>
@@ -792,121 +793,26 @@ export default function HomePage() {
           {/* Mobile (sm) layout: custom order without Store card */}
           <div className="md:hidden grid grid-cols-1 gap-6">
             {/* 1. Alquiler de Bicicletas (services[0]) */}
-            <Link href={services[0].href}>
-              <Card className="hover:shadow-lg hover:scale-105 transition-all duration-200 cursor-pointer group h-full border-2 border-transparent hover:border-yellow-400 max-w-sm md:max-w-none mx-auto">
-                <CardHeader className="text-center">
-                  <div className="mx-auto mb-4 p-4 bg-yellow-400 rounded-full text-blue-600 group-hover:bg-yellow-500 transition-colors">
-                    <div className="h-10 w-10 flex items-center justify-center">
-                      {services[0].icon}
-                    </div>
-                  </div>
-                  <CardTitle className="text-2xl text-gray-900 group-hover:text-blue-600 transition-colors">{services[0].title}</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <CardDescription className="text-center text-lg text-gray-600 group-hover:text-gray-800 transition-colors">{services[0].description}</CardDescription>
-                  <div className="text-center mt-3">
-                    <span className="text-sm text-blue-600 group-hover:text-blue-800 font-medium opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-                      {t('common.seeMore')}
-                    </span>
-                  </div>
-                </CardContent>
-              </Card>
-            </Link>
+            {renderServiceCard(services[0])}
 
             {/* 2. Alquiler de Coches (services[2]) */}
-            <Link href={services[2].href}>
-              <Card className="hover:shadow-lg hover:scale-105 transition-all duration-200 cursor-pointer group h-full border-2 border-transparent hover:border-yellow-400 max-w-sm md:max-w-none mx-auto">
-                <CardHeader className="text-center">
-                  <div className="mx-auto mb-4 p-4 bg-yellow-400 rounded-full text-blue-600 group-hover:bg-yellow-500 transition-colors">
-                    <div className="h-10 w-10 flex items-center justify-center">
-                      {services[2].icon}
-                    </div>
-                  </div>
-                  <CardTitle className="text-2xl text-gray-900 group-hover:text-blue-600 transition-colors">{services[2].title}</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <CardDescription className="text-center text-lg text-gray-600 group-hover:text-gray-800 transition-colors">{services[2].description}</CardDescription>
-                  <div className="text-center mt-3">
-                    <span className="text-sm text-blue-600 group-hover:text-blue-800 font-medium opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-                      Ver más →
-                    </span>
-                  </div>
-                </CardContent>
-              </Card>
-            </Link>
+            {renderServiceCard(services[2])}
 
             {/* 3. Motos y Scooters (services[3]) */}
-            <Link href={services[3].href}>
-              <Card className="hover:shadow-lg hover:scale-105 transition-all duration-200 cursor-pointer group h-full border-2 border-transparent hover:border-yellow-400 max-w-sm md:max-w-none mx-auto">
-                <CardHeader className="text-center">
-                  <div className="mx-auto mb-4 p-4 bg-yellow-400 rounded-full text-blue-600 group-hover:bg-yellow-500 transition-colors">
-                    <div className="h-10 w-10 flex items-center justify-center">
-                      {services[3].icon}
-                    </div>
-                  </div>
-                  <CardTitle className="text-2xl text-gray-900 group-hover:text-blue-600 transition-colors">{services[3].title}</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <CardDescription className="text-center text-lg text-gray-600 group-hover:text-gray-800 transition-colors">{services[3].description}</CardDescription>
-                  <div className="text-center mt-3">
-                    <span className="text-sm text-blue-600 group-hover:text-blue-800 font-medium opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-                      Ver más →
-                    </span>
-                  </div>
-                </CardContent>
-              </Card>
-            </Link>
+            {renderServiceCard(services[3])}
 
             {/* 4. Visitas Guiadas (services[1]) */}
-            <Link href={services[1].href}>
-              <Card className="hover:shadow-lg hover:scale-105 transition-all duration-200 cursor-pointer group h-full border-2 border-transparent hover:border-yellow-400 max-w-sm md:max-w-none mx-auto">
-                <CardHeader className="text-center">
-                  <div className="mx-auto mb-4 p-4 bg-yellow-400 rounded-full text-blue-600 group-hover:bg-yellow-500 transition-colors">
-                    <div className="h-10 w-10 flex items-center justify-center">
-                      {services[1].icon}
-                    </div>
-                  </div>
-                  <CardTitle className="text-2xl text-gray-900 group-hover:text-blue-600 transition-colors">{services[1].title}</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <CardDescription className="text-center text-lg text-gray-600 group-hover:text-gray-800 transition-colors">{services[1].description}</CardDescription>
-                  <div className="text-center mt-3">
-                    <span className="text-sm text-blue-600 group-hover:text-blue-800 font-medium opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-                      Ver más →
-                    </span>
-                  </div>
-                </CardContent>
-              </Card>
-            </Link>
+            {renderServiceCard(services[1])}
 
             {/* 5. Servicio Reparación (services[4]) */}
-            <Link href={services[4].href}>
-              <Card className="hover:shadow-lg hover:scale-105 transition-all duration-200 cursor-pointer group h-full border-2 border-transparent hover:border-yellow-400 max-w-sm md:max-w-none mx-auto">
-                <CardHeader className="text-center">
-                  <div className="mx-auto mb-4 p-4 bg-yellow-400 rounded-full text-blue-600 group-hover:bg-yellow-500 transition-colors">
-                    <div className="h-10 w-10 flex items-center justify-center">
-                      {services[4].icon}
-                    </div>
-                  </div>
-                  <CardTitle className="text-2xl text-gray-900 group-hover:text-blue-600 transition-colors">{services[4].title}</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <CardDescription className="text-center text-lg text-gray-600 group-hover:text-gray-800 transition-colors">{services[4].description}</CardDescription>
-                  <div className="text-center mt-3">
-                    <span className="text-sm text-blue-600 group-hover:text-blue-800 font-medium opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-                      Ver más →
-                    </span>
-                  </div>
-                </CardContent>
-              </Card>
-            </Link>
+            {renderServiceCard(services[4])}
           </div>
 
         </div>
       </section>
 
       {/* Second Store Section */}
-      <section className="py-16 bg-white">
+      <section className="py-16 md:py-20">
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center max-w-6xl mx-auto">
             {/* Image */}
@@ -916,27 +822,34 @@ export default function HomePage() {
                 alt="Segunda tienda Free Air Street" 
                 width={600}
                 height={400}
-                className="rounded-lg shadow-lg object-cover w-full h-[300px] md:h-[400px]"
+                className="h-[300px] w-full rounded-[2rem] border border-slate-200 object-cover shadow-sm dark:border-white/10 md:h-[420px]"
               />
             </div>
             
             {/* Content */}
             <div className="space-y-6">
-              <h2 className="text-3xl md:text-4xl font-bold text-gray-900">
-                {t('secondStore.title')} <span className="text-blue-600 underline">{t('secondStore.otherStore')}</span> {t('secondStore.available')}
-              </h2>
+              <SectionHeading
+                align="left"
+                title={
+                  <>
+                    {t('secondStore.title')}{" "}
+                    <span className="text-yellow-500 dark:text-yellow-400">{t('secondStore.otherStore')}</span>{" "}
+                    {t('secondStore.available')}
+                  </>
+                }
+              />
               
               <div className="space-y-4">
                 <div className="flex items-start space-x-3">
-                  <MapPin className="h-6 w-6 text-red-600 mt-1 flex-shrink-0" />
+                  <MapPin className="h-6 w-6 text-yellow-500 mt-1 flex-shrink-0" />
                   <div>
-                    <p className="text-lg font-semibold text-gray-900">{t('secondStore.secondLocation')}</p>
-                    <p className="text-gray-700">{t('secondStore.address')}</p>
-                    <p className="text-gray-700">{t('secondStore.city')}</p>
+                    <p className="text-lg font-semibold text-slate-900 dark:text-white">{t('secondStore.secondLocation')}</p>
+                    <p className="text-slate-600 dark:text-slate-300">{t('secondStore.address')}</p>
+                    <p className="text-slate-600 dark:text-slate-300">{t('secondStore.city')}</p>
                   </div>
                 </div>
                 
-                <p className="text-gray-600 leading-relaxed">
+                <p className="text-slate-600 dark:text-slate-400 leading-relaxed">
                   {t('secondStore.description')}
                 </p>
               </div>
@@ -945,7 +858,7 @@ export default function HomePage() {
                 href="https://maps.app.goo.gl/5KcHf2wMjwn9kMEFA"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-semibold shadow-lg"
+                className="inline-flex h-12 items-center rounded-full bg-blue-900 px-6 text-sm font-semibold text-white shadow-lg transition hover:bg-blue-800 dark:bg-yellow-400 dark:text-blue-950 dark:hover:bg-yellow-300"
               >
                 <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
@@ -959,119 +872,100 @@ export default function HomePage() {
       </section>
 
       {/* Quick Prices Section */}
-      <section className="py-16 bg-yellow-400">
+      <section className="py-16 md:py-20">
         <div className="container mx-auto px-4">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-blue-900 mb-4">{t('prices.title')}</h2>
-            <p className="text-lg text-blue-800">{t('prices.subtitle')}</p>
+          <div className="mb-12">
+            <SectionHeading title={t('prices.title')} subtitle={t('prices.subtitle')} />
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto">
-            <Card className="bg-white flex flex-col h-full">
-              <CardHeader>
-                <CardTitle className="text-blue-900">{t('prices.cityBike')}</CardTitle>
-                <CardDescription>{t('prices.cityBikeDesc')}</CardDescription>
-              </CardHeader>
-              <CardContent className="flex-1 flex flex-col">
-                <div className="space-y-2 mb-4 flex-1">
-                  <div className="flex justify-between">
-                    <span>{t('prices.hour')}</span>
-                    <Badge variant="secondary" className="text-lg font-bold">{getPrice('city-bike-1h', '4,50€')}</Badge>
-                  </div>
-                  <div className="flex justify-between">
-                    <span>{t('prices.allDay')}</span>
-                    <Badge className="bg-yellow-500 text-blue-900 text-xl font-bold">{getPrice('city-bike-allday', '18€')}</Badge>
-                  </div>
+            <div className="flex h-full flex-col rounded-[2rem] border border-slate-200 bg-white p-6 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl dark:border-white/10 dark:bg-slate-900/70">
+              <h3 className="text-xl font-black text-slate-900 dark:text-white">{t('prices.cityBike')}</h3>
+              <p className="mt-1 text-sm text-slate-600 dark:text-slate-400">{t('prices.cityBikeDesc')}</p>
+              <div className="mt-5 flex-1 space-y-3">
+                <div className="flex items-center justify-between gap-3">
+                  <span className="text-sm font-semibold text-slate-600 dark:text-slate-300">{t('prices.hour')}</span>
+                  <span className="rounded-full bg-slate-100 px-3 py-1 text-lg font-black text-slate-900 dark:bg-white/10 dark:text-white">{getPrice('city-bike-1h', '4,50€')}</span>
                 </div>
-                <div className="text-center mt-auto">
-                  <Link href="/alquiler?tab=bicicletas">
-                    <Button className="bg-blue-600 hover:bg-blue-700 text-white font-bold px-6 py-2">
-                      {t('rental.reserve') || 'Reservar'}
-                    </Button>
-                  </Link>
+                <div className="flex items-center justify-between gap-3">
+                  <span className="text-sm font-semibold text-slate-600 dark:text-slate-300">{t('prices.allDay')}</span>
+                  <span className="rounded-full bg-yellow-400 px-3 py-1 text-xl font-black text-blue-950">{getPrice('city-bike-allday', '18€')}</span>
                 </div>
-              </CardContent>
-            </Card>
+              </div>
+              <Link href="/alquiler?tab=bicicletas" className="mt-6 block">
+                <Button className="h-12 w-full rounded-full bg-blue-900 text-sm font-bold text-white hover:bg-blue-800 dark:bg-yellow-400 dark:text-blue-950 dark:hover:bg-yellow-300">
+                  {t('rental.reserve') || 'Reservar'}
+                </Button>
+              </Link>
+            </div>
 
-            <Card className="bg-white flex flex-col h-full">
-              <CardHeader>
-                <CardTitle className="text-blue-900">{t('prices.electricBike')}</CardTitle>
-                <CardDescription>{t('prices.electricBikeDesc')}</CardDescription>
-              </CardHeader>
-              <CardContent className="flex-1 flex flex-col">
-                <div className="space-y-2 mb-4 flex-1">
-                  <div className="flex justify-between">
-                    <span>{t('prices.hour')}</span>
-                    <Badge variant="secondary" className="text-lg font-bold">{getPrice('electric-bike-1h', '10€')}</Badge>
-                  </div>
-                  <div className="flex justify-between">
-                    <span>{t('prices.allDay')}</span>
-                    <Badge className="bg-yellow-500 text-blue-900 text-xl font-bold">{getPrice('electric-bike-allday', '35€')}</Badge>
-                  </div>
+            <div className="flex h-full flex-col rounded-[2rem] border border-slate-200 bg-white p-6 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl dark:border-white/10 dark:bg-slate-900/70">
+              <h3 className="text-xl font-black text-slate-900 dark:text-white">{t('prices.electricBike')}</h3>
+              <p className="mt-1 text-sm text-slate-600 dark:text-slate-400">{t('prices.electricBikeDesc')}</p>
+              <div className="mt-5 flex-1 space-y-3">
+                <div className="flex items-center justify-between gap-3">
+                  <span className="text-sm font-semibold text-slate-600 dark:text-slate-300">{t('prices.hour')}</span>
+                  <span className="rounded-full bg-slate-100 px-3 py-1 text-lg font-black text-slate-900 dark:bg-white/10 dark:text-white">{getPrice('electric-bike-1h', '10€')}</span>
                 </div>
-                <div className="text-center mt-auto">
-                  <Link href="/alquiler?tab=bicicletas">
-                    <Button className="bg-blue-600 hover:bg-blue-700 text-white font-bold px-6 py-2">
-                      {t('rental.reserve') || 'Reservar'}
-                    </Button>
-                  </Link>
+                <div className="flex items-center justify-between gap-3">
+                  <span className="text-sm font-semibold text-slate-600 dark:text-slate-300">{t('prices.allDay')}</span>
+                  <span className="rounded-full bg-yellow-400 px-3 py-1 text-xl font-black text-blue-950">{getPrice('electric-bike-allday', '35€')}</span>
                 </div>
-              </CardContent>
-            </Card>
+              </div>
+              <Link href="/alquiler?tab=bicicletas" className="mt-6 block">
+                <Button className="h-12 w-full rounded-full bg-blue-900 text-sm font-bold text-white hover:bg-blue-800 dark:bg-yellow-400 dark:text-blue-950 dark:hover:bg-yellow-300">
+                  {t('rental.reserve') || 'Reservar'}
+                </Button>
+              </Link>
+            </div>
 
-            <Card className="bg-white flex flex-col h-full">
-              <CardHeader>
-                <CardTitle className="text-blue-900">{t('prices.traditionalScooter')}</CardTitle>
-                <CardDescription>{t('prices.traditionalScooterDesc')}</CardDescription>
-              </CardHeader>
-              <CardContent className="flex-1 flex flex-col">
-                <div className="space-y-2 mb-4 flex-1">
-                  <div className="flex justify-between">
-                    <span>{t('prices.halfHour')}</span>
-                    <Badge variant="secondary" className="text-lg font-bold">{getPrice('scooter-30m', '10€')}</Badge>
-                  </div>
-                  <div className="flex justify-between">
-                    <span>{t('prices.hour')}</span>
-                    <Badge className="bg-yellow-500 text-blue-900 text-xl font-bold">{getPrice('scooter-1h', '15€')}</Badge>
-                  </div>
+            <div className="flex h-full flex-col rounded-[2rem] border border-slate-200 bg-white p-6 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl dark:border-white/10 dark:bg-slate-900/70">
+              <h3 className="text-xl font-black text-slate-900 dark:text-white">{t('prices.traditionalScooter')}</h3>
+              <p className="mt-1 text-sm text-slate-600 dark:text-slate-400">{t('prices.traditionalScooterDesc')}</p>
+              <div className="mt-5 flex-1 space-y-3">
+                <div className="flex items-center justify-between gap-3">
+                  <span className="text-sm font-semibold text-slate-600 dark:text-slate-300">{t('prices.halfHour')}</span>
+                  <span className="rounded-full bg-slate-100 px-3 py-1 text-lg font-black text-slate-900 dark:bg-white/10 dark:text-white">{getPrice('scooter-30m', '10€')}</span>
                 </div>
-                <div className="text-center mt-auto">
-                  <Link href="/alquiler?tab=scooters">
-                    <Button className="bg-blue-600 hover:bg-blue-700 text-white font-bold px-6 py-2">
-                      {t('rental.reserve') || 'Reservar'}
-                    </Button>
-                  </Link>
+                <div className="flex items-center justify-between gap-3">
+                  <span className="text-sm font-semibold text-slate-600 dark:text-slate-300">{t('prices.hour')}</span>
+                  <span className="rounded-full bg-yellow-400 px-3 py-1 text-xl font-black text-blue-950">{getPrice('scooter-1h', '15€')}</span>
                 </div>
-              </CardContent>
-            </Card>
+              </div>
+              <Link href="/alquiler?tab=scooters" className="mt-6 block">
+                <Button className="h-12 w-full rounded-full bg-blue-900 text-sm font-bold text-white hover:bg-blue-800 dark:bg-yellow-400 dark:text-blue-950 dark:hover:bg-yellow-300">
+                  {t('rental.reserve') || 'Reservar'}
+                </Button>
+              </Link>
+            </div>
 
 
           </div>
           
           {/* Scooter Promotion Section */}
           <div className="mt-12 max-w-4xl mx-auto">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center overflow-hidden rounded-[2.5rem] bg-[#04122b] p-6 shadow-sm md:p-10">
               {/* Image */}
-              <div className="relative">
+              <div className="relative flex items-center justify-center">
                 <Image 
                   src="/patinetex.png" 
                   alt="Patinete eléctrico" 
                   width={400}
                   height={300}
-                  className="w-full h-auto object-contain"
+                  className="h-auto w-full max-w-xs object-contain"
                 />
               </div>
               
               {/* Content */}
-              <div className="text-center lg:text-left space-y-6">
-                <h3 className="text-2xl md:text-3xl font-bold text-blue-900">
+              <div className="text-center lg:text-left space-y-5">
+                <h3 className="text-2xl md:text-3xl font-black text-white">
                   {t('scooterPromo.title')}
                 </h3>
-                <p className="text-lg text-gray-700">
+                <p className="text-base text-blue-100/85">
                   {t('scooterPromo.description')}
                 </p>
                 <Link href="/alquiler?tab=scooters">
-                  <Button className="bg-yellow-400 hover:bg-yellow-500 text-blue-900 font-bold px-8 py-3 text-lg shadow-lg">
+                  <Button className="h-12 rounded-full bg-yellow-400 px-6 text-sm font-bold text-blue-950 shadow-lg shadow-yellow-400/20 hover:bg-yellow-300">
                     {t('scooterPromo.button')}
                   </Button>
                 </Link>
@@ -1082,13 +976,10 @@ export default function HomePage() {
       </section>
 
       {/* Featured Tours Section */}
-      <section id="tours-destacados" className="py-16 bg-white">
+      <section id="tours-destacados" className="py-16 md:py-20">
         <div className="container mx-auto px-4">
-          <div className="text-center mb-6 md:mb-3">
-            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">{t('tours.title')}</h2>
-            <p className="text-lg md:text-xl text-gray-600 max-w-2xl mx-auto">
-              {t('tours.subtitle')}
-            </p>
+          <div className="mb-10">
+            <SectionHeading title={t('tours.title')} subtitle={t('tours.subtitle')} />
           </div>
 
           {/* Sol Hires Images and Video Section */}
@@ -1136,7 +1027,7 @@ export default function HomePage() {
             {/* Video Section - Right Side */}
              <div className="relative w-full max-w-xs md:max-w-sm lg:max-w-md">
                <div 
-                   className="relative w-full h-auto overflow-hidden rounded-lg shadow-lg mb-6"
+                   className="relative w-full h-auto overflow-hidden rounded-[2rem] border border-slate-200 shadow-sm dark:border-white/10 mb-6"
                    ref={(el) => {
                      if (el) {
                        const video = el.querySelector('video');
@@ -1189,17 +1080,17 @@ export default function HomePage() {
                  </div>
                
                {/* Quad Tours Pricing Table */}
-               <div className="bg-white rounded-lg shadow-lg p-4 border-2 border-gray-200">
+               <div className="rounded-[2rem] border border-slate-200 bg-white p-4 shadow-sm dark:border-white/10 dark:bg-slate-900/70 sm:p-5">
                  <div className="text-center mb-4">
-                   <h3 className="text-lg font-bold text-gray-800 mb-1">{t('quadTours.title')}</h3>
-                   <p className="text-sm text-gray-600">{t('quadTours.subtitle')}</p>
+                   <h3 className="text-lg font-black text-slate-900 dark:text-white mb-1">{t('quadTours.title')}</h3>
+                   <p className="text-sm text-slate-600 dark:text-slate-400">{t('quadTours.subtitle')}</p>
                  </div>
                  
-                 <div className="grid grid-cols-3 gap-1 text-xs font-bold">
+                 <div className="grid grid-cols-3 gap-1 overflow-hidden rounded-2xl text-xs font-bold">
                    {/* Headers */}
-                   <div className="bg-black text-white p-2 text-center rounded-tl">{t('quadTours.hour')}</div>
-                   <div className="bg-black text-white p-2 text-center">{t('quadTours.tour')}</div>
-                   <div className="bg-black text-white p-2 text-center rounded-tr">{t('quadTours.price')}</div>
+                   <div className="bg-[#04122b] text-white p-2 text-center">{t('quadTours.hour')}</div>
+                   <div className="bg-[#04122b] text-white p-2 text-center">{t('quadTours.tour')}</div>
+                   <div className="bg-[#04122b] text-white p-2 text-center">{t('quadTours.price')}</div>
                    
                    {/* 1H Row */}
                       <div className="bg-yellow-400 text-black p-2 text-center flex items-center justify-center font-black text-lg">1H</div>
@@ -1236,7 +1127,7 @@ export default function HomePage() {
                  </div>
                  
                  <div className="mt-3 text-center">
-                    <div className="bg-blue-100 text-blue-800 p-2 rounded text-xs font-semibold">
+                    <div className="rounded-xl bg-blue-50 text-blue-900 p-2 text-xs font-semibold dark:bg-white/10 dark:text-blue-100">
                       {t('quadTours.kidsTravel')}
                       <div className="text-xs font-normal">({t('quadTours.ageRange')})</div>
                       <div className="text-xs font-bold">{t('quadTours.adventureForAll')}</div>
@@ -1253,7 +1144,7 @@ export default function HomePage() {
                        />
                        <Button
                            onClick={() => window.open('https://quadaventuracostadelsol.com/actividades-de-aventura', '_blank')}
-                           className="bg-yellow-400 hover:bg-yellow-500 text-blue-900 font-bold px-4 py-2 rounded text-sm"
+                           className="h-11 rounded-full bg-yellow-400 px-4 text-sm font-bold text-blue-950 hover:bg-yellow-300"
                          >
                            Reservar Ahora
                          </Button>
@@ -1263,140 +1154,128 @@ export default function HomePage() {
              </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-7xl mx-auto">
-            <Card className="hover:shadow-lg transition-shadow overflow-hidden">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-7xl mx-auto">
+            <article className="group flex h-full flex-col overflow-hidden rounded-[2rem] border border-slate-200 bg-white shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl dark:border-white/10 dark:bg-slate-900/70">
               <div className="aspect-video relative">
                 <Image
                   src="/lugares/dolphintrip.jpg"
                   alt="Dolphin Trip"
                   fill
-                  className="object-cover"
+                  className="object-cover transition duration-700 group-hover:scale-105"
                 />
                 <div className="absolute top-4 left-4">
-                  <div className="bg-white/90 backdrop-blur-sm rounded-full p-2 text-2xl">🐬</div>
+                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-white/90 text-xl backdrop-blur-sm">🐬</div>
                 </div>
                 <div className="absolute top-4 right-4">
-                  <Badge className="bg-yellow-500 text-blue-900 font-bold text-xl">{getPrice('dolphin-trip', '18€')}</Badge>
+                  <span className="rounded-full bg-yellow-400 px-3 py-1 text-base font-black text-blue-950 shadow">{getPrice('dolphin-trip', '18€')}</span>
                 </div>
               </div>
-              <CardHeader>
-                <div className="flex items-center justify-between mb-2">
-                  <CardTitle className="text-xl text-gray-900">
+              <div className="flex flex-1 flex-col p-5">
+                <div className="flex items-start justify-between gap-3">
+                  <h3 className="text-lg font-black leading-tight text-slate-900 dark:text-white">
                     {t('tours.dolphinTrip')}
-                  </CardTitle>
-                  <div className="text-right">
-                    <p className="text-xs text-gray-500 mt-1">{t('tours.adults')}</p>
-                  </div>
+                  </h3>
+                  <p className="text-[11px] font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400 mt-1">{t('tours.adults')}</p>
                 </div>
-                <div className="flex items-center text-gray-600 mb-2">
-                  <MapPin className="h-4 w-4 mr-2" />
-                  <span className="text-sm">Marina Benalmádena</span>
-                </div>
-              </CardHeader>
-              <CardContent>
-                <p className="text-gray-600 mb-4">
+                <p className="mt-2 flex items-center gap-2 text-sm text-slate-600 dark:text-slate-400">
+                  <MapPin className="h-4 w-4 shrink-0 text-yellow-500" />
+                  <span>Marina Benalmádena</span>
+                </p>
+                <p className="mt-3 text-sm leading-relaxed text-slate-600 dark:text-slate-400">
                   {t('tours.dolphinDesc')}
                 </p>
-                <div className="space-y-1 text-sm text-gray-600">
-                  <div className="flex items-center">
-                    <span className="w-1.5 h-1.5 bg-yellow-500 rounded-full mr-2"></span>
+                <ul className="mt-4 space-y-1 text-sm text-slate-600 dark:text-slate-300">
+                  <li className="flex items-center">
+                    <span className="mr-2 h-1.5 w-1.5 rounded-full bg-yellow-400"></span>
                     {t('tours.children')}
-                  </div>
-                  <div className="flex items-center">
-                    <span className="w-1.5 h-1.5 bg-yellow-500 rounded-full mr-2"></span>
+                  </li>
+                  <li className="flex items-center">
+                    <span className="mr-2 h-1.5 w-1.5 rounded-full bg-yellow-400"></span>
                     {t('tours.familyExperience')}
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
+                  </li>
+                </ul>
+              </div>
+            </article>
 
-            <Card className="hover:shadow-lg transition-shadow overflow-hidden">
+            <article className="group flex h-full flex-col overflow-hidden rounded-[2rem] border border-slate-200 bg-white shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl dark:border-white/10 dark:bg-slate-900/70">
               <div className="aspect-video relative">
                 <Image
                   src="/destinos/alhambragranada.png"
                   alt="Granada Alhambra"
                   fill
-                  className="object-cover"
+                  className="object-cover transition duration-700 group-hover:scale-105"
                 />
                 <div className="absolute top-4 left-4">
-                  <div className="bg-white/90 backdrop-blur-sm rounded-full p-2 text-2xl">🏰</div>
+                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-white/90 text-xl backdrop-blur-sm">🏰</div>
                 </div>
                 <div className="absolute top-4 right-4">
-                  <Badge className="bg-yellow-500 text-blue-900 font-bold text-xl">{getPrice('alhambra-granada', '79€')}</Badge>
+                  <span className="rounded-full bg-yellow-400 px-3 py-1 text-base font-black text-blue-950 shadow">{getPrice('alhambra-granada', '79€')}</span>
                 </div>
               </div>
-              <CardHeader>
-                <div className="flex items-center justify-between mb-2">
-                  <CardTitle className="text-xl text-gray-900">
-                    {t('tours.granadaAlhambra')}
-                  </CardTitle>
-                </div>
-                <div className="flex items-center text-gray-600 mb-2">
-                  <Clock className="h-4 w-4 mr-2" />
-                  <span className="text-sm">{t('tours.thursdayFriday')}</span>
-                </div>
-              </CardHeader>
-              <CardContent>
-                <p className="text-gray-600 mb-4">{t('tours.granadaDesc')}</p>
-                <div className="space-y-1 text-sm text-gray-600">
-                  <div className="flex items-center">
-                    <span className="w-1.5 h-1.5 bg-yellow-500 rounded-full mr-2"></span>
+              <div className="flex flex-1 flex-col p-5">
+                <h3 className="text-lg font-black leading-tight text-slate-900 dark:text-white">
+                  {t('tours.granadaAlhambra')}
+                </h3>
+                <p className="mt-2 flex items-center gap-2 text-sm text-slate-600 dark:text-slate-400">
+                  <Clock className="h-4 w-4 shrink-0 text-yellow-500" />
+                  <span>{t('tours.thursdayFriday')}</span>
+                </p>
+                <p className="mt-3 text-sm leading-relaxed text-slate-600 dark:text-slate-400">{t('tours.granadaDesc')}</p>
+                <ul className="mt-4 space-y-1 text-sm text-slate-600 dark:text-slate-300">
+                  <li className="flex items-center">
+                    <span className="mr-2 h-1.5 w-1.5 rounded-full bg-yellow-400"></span>
                     {t('tours.unescoHeritage')}
-                  </div>
-                  <div className="flex items-center">
-                    <span className="w-1.5 h-1.5 bg-yellow-500 rounded-full mr-2"></span>
+                  </li>
+                  <li className="flex items-center">
+                    <span className="mr-2 h-1.5 w-1.5 rounded-full bg-yellow-400"></span>
                     {t('tours.officialGuide')}
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
+                  </li>
+                </ul>
+              </div>
+            </article>
 
-            <Card className="hover:shadow-lg transition-shadow overflow-hidden">
+            <article className="group flex h-full flex-col overflow-hidden rounded-[2rem] border border-slate-200 bg-white shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl dark:border-white/10 dark:bg-slate-900/70">
               <div className="aspect-video relative">
                 <Image
                   src="/lugares/paseocaballo.jpeg"
                   alt="Paseos a Caballo"
                   fill
-                  className="object-cover"
+                  className="object-cover transition duration-700 group-hover:scale-105"
                 />
                 <div className="absolute top-4 left-4">
-                  <div className="bg-white/90 backdrop-blur-sm rounded-full p-2 text-2xl">🐎</div>
+                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-white/90 text-xl backdrop-blur-sm">🐎</div>
                 </div>
                 <div className="absolute top-4 right-4">
-                  <Badge className="bg-yellow-500 text-blue-900 font-bold text-xl">{getPrice('paseo-caballo', '65€')}</Badge>
+                  <span className="rounded-full bg-yellow-400 px-3 py-1 text-base font-black text-blue-950 shadow">{getPrice('paseo-caballo', '65€')}</span>
                 </div>
               </div>
-              <CardHeader>
-                <div className="flex items-center justify-between mb-2">
-                  <CardTitle className="text-xl text-gray-900">
-                    {t('tours.horseRiding')}
-                  </CardTitle>
-                </div>
-                <div className="flex items-center text-gray-600 mb-2">
-                  <Clock className="h-4 w-4 mr-2" />
-                  <span className="text-sm">{t('tours.duration')}</span>
-                </div>
-              </CardHeader>
-              <CardContent>
-                <p className="text-gray-600 mb-4">
+              <div className="flex flex-1 flex-col p-5">
+                <h3 className="text-lg font-black leading-tight text-slate-900 dark:text-white">
+                  {t('tours.horseRiding')}
+                </h3>
+                <p className="mt-2 flex items-center gap-2 text-sm text-slate-600 dark:text-slate-400">
+                  <Clock className="h-4 w-4 shrink-0 text-yellow-500" />
+                  <span>{t('tours.duration')}</span>
+                </p>
+                <p className="mt-3 text-sm leading-relaxed text-slate-600 dark:text-slate-400">
                   {t('tours.horseDesc')}
                 </p>
-                <div className="space-y-1 text-sm text-gray-600">
-                  <div className="flex items-center">
-                    <span className="w-1.5 h-1.5 bg-yellow-500 rounded-full mr-2"></span>{t('tours.onePersonPerHorse')}
-                  </div>
-                  <div className="flex items-center">
-                    <span className="w-1.5 h-1.5 bg-yellow-500 rounded-full mr-2"></span>
+                <ul className="mt-4 space-y-1 text-sm text-slate-600 dark:text-slate-300">
+                  <li className="flex items-center">
+                    <span className="mr-2 h-1.5 w-1.5 rounded-full bg-yellow-400"></span>{t('tours.onePersonPerHorse')}
+                  </li>
+                  <li className="flex items-center">
+                    <span className="mr-2 h-1.5 w-1.5 rounded-full bg-yellow-400"></span>
                     {t('tours.expertGuide')}
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
+                  </li>
+                </ul>
+              </div>
+            </article>
           </div>
 
           <div className="text-center mt-8">
             <Link href="/tours">
-              <Button size="xl" className="bg-blue-600 hover:bg-blue-700 text-white px-12 py-4 text-lg">
+              <Button className="h-14 rounded-full bg-blue-900 px-10 text-base font-bold text-white shadow-lg hover:bg-blue-800 dark:bg-yellow-400 dark:text-blue-950 dark:hover:bg-yellow-300">
                 {t('tours.viewAllTours')}
               </Button>
             </Link>
@@ -1405,110 +1284,82 @@ export default function HomePage() {
       </section>
 
       {/* Contact Section */}
-      <section id="contacto" className="py-16 bg-blue-600">
+      <section id="contacto" className="py-16 md:py-20">
         <div className="container mx-auto px-4">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">{t('contact.title')}</h2>
-            <p className="text-lg text-blue-100">{t('contact.subtitle')}</p>
-            <div className="mt-6">
+          <div className="overflow-hidden rounded-[2.5rem] bg-[#04122b] px-5 py-12 shadow-sm sm:px-8 md:px-12 md:py-16">
+            <SectionHeading
+              title={<span className="text-white">{t('contact.title')}</span>}
+              subtitle={<span className="text-blue-100/80">{t('contact.subtitle')}</span>}
+            />
+            <div className="mt-8 flex justify-center">
               <a
                 href="tel:655707412"
-                className="inline-flex items-center px-6 py-3 bg-yellow-500 hover:bg-yellow-600 text-white font-semibold rounded-lg transition-all duration-300 transform hover:scale-105 shadow-lg"
+                className="inline-flex h-12 items-center rounded-full bg-yellow-400 px-6 text-sm font-bold text-blue-950 shadow-lg shadow-yellow-400/20 transition hover:-translate-y-0.5 hover:bg-yellow-300"
               >
                 <Phone className="w-5 h-5 mr-2" />
                 {t('contact.callNow') || 'Llamar Ahora'}
               </a>
             </div>
-          </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
-            <div className="text-white">
-              <Phone className="h-8 w-8 mx-auto mb-4" />
-              <h3 className="text-xl font-semibold mb-2">{t('contact.phone')}</h3>
-              <a href="tel:655707412" className="text-blue-100 hover:text-white transition-colors cursor-pointer">655 707 412</a>
-              <p className="text-blue-200 text-sm mt-1">{t('contact.phoneHours')}</p>
-            </div>
+            <div className="mt-10 grid grid-cols-1 md:grid-cols-3 gap-4 text-center">
+              <div className="rounded-[2rem] border border-white/10 bg-white/5 p-6 backdrop-blur-md">
+                <span className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-yellow-400/15 text-yellow-300">
+                  <Phone className="h-5 w-5" />
+                </span>
+                <h3 className="text-xs font-bold uppercase tracking-wide text-blue-200/70">{t('contact.phone')}</h3>
+                <a href="tel:655707412" className="mt-1 block text-lg font-black text-white transition hover:text-yellow-300">655 707 412</a>
+                <p className="mt-1 text-xs text-blue-100/60">{t('contact.phoneHours')}</p>
+              </div>
 
-            <div className="text-white">
-              <Mail className="h-8 w-8 mx-auto mb-4" />
-              <h3 className="text-xl font-semibold mb-2">{t('contact.email')}</h3>
-              <p className="text-blue-100">rentairstreet@gmail.com</p>
-              <p className="text-blue-200 text-sm mt-1">{t('contact.emailResponse')}</p>
-            </div>
+              <div className="rounded-[2rem] border border-white/10 bg-white/5 p-6 backdrop-blur-md">
+                <span className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-yellow-400/15 text-yellow-300">
+                  <Mail className="h-5 w-5" />
+                </span>
+                <h3 className="text-xs font-bold uppercase tracking-wide text-blue-200/70">{t('contact.email')}</h3>
+                <p className="mt-1 text-lg font-black text-white">rentairstreet@gmail.com</p>
+                <p className="mt-1 text-xs text-blue-100/60">{t('contact.emailResponse')}</p>
+              </div>
 
-            <div className="text-white">
-              <MapPin className="h-8 w-8 mx-auto mb-4" />
-              <h3 className="text-xl font-semibold mb-2">{t('contact.location')}</h3>
-              <p className="text-blue-100">{t('location.address')}</p>
-              <p className="text-blue-200 text-sm mt-1">{t('location.city')}</p>
+              <div className="rounded-[2rem] border border-white/10 bg-white/5 p-6 backdrop-blur-md">
+                <span className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-yellow-400/15 text-yellow-300">
+                  <MapPin className="h-5 w-5" />
+                </span>
+                <h3 className="text-xs font-bold uppercase tracking-wide text-blue-200/70">{t('contact.location')}</h3>
+                <p className="mt-1 text-lg font-black text-white">{t('location.address')}</p>
+                <p className="mt-1 text-xs text-blue-100/60">{t('location.city')}</p>
+              </div>
             </div>
           </div>
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="bg-gradient-to-r from-yellow-400 to-yellow-500 text-black py-8">
-        <div className="container mx-auto px-4">
-          <div className="flex flex-col md:flex-row justify-between items-center">
-            <div className="flex items-center space-x-3 mb-4 md:mb-0">
-              <div className="flex items-center space-x-3">
-                <Image src="/icon/iconf.png" alt="Free Air Street Logo" width={60} height={60} className="rounded" />
-                <div>
-                  <h3 className="font-bold birthstone-regular">Free Air Street</h3>
-                  <p className="text-sm text-gray-700">Rent & Tours</p>
-                </div>
-              </div>
-              
-              {/* Instagram Link */}
-              <a
-                href="https://www.instagram.com/freeairstreet?igsh=d25kaDRkM3QwNGJ6"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center space-x-2 bg-gradient-to-r from-purple-500 via-pink-500 to-orange-500 text-white px-4 py-2 rounded-lg hover:shadow-lg transition-all duration-300 transform hover:scale-105"
-              >
-                <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
-                </svg>
-                <span className="font-semibold">freeairstreet</span>
-              </a>
-              
-              {/* WhatsApp Link */}
-              <a
-                href="https://wa.me/34655707412"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center justify-center px-4 py-2 bg-green-500 hover:bg-green-600 text-white rounded-lg hover:shadow-lg transition-all duration-300 transform hover:scale-105"
-              >
-                <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893A11.821 11.821 0 0020.885 3.488"/>
-                </svg>
-              </a>
-            </div>
+      <SiteFooter
+        tagline="Rent & Tours · Torremolinos"
+        rights={t('footer.rights')}
+        contactLabel={t('contact.title')}
+      />
 
-            <div className="text-center md:text-right">
-              <p className="text-gray-700">{t('footer.rights')}</p>
-              <div className="flex items-center justify-center md:justify-end space-x-2 mt-2">
-                <span className="text-gray-700 text-sm">Web made by:</span>
-                <a 
-                  href="https://carlosfr.es" 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  className="bg-blue-500 text-white px-3 py-1 rounded-full text-sm font-semibold hover:bg-blue-400 transition-colors cursor-pointer"
-                >
-                  Carlosfr.es
-                </a>
-                <button
-                  id="admin-dashboard-trigger"
-                  className="ml-4 text-gray-400 hover:text-gray-600 transition-colors"
-                  title="Admin"
-                >
-                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
-                </button>
-              </div>
-            </div>
-          </div>
+      <div className="bg-gradient-to-r from-yellow-400 to-yellow-500 pb-8 text-black">
+        <div className="container mx-auto flex flex-col items-center justify-center gap-2 px-4 text-center text-xs text-gray-700 sm:flex-row">
+          <span>Web made by:</span>
+          <a 
+            href="https://carlosfr.es" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            className="rounded-full bg-blue-500 px-3 py-1 text-xs font-semibold text-white transition-colors hover:bg-blue-400"
+          >
+            Carlosfr.es
+          </a>
+          <button
+            id="admin-dashboard-trigger"
+            className="ml-2 text-gray-500 transition-colors hover:text-gray-700"
+            title="Admin"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+          </button>
         </div>
-      </footer>
+      </div>
 
       {/* QR Modal */}
       {isQrModalOpen && (

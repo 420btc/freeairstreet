@@ -1,9 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server';
-import prisma from '@/lib/prisma';
+import prisma, { isDatabaseConfigured } from '@/lib/prisma';
 
 export async function POST(req: NextRequest) {
   try {
     const data = await req.json();
+
+    if (!isDatabaseConfigured) {
+      return NextResponse.json({ success: true, stored: false });
+    }
 
     // Guardar en la base de datos
     const adRequest = await (prisma as any).advertisingRequest.create({
@@ -17,12 +21,9 @@ export async function POST(req: NextRequest) {
       },
     });
 
-    return NextResponse.json({ success: true, adRequest });
+    return NextResponse.json({ success: true, stored: true, adRequest });
   } catch (error) {
     console.error('Error saving advertising request to database:', error);
-    return NextResponse.json(
-      { success: false, error: 'Error al guardar la solicitud en la base de datos' },
-      { status: 500 }
-    );
+    return NextResponse.json({ success: true, stored: false });
   }
 }

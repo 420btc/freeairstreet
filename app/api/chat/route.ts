@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import OpenAI from 'openai';
-import prisma from '@/lib/prisma';
+import prisma, { isDatabaseConfigured } from '@/lib/prisma';
 import { getCachedPrices } from '@/lib/price-cache';
 import { rateLimit } from '@/lib/rate-limit';
 import type { ChatMessage, ChatSession } from '@prisma/client';
@@ -52,6 +52,43 @@ const EXTRACT_CONTEXT_FUNCTION = {
   },
 };
 
+async function saveUserMessage(sessionId: string, message: string) {
+  if (!isDatabaseConfigured) return;
+  try {
+    await prisma.chatSession.upsert({
+      where: { id: sessionId },
+      update: {},
+      create: { id: sessionId },
+    });
+
+    await prisma.chatMessage.create({
+      data: {
+        chatSessionId: sessionId,
+        isUser: true,
+        content: message,
+      },
+    });
+  } catch (error) {
+    // El chat sigue funcionando aunque no haya base de datos
+    console.error('Chat history unavailable (user message):', error);
+  }
+}
+
+async function saveAssistantMessage(sessionId: string, content: string) {
+  if (!isDatabaseConfigured) return;
+  try {
+    await prisma.chatMessage.create({
+      data: {
+        chatSessionId: sessionId,
+        isUser: false,
+        content,
+      },
+    });
+  } catch (error) {
+    console.error('Chat history unavailable (assistant message):', error);
+  }
+}
+
 export async function POST(req: NextRequest) {
   try {
     const ip = req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || 'anonymous';
@@ -78,19 +115,7 @@ export async function POST(req: NextRequest) {
     const systemContent = SYSTEM_PROMPT + pricesText + REQUIREMENTS_PROMPT + pageContextStr;
 
     if (sessionId && message) {
-      await prisma.chatSession.upsert({
-        where: { id: sessionId },
-        update: {},
-        create: { id: sessionId },
-      });
-
-      await prisma.chatMessage.create({
-        data: {
-          chatSessionId: sessionId,
-          isUser: true,
-          content: message,
-        },
-      });
+      await saveUserMessage(sessionId, message);
     }
 
     const historyMessages = (conversationHistory || []).slice(-20).map((msg: { isUser: boolean; content: string }) => ({
@@ -130,13 +155,7 @@ export async function POST(req: NextRequest) {
             controller.close();
 
             if (sessionId && fullResponse) {
-              await prisma.chatMessage.create({
-                data: {
-                  chatSessionId: sessionId,
-                  isUser: false,
-                  content: fullResponse,
-                },
-              });
+              await saveAssistantMessage(sessionId, fullResponse);
             }
           } catch (err) {
             controller.error(err);
@@ -163,13 +182,7 @@ export async function POST(req: NextRequest) {
     const response = completion.choices[0]?.message?.content || 'Lo siento, no pude procesar tu consulta.';
 
     if (sessionId && response) {
-      await prisma.chatMessage.create({
-        data: {
-          chatSessionId: sessionId,
-          isUser: false,
-          content: response,
-        },
-      });
+      await saveAssistantMessage(sessionId, response);
     }
 
     return NextResponse.json({ response });

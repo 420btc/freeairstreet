@@ -1,18 +1,37 @@
 "use client"
 
 import { useState } from "react"
-import { ArrowLeft, Clock, Users, MapPin, Calendar, Euro, Info, Menu, X, QrCode } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import Image from "next/image"
 import Link from "next/link"
-import { LanguageToggle } from '../../components/LanguageToggle'
-import { ThemeToggle } from '../../components/ThemeToggle'
-import { ReservationModal } from '../../components/ReservationModal'
-import { useLanguage } from '../../contexts/LanguageContext'
-import { usePricing } from '../../contexts/PricingContext'
+import {
+  ArrowLeft,
+  ArrowRight,
+  Calendar,
+  Check,
+  Clock,
+  Euro,
+  Info,
+  Languages,
+  MapPin,
+  Menu,
+  MessageCircle,
+  QrCode,
+  ShieldCheck,
+  Sparkles,
+  Star,
+  Users,
+  X,
+} from "lucide-react"
+import { Button } from "@/components/ui/button"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { LanguageToggle } from "@/components/LanguageToggle"
+import { ThemeToggle } from "@/components/ThemeToggle"
+import { ReservationModal } from "@/components/ReservationModal"
+import { PageHero } from "@/components/site/PageHero"
+import { SectionHeading } from "@/components/site/SectionHeading"
+import { SiteFooter } from "@/components/site/SiteFooter"
+import { useLanguage } from "@/contexts/LanguageContext"
+import { usePricing } from "@/contexts/PricingContext"
 
 export default function ToursPage() {
   const [activeTab, setActiveTab] = useState("excursiones")
@@ -302,8 +321,65 @@ export default function ToursPage() {
     return colors[day] || "bg-gray-100 text-gray-800"
   }
 
+  const featuredExcursions = ["Granada Alhambra", "Sevilla", "Caminito del Rey"]
+
+  const copy = {
+    es: {
+      heroBadge: "Tours y excursiones",
+      heroImageAlt: "Excursiones guiadas por Andalucía",
+      statExcursions: `${excursions.length} excursiones`,
+      statExcursionsLabel: "por toda Andalucía",
+      statPrice: "Desde 19€",
+      statPriceLabel: "por persona",
+      statLanguages: "5 idiomas",
+      statLanguagesLabel: "es · en · fr · de · it",
+      statGuide: "Guía local",
+      statGuideLabel: "te acompaña todo el día",
+      ctaExperiences: "Ver experiencias",
+      ctaWhatsapp: "WhatsApp",
+      eyebrow: "Temporada 2026",
+      featured: "Destacado",
+      priceFrom: "Desde",
+      infoEyebrow: "Antes de reservar",
+      infoTitle: "Información útil",
+      infoSubtitle: "Precios especiales, idiomas y todo lo que incluyen nuestras excursiones y actividades.",
+      footerTagline: "Rent & Tours · @freeairstreet",
+      footerRights: "© 2025 Free Air Street. Todos los derechos reservados.",
+      backHome: "Volver al inicio",
+    },
+    en: {
+      heroBadge: "Tours & excursions",
+      heroImageAlt: "Guided excursions across Andalusia",
+      statExcursions: `${excursions.length} excursions`,
+      statExcursionsLabel: "across Andalusia",
+      statPrice: "From 19€",
+      statPriceLabel: "per person",
+      statLanguages: "5 languages",
+      statLanguagesLabel: "es · en · fr · de · it",
+      statGuide: "Local guide",
+      statGuideLabel: "with you all day",
+      ctaExperiences: "See experiences",
+      ctaWhatsapp: "WhatsApp",
+      eyebrow: "2026 season",
+      featured: "Featured",
+      priceFrom: "From",
+      infoEyebrow: "Before you book",
+      infoTitle: "Useful information",
+      infoSubtitle: "Special prices, languages and everything included in our excursions and activities.",
+      footerTagline: "Rent & Tours · @freeairstreet",
+      footerRights: "© 2025 Free Air Street. All rights reserved.",
+      backHome: "Back to home",
+    },
+  }
+
+  const text = language === 'en' ? copy.en : copy.es
+
+  const scrollToExperiences = () => {
+    document.getElementById("experiencias")?.scrollIntoView({ behavior: "smooth", block: "start" })
+  }
+
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen overflow-x-hidden bg-[#f5f6f8] text-slate-900 dark:bg-[#070d18] dark:text-slate-100">
       {/* Header */}
       <header className="bg-gradient-to-r from-yellow-400 to-yellow-500 shadow-lg sticky top-0 z-50">
         <div className="container mx-auto px-4">
@@ -325,12 +401,15 @@ export default function ToursPage() {
             </Link>
 
             {/* Desktop Navigation - Centered */}
-            <nav className="hidden md:flex space-x-8 flex-1 justify-center">
+            <nav className="hidden md:flex space-x-4 lg:space-x-8 flex-1 justify-center">
               <Link href="/alquiler" className="text-blue-900 hover:text-blue-700 navbar-desktop-link font-medium transition-colors">
                 {t('header.rental')}
               </Link>
               <Link href="/tours" className="text-blue-900 hover:text-blue-700 navbar-desktop-link font-medium transition-colors border-b-2 border-blue-900">
                 {t('header.tours')}
+              </Link>
+              <Link href="/rutas" className="text-blue-900 hover:text-blue-700 navbar-desktop-link font-medium transition-colors">
+                {t('header.routes')}
               </Link>
               <Link href="/tienda" className="text-blue-900 hover:text-blue-700 navbar-desktop-link font-medium transition-colors">
                 {t('header.shop')}
@@ -388,20 +467,27 @@ export default function ToursPage() {
                   <span className="animate-typewriter" style={{ animationDelay: '0.2s' }}>{t('header.tours')}</span>
                 </Link>
                 <Link 
-                  href="/tienda" 
+                  href="/rutas" 
                   className="text-blue-900 hover:text-blue-700 navbar-mobile-text font-medium animate-fadeInUp"
                   style={{ animationDelay: '0.3s' }}
                 >
-                  <span className="animate-typewriter" style={{ animationDelay: '0.3s' }}>{t('header.shop')}</span>
+                  <span className="animate-typewriter" style={{ animationDelay: '0.3s' }}>{t('header.routes')}</span>
+                </Link>
+                <Link 
+                  href="/tienda" 
+                  className="text-blue-900 hover:text-blue-700 navbar-mobile-text font-medium animate-fadeInUp"
+                  style={{ animationDelay: '0.4s' }}
+                >
+                  <span className="animate-typewriter" style={{ animationDelay: '0.4s' }}>{t('header.shop')}</span>
                 </Link>
                 <Link 
                   href="/contacto" 
                   className="text-blue-900 hover:text-blue-700 navbar-mobile-text font-medium animate-fadeInUp"
-                  style={{ animationDelay: '0.4s' }}
+                  style={{ animationDelay: '0.5s' }}
                 >
-                  <span className="animate-typewriter" style={{ animationDelay: '0.4s' }}>{t('header.contact')}</span>
+                  <span className="animate-typewriter" style={{ animationDelay: '0.5s' }}>{t('header.contact')}</span>
                 </Link>
-                <div className="flex items-center space-x-4 pt-4 border-t border-yellow-600 animate-fadeInUp" style={{ animationDelay: '0.5s' }}>
+                <div className="flex items-center space-x-4 pt-4 border-t border-yellow-600 animate-fadeInUp" style={{ animationDelay: '0.6s' }}>
                   <LanguageToggle />
                   <ThemeToggle />
                 </div>
@@ -411,472 +497,538 @@ export default function ToursPage() {
         </div>
       </header>
 
-      <div className="container mx-auto px-4 py-8">
-        {/* Título y Subtítulo */}
-        <div className="text-center mb-12">
-          <h1 className="text-4xl md:text-5xl font-bold text-black mb-4">
-            {t('tours.title')}
-          </h1>
-          <p className="text-lg md:text-xl text-gray-700 max-w-3xl mx-auto">
-            {t('tours.subtitle')}
-          </p>
-        </div>
+      {/* Hero */}
+      <PageHero
+        badge={
+          <>
+            <Sparkles className="h-4 w-4" />
+            {text.heroBadge}
+          </>
+        }
+        title={t('tours.pageTitle')}
+        subtitle={t('tours.pageSubtitle')}
+        image="/destinos/marbella.jpg"
+        imageAlt={text.heroImageAlt}
+        stats={[
+          { icon: <Calendar className="h-5 w-5" />, value: text.statExcursions, label: text.statExcursionsLabel },
+          { icon: <Euro className="h-5 w-5" />, value: text.statPrice, label: text.statPriceLabel },
+          { icon: <Languages className="h-5 w-5" />, value: text.statLanguages, label: text.statLanguagesLabel },
+          { icon: <Users className="h-5 w-5" />, value: text.statGuide, label: text.statGuideLabel },
+        ]}
+        actions={
+          <>
+            <Button
+              onClick={scrollToExperiences}
+              className="h-14 rounded-full bg-yellow-400 px-8 text-base font-bold text-blue-950 shadow-xl shadow-yellow-400/20 transition hover:-translate-y-0.5 hover:bg-yellow-300"
+            >
+              {text.ctaExperiences}
+              <ArrowRight className="ml-2 h-5 w-5" />
+            </Button>
+            <a
+              href="https://wa.me/34655707412"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex h-14 items-center justify-center gap-2 rounded-full border border-white/25 bg-white/5 px-8 text-base font-semibold text-white backdrop-blur-md transition hover:bg-white/15"
+            >
+              <MessageCircle className="h-5 w-5" />
+              {text.ctaWhatsapp}
+            </a>
+          </>
+        }
+      />
 
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <div className="mb-8">
-            {/* Desktop: Una fila */}
-            <TabsList className="hidden sm:grid w-full grid-cols-3 h-16">
-              <TabsTrigger value="excursiones" className="flex items-center space-x-2 py-4 px-6 text-lg">
-                <span>🏛️</span>
-                <span>{t('tours.excursions')}</span>
-              </TabsTrigger>
-              <TabsTrigger value="actividades-marinas" className="flex items-center space-x-2 py-4 px-6 text-lg">
-                <span>🚢</span>
-                <span>{t('tours.activities')}</span>
-              </TabsTrigger>
-              <TabsTrigger value="caballos" className="flex items-center space-x-2 py-4 px-6 text-lg relative">
-                <span>🐎</span>
-                <span>{t('tours.horseRiding')}</span>
-                <div className="absolute -top-2 -right-2 bg-yellow-400 text-red-600 font-bold text-xs px-2 py-1 rounded-full border-2 border-yellow-500 shadow-lg transform rotate-12">
-                  HOT!
-                </div>
-              </TabsTrigger>
-            </TabsList>
-            
-            {/* Mobile: Dos filas */}
-            <div className="sm:hidden">
-              <TabsList className="grid w-full grid-cols-2 mb-4 h-12">
-                <TabsTrigger value="excursiones" className="flex items-center justify-center space-x-2 h-full px-3 text-sm">
+      {/* Experiencias */}
+      <section id="experiencias" className="container mx-auto scroll-mt-24 px-4 py-14 md:py-20">
+        <SectionHeading eyebrow={text.eyebrow} title={t('tours.title')} subtitle={t('tours.subtitle')} />
+
+        <div className="mt-10 md:mt-14">
+          <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+            <div className="hidden rounded-[2.5rem] border border-slate-200/80 bg-white/70 p-1.5 shadow-sm backdrop-blur-md dark:border-white/10 dark:bg-white/[0.04] sm:block">
+              {/* Desktop: Una fila */}
+              <TabsList className="grid h-auto w-full grid-cols-3 gap-1.5 rounded-full bg-transparent p-0">
+                <TabsTrigger
+                  value="excursiones"
+                  className="h-12 gap-2 rounded-full px-4 text-sm font-bold text-slate-600 transition data-[state=active]:bg-yellow-400 data-[state=active]:text-blue-950 data-[state=active]:shadow-md hover:bg-slate-100 dark:text-slate-300 dark:data-[state=active]:bg-yellow-400 dark:data-[state=active]:text-blue-950 dark:hover:bg-white/10 sm:text-base"
+                >
                   <span>🏛️</span>
                   <span>{t('tours.excursions')}</span>
                 </TabsTrigger>
-                <TabsTrigger value="actividades-marinas" className="flex items-center justify-center space-x-2 h-full px-3 text-sm">
+                <TabsTrigger
+                  value="actividades-marinas"
+                  className="h-12 gap-2 rounded-full px-4 text-sm font-bold text-slate-600 transition data-[state=active]:bg-yellow-400 data-[state=active]:text-blue-950 data-[state=active]:shadow-md hover:bg-slate-100 dark:text-slate-300 dark:data-[state=active]:bg-yellow-400 dark:data-[state=active]:text-blue-950 dark:hover:bg-white/10 sm:text-base"
+                >
                   <span>🚢</span>
                   <span>{t('tours.activities')}</span>
                 </TabsTrigger>
-              </TabsList>
-              <TabsList className="grid w-full grid-cols-1 bg-gray-100 h-12">
-                <TabsTrigger value="caballos" className="flex items-center justify-center space-x-2 h-full px-3 text-sm relative">
+                <TabsTrigger
+                  value="caballos"
+                  className="relative h-12 gap-2 rounded-full px-4 text-sm font-bold text-slate-600 transition data-[state=active]:bg-yellow-400 data-[state=active]:text-blue-950 data-[state=active]:shadow-md hover:bg-slate-100 dark:text-slate-300 dark:data-[state=active]:bg-yellow-400 dark:data-[state=active]:text-blue-950 dark:hover:bg-white/10 sm:text-base"
+                >
                   <span>🐎</span>
                   <span>{t('tours.horseRiding')}</span>
-                  <div className="absolute -top-1 -right-1 bg-yellow-400 text-red-600 font-bold text-xs px-1.5 py-0.5 rounded-full border-2 border-yellow-500 shadow-lg transform rotate-12">
+                  <div className="absolute -top-2 -right-2 rotate-12 rounded-full border-2 border-yellow-500 bg-yellow-400 px-2 py-1 text-xs font-bold text-red-600 shadow-lg">
                     HOT!
                   </div>
                 </TabsTrigger>
               </TabsList>
             </div>
-          </div>
 
-          {/* Excursiones Tab */}
-          <TabsContent value="excursiones">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {(language === 'en' ? excursions.map(translateExcursion) : excursions).map((excursion, index) => (
-                <Card key={index} className={`overflow-hidden hover:shadow-lg transition-shadow ${
-                  excursion.name === "Granada Alhambra" || excursion.name === "Sevilla" || excursion.name === "Caminito del Rey" 
-                    ? "bg-gradient-to-br from-yellow-400 via-yellow-300 to-blue-400 border-2 border-yellow-500 shadow-xl" 
-                    : ""
-                }`}>
-                  <div className="aspect-video relative">
-                    <Image
-                      src={excursion.image || "/placeholder.svg"}
-                      alt={excursion.name}
-                      fill
-                      className="object-cover"
-                    />
-                    <div className="absolute top-4 left-4">
-                      <div className="bg-white/90 backdrop-blur-sm rounded-full p-2 text-2xl">{excursion.emoji}</div>
+            {/* Mobile: Dos filas */}
+            <div className="space-y-3 sm:hidden">
+              <div className="rounded-full border border-slate-200/80 bg-white/70 p-1.5 shadow-sm backdrop-blur-md dark:border-white/10 dark:bg-white/[0.04]">
+                <TabsList className="grid h-auto w-full grid-cols-2 gap-1.5 rounded-full bg-transparent p-0">
+                  <TabsTrigger
+                    value="excursiones"
+                    className="h-12 gap-2 rounded-full px-3 text-xs font-bold text-slate-600 transition data-[state=active]:bg-yellow-400 data-[state=active]:text-blue-950 data-[state=active]:shadow-md dark:text-slate-300 dark:data-[state=active]:bg-yellow-400 dark:data-[state=active]:text-blue-950"
+                  >
+                    <span>🏛️</span>
+                    <span>{t('tours.excursions')}</span>
+                  </TabsTrigger>
+                  <TabsTrigger
+                    value="actividades-marinas"
+                    className="h-12 gap-2 rounded-full px-3 text-xs font-bold text-slate-600 transition data-[state=active]:bg-yellow-400 data-[state=active]:text-blue-950 data-[state=active]:shadow-md dark:text-slate-300 dark:data-[state=active]:bg-yellow-400 dark:data-[state=active]:text-blue-950"
+                  >
+                    <span>🚢</span>
+                    <span>{t('tours.activities')}</span>
+                  </TabsTrigger>
+                </TabsList>
+              </div>
+              <div className="rounded-full border border-slate-200/80 bg-white/70 p-1.5 shadow-sm backdrop-blur-md dark:border-white/10 dark:bg-white/[0.04]">
+                <TabsList className="grid h-auto w-full grid-cols-1 rounded-full bg-transparent p-0">
+                  <TabsTrigger
+                    value="caballos"
+                    className="relative h-12 gap-2 rounded-full px-3 text-xs font-bold text-slate-600 transition data-[state=active]:bg-yellow-400 data-[state=active]:text-blue-950 data-[state=active]:shadow-md dark:text-slate-300 dark:data-[state=active]:bg-yellow-400 dark:data-[state=active]:text-blue-950"
+                  >
+                    <span>🐎</span>
+                    <span>{t('tours.horseRiding')}</span>
+                    <div className="absolute -top-1 -right-1 rotate-12 rounded-full border-2 border-yellow-500 bg-yellow-400 px-1.5 py-0.5 text-[10px] font-bold text-red-600 shadow-lg">
+                      HOT!
                     </div>
-                    <div className="absolute top-4 right-4">
-                      <Badge className="bg-yellow-500 text-blue-900 font-bold text-lg px-3 py-1">{excursion.price}</Badge>
-                    </div>
-                  </div>
-
-                  <CardHeader>
-                    <div className="flex items-start justify-between">
-                      <CardTitle className={`text-2xl flex-1 ${
-                        excursion.name === "Granada Alhambra" || excursion.name === "Sevilla" || excursion.name === "Caminito del Rey" 
-                          ? "text-blue-900 font-bold" 
-                          : "text-gray-900"
-                      }`}>{excursion.name}</CardTitle>
-                      <Badge variant="outline" className="ml-2 text-xs">
-                        {excursion.country}
-                      </Badge>
-                    </div>
-                    <CardDescription className={`${
-                      excursion.name === "Granada Alhambra" || excursion.name === "Sevilla" || excursion.name === "Caminito del Rey" 
-                        ? "text-blue-800 font-medium" 
-                        : ""
-                    }`}>{excursion.description}</CardDescription>
-                  </CardHeader>
-
-                  <CardContent>
-                    {/* Days */}
-                    <div className="mb-4">
-                      <h4 className={`font-semibold mb-2 ${
-                        excursion.name === "Granada Alhambra" || excursion.name === "Sevilla" || excursion.name === "Caminito del Rey" 
-                          ? "text-blue-900" 
-                          : "text-gray-900"
-                       }`}>{t('tours.availableDays')}</h4>
-                       <div className="flex flex-wrap gap-2">
-                        {(language === 'en' ? (excursion.days || []).map((d: string) => dayMap[d] || d) : excursion.days).map((day: string, dayIndex: number) => (
-                          <Badge key={dayIndex} className={`text-sm font-semibold px-3 py-1 ${getDayColor(day)}`}>
-                            {day}
-                          </Badge>
-                        ))}
-                       </div>
-                    </div>
-
-                    <Button 
-                      className="w-full bg-blue-600 hover:bg-blue-700"
-                      onClick={() => handleReservation(excursion.name, excursion.price)}
-                    >
-                      <Calendar className="h-4 w-4 mr-2" />
-                      Reservar Excursión
-                    </Button>
-                  </CardContent>
-                </Card>
-              ))}
+                  </TabsTrigger>
+                </TabsList>
+              </div>
             </div>
-          </TabsContent>
 
-          {/* Actividades Marinas Tab */}
-          <TabsContent value="actividades-marinas">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {(language === 'en' ? boatActivities.map(translateBoat) : boatActivities).map((activity, index) => (
-                <Card key={index} className="overflow-hidden hover:shadow-lg transition-shadow">
-                  <div className="aspect-video relative">
-                    {activity.isVideo ? (
-                      <video
-                        autoPlay
-                        loop
-                        muted
-                        playsInline
-                        className="w-full h-full object-cover"
-                      >
-                        <source src={activity.video} type="video/mp4" />
-                      </video>
-                    ) : (
+            {/* Excursiones Tab */}
+            <TabsContent value="excursiones">
+              <div className="mt-6 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+                {(language === 'en' ? excursions.map(translateExcursion) : excursions).map((excursion, index) => {
+                  const featured = featuredExcursions.includes(excursions[index]?.name ?? excursion.name)
+                  const days = language === 'en'
+                    ? (excursion.days || []).map((d: string) => dayMap[d] || d)
+                    : excursion.days
+
+                  return (
+                    <article
+                      key={index}
+                      className={`group flex flex-col overflow-hidden rounded-[2rem] border bg-white shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl dark:bg-slate-900/70 ${
+                        featured
+                          ? "border-yellow-400 ring-4 ring-yellow-300/40 dark:border-yellow-400"
+                          : "border-slate-200 dark:border-white/10"
+                      }`}
+                    >
+                      <div className="relative h-52 overflow-hidden bg-gradient-to-br from-blue-950 via-blue-900 to-slate-800">
+                        <Image
+                          src={excursion.image || "/placeholder.svg"}
+                          alt={excursion.name}
+                          fill
+                          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                          className="object-cover transition duration-700 group-hover:scale-105"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-slate-950/85 via-slate-950/20 to-transparent" />
+
+                        <div className="absolute left-4 top-4 flex items-center gap-2">
+                          <span className="flex h-10 w-10 items-center justify-center rounded-full border border-white/20 bg-white/15 text-xl backdrop-blur-md">
+                            {excursion.emoji}
+                          </span>
+                          <span className="rounded-full border border-white/20 bg-black/25 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide text-white/85 backdrop-blur-md">
+                            {excursion.country}
+                          </span>
+                        </div>
+
+                        {featured && (
+                          <span className="absolute right-4 top-4 inline-flex items-center gap-1 rounded-full bg-yellow-400 px-2.5 py-1 text-[10px] font-black uppercase tracking-wide text-blue-950">
+                            <Star className="h-3 w-3" />
+                            {text.featured}
+                          </span>
+                        )}
+
+                        <div className="absolute inset-x-4 bottom-4 flex items-end justify-between gap-3">
+                          <h3 className="min-w-0 flex-1 text-xl font-black leading-tight text-white">{excursion.name}</h3>
+                          <div className="shrink-0 text-right">
+                            <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-yellow-300">{text.priceFrom}</p>
+                            <p className="text-4xl font-black leading-none text-white">{excursion.price}</p>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="flex flex-1 flex-col p-5">
+                        <p className="text-sm leading-relaxed text-slate-600 dark:text-slate-400">{excursion.description}</p>
+
+                        <div className="mt-4">
+                          <h4 className="text-[11px] font-bold uppercase tracking-[0.16em] text-slate-500 dark:text-slate-400">
+                            {t('tours.availableDays')}
+                          </h4>
+                          <div className="mt-2 flex flex-wrap gap-1.5">
+                            {(days || []).map((day: string, dayIndex: number) => (
+                              <span
+                                key={dayIndex}
+                                className={`rounded-full px-2.5 py-1 text-[11px] font-bold ${getDayColor(day)}`}
+                              >
+                                {day}
+                              </span>
+                            ))}
+                          </div>
+                        </div>
+
+                        <Button
+                          className="mt-5 h-12 w-full rounded-full bg-blue-900 font-bold text-white hover:bg-blue-800 dark:bg-yellow-400 dark:text-blue-950 dark:hover:bg-yellow-300"
+                          onClick={() => handleReservation(excursion.name, excursion.price)}
+                        >
+                          <Calendar className="mr-2 h-4 w-4" />
+                          Reservar Excursión
+                        </Button>
+                      </div>
+                    </article>
+                  )
+                })}
+              </div>
+            </TabsContent>
+
+            {/* Actividades Marinas Tab */}
+            <TabsContent value="actividades-marinas">
+              <div className="mt-6 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+                {(language === 'en' ? boatActivities.map(translateBoat) : boatActivities).map((activity, index) => {
+                  const featured = boatActivities[index]?.name === "Alquiler de Embarcaciones Pequeñas sin Carnet"
+
+                  return (
+                    <article
+                      key={index}
+                      className={`group flex flex-col overflow-hidden rounded-[2rem] border bg-white shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl dark:bg-slate-900/70 ${
+                        featured
+                          ? "border-yellow-400 ring-4 ring-yellow-300/40 dark:border-yellow-400"
+                          : "border-slate-200 dark:border-white/10"
+                      }`}
+                    >
+                      <div className="relative h-52 overflow-hidden bg-gradient-to-br from-blue-950 via-blue-900 to-slate-800">
+                        {activity.isVideo ? (
+                          <video
+                            autoPlay
+                            loop
+                            muted
+                            playsInline
+                            className="h-full w-full object-cover"
+                          >
+                            <source src={activity.video} type="video/mp4" />
+                          </video>
+                        ) : (
+                          <Image
+                            src={activity.image || "/placeholder.svg"}
+                            alt={activity.name}
+                            fill
+                            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                            className="object-cover transition duration-700 group-hover:scale-105"
+                          />
+                        )}
+                        <div className="absolute inset-0 bg-gradient-to-t from-slate-950/85 via-slate-950/20 to-transparent" />
+
+                        <div className="absolute left-4 top-4 flex items-center gap-2">
+                          <span className="flex h-10 w-10 items-center justify-center rounded-full border border-white/20 bg-white/15 text-xl backdrop-blur-md">
+                            {activity.emoji}
+                          </span>
+                          {featured && (
+                            <span className="inline-flex items-center gap-1 rounded-full bg-yellow-400 px-2.5 py-1 text-[10px] font-black uppercase tracking-wide text-blue-950">
+                              <Star className="h-3 w-3" />
+                              {text.featured}
+                            </span>
+                          )}
+                        </div>
+
+                        <div className="absolute inset-x-4 bottom-4 flex items-end justify-between gap-3">
+                          <h3 className="min-w-0 flex-1 text-xl font-black leading-tight text-white">{activity.name}</h3>
+                          {activity.priceAdult ? (
+                            <div className="shrink-0 text-right">
+                              <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-yellow-300">{t('tours.adults')}</p>
+                              <p className="text-4xl font-black leading-none text-white">{activity.priceAdult}</p>
+                              <p className="mt-1 inline-flex rounded-full bg-emerald-500/90 px-2 py-0.5 text-[10px] font-bold text-white">
+                                {t('tours.children')}: {activity.priceChild}
+                              </p>
+                            </div>
+                          ) : (
+                            <span className="shrink-0 rounded-full border border-white/25 bg-black/35 px-3 py-1 text-[11px] font-bold text-white backdrop-blur-md">
+                              {activity.price || t('tours.consult')}
+                            </span>
+                          )}
+                        </div>
+                      </div>
+
+                      <div className="flex flex-1 flex-col p-5">
+                        <p className="text-sm leading-relaxed text-slate-600 dark:text-slate-400">{activity.description}</p>
+
+                        <div className="mt-4 flex items-center gap-2 text-xs font-semibold text-slate-600 dark:text-slate-300">
+                          <MapPin className="h-4 w-4 shrink-0 text-yellow-500" />
+                          <span>{activity.location}</span>
+                        </div>
+
+                        <div className="mt-4">
+                          <h4 className="text-[11px] font-bold uppercase tracking-[0.16em] text-slate-500 dark:text-slate-400">
+                            {t('tours.whatIncludes')}
+                          </h4>
+                          <div className="mt-2 flex flex-wrap gap-1.5">
+                            {activity.highlights.map((highlight: string, highlightIndex: number) => (
+                              <span
+                                key={highlightIndex}
+                                className="rounded-full border border-slate-200 bg-slate-50 px-2.5 py-1 text-[11px] font-semibold text-slate-600 dark:border-white/10 dark:bg-white/5 dark:text-slate-300"
+                              >
+                                {highlight}
+                              </span>
+                            ))}
+                          </div>
+                        </div>
+
+                        <Button
+                          className={`mt-5 h-12 w-full rounded-full font-bold ${
+                            activity.reservationUrl
+                              ? 'bg-yellow-400 text-blue-950 hover:bg-yellow-300'
+                              : 'bg-blue-900 text-white hover:bg-blue-800 dark:bg-yellow-400 dark:text-blue-950 dark:hover:bg-yellow-300'
+                          }`}
+                          onClick={() => {
+                            if (activity.reservationUrl) {
+                              window.open(activity.reservationUrl, '_blank')
+                            } else {
+                              handleReservation(activity.name, activity.priceAdult || activity.price)
+                            }
+                          }}
+                        >
+                          <Calendar className="mr-2 h-4 w-4" />
+                          {activity.reservationUrl
+                            ? 'Reservar Ahora'
+                            : (
+                              activity.price === "Consultar precio" ||
+                              activity.price === "Consult price"
+                            ) ? t('tours.consultAvailability') : t('tours.reserveActivity')}
+                        </Button>
+                      </div>
+                    </article>
+                  )
+                })}
+              </div>
+            </TabsContent>
+
+            {/* Caballos Tab */}
+            <TabsContent value="caballos">
+              <div className="mt-6 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+                {horseRidingLocalized.map((activity, index) => (
+                  <article
+                    key={index}
+                    className="group flex flex-col overflow-hidden rounded-[2rem] border border-slate-200 bg-white shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl dark:border-white/10 dark:bg-slate-900/70"
+                  >
+                    <div className="relative h-52 overflow-hidden bg-gradient-to-br from-blue-950 via-blue-900 to-slate-800">
                       <Image
                         src={activity.image || "/placeholder.svg"}
                         alt={activity.name}
                         fill
-                        className="object-cover"
+                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                        className="object-cover transition duration-700 group-hover:scale-105"
                       />
-                    )}
-                    <div className="absolute top-4 left-4">
-                      <div className="bg-white/90 backdrop-blur-sm rounded-full p-2 text-2xl">{activity.emoji}</div>
-                    </div>
-                    <div className="absolute top-4 right-4">
-                      {activity.priceAdult ? (
-                        <div className="space-y-2">
-                          <Badge className="bg-yellow-500 text-blue-900 font-bold block text-sm px-3 py-1">
-                            {t('tours.adults')}: {activity.priceAdult}
-                          </Badge>
-                          <Badge className="bg-green-500 text-white font-bold block text-sm px-3 py-1">
-                            {t('tours.children')}: {activity.priceChild}
-                          </Badge>
+                      <div className="absolute inset-0 bg-gradient-to-t from-slate-950/85 via-slate-950/20 to-transparent" />
+
+                      <div className="absolute left-4 top-4">
+                        <span className="flex h-10 w-10 items-center justify-center rounded-full border border-white/20 bg-white/15 text-xl backdrop-blur-md">
+                          {activity.emoji}
+                        </span>
+                      </div>
+
+                      <div className="absolute inset-x-4 bottom-4 flex items-end justify-between gap-3">
+                        <h3 className="text-xl font-black leading-tight text-white">{activity.name}</h3>
+                        <div className="shrink-0 text-right">
+                          <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-yellow-300">{t('tours.price')}</p>
+                          <p className="text-4xl font-black leading-none text-white">{activity.price}</p>
                         </div>
-                      ) : (
-                        <Badge className="bg-gray-500 text-white font-bold text-sm px-3 py-1">{t('tours.consult')}</Badge>
-                      )}
-                    </div>
-                  </div>
-
-                  <CardHeader>
-                    <CardTitle className={`text-2xl ${
-                      activity.name === "Alquiler de Embarcaciones Pequeñas sin Carnet" 
-                        ? "text-blue-900 font-bold" 
-                        : "text-gray-900"
-                    }`}>{activity.name}</CardTitle>
-                    <CardDescription className={activity.name === "Alquiler de Embarcaciones Pequeñas sin Carnet" ? "text-blue-800 font-medium" : ""}>{activity.description}</CardDescription>
-                  </CardHeader>
-
-                  <CardContent>
-                    {/* Location */}
-                    <div className="mb-4">
-                      <div className={`flex items-center space-x-2 text-sm ${
-                        activity.name === "Alquiler de Embarcaciones Pequeñas sin Carnet" 
-                          ? "text-blue-800" 
-                          : "text-gray-600"
-                      }`}>
-                        <MapPin className="h-4 w-4" />
-                        <span>{activity.location}</span>
                       </div>
                     </div>
 
-                    {/* Highlights */}
-                    <div className="mb-4">
-                      <h4 className={`font-semibold mb-2 ${
-                        activity.name === "Alquiler de Embarcaciones Pequeñas sin Carnet" 
-                          ? "text-blue-900" 
-                          : "text-gray-900"
-                      }`}>{t('tours.whatIncludes')}</h4>
-                      <ul className="space-y-1">
-                        {activity.highlights.map((highlight: string, highlightIndex: number) => (
-                          <li key={highlightIndex} className={`text-sm flex items-center ${
-                            activity.name === "Alquiler de Embarcaciones Pequeñas sin Carnet" 
-                              ? "text-blue-800" 
-                              : "text-gray-600"
-                          }`}>
-                            <span className={`w-1.5 h-1.5 rounded-full mr-2 ${
-                              activity.name === "Alquiler de Embarcaciones Pequeñas sin Carnet" 
-                                ? "bg-blue-600" 
-                                : "bg-yellow-500"
-                            }`}></span>
-                            {highlight}
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
+                    <div className="flex flex-1 flex-col p-5">
+                      <p className="text-sm leading-relaxed text-slate-600 dark:text-slate-400">{activity.description}</p>
 
-                    <Button 
-                      className={`w-full ${
-                        activity.reservationUrl 
-                          ? 'bg-yellow-400 hover:bg-yellow-500 text-blue-900' 
-                          : 'bg-blue-600 hover:bg-blue-700'
-                      }`}
-                      onClick={() => {
-                        if (activity.reservationUrl) {
-                          window.open(activity.reservationUrl, '_blank')
-                        } else {
-                          handleReservation(activity.name, activity.priceAdult || activity.price)
-                        }
-                      }}
-                    >
-                      <Calendar className="h-4 w-4 mr-2" />
-                      {activity.reservationUrl 
-                        ? 'Reservar Ahora'
-                        : (
-                          activity.price === "Consultar precio" ||
-                          activity.price === "Consult price"
-                        ) ? t('tours.consultAvailability') : t('tours.reserveActivity')
-                      }
-                    </Button>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
-          </TabsContent>
-
-          {/* Caballos Tab */}
-          <TabsContent value="caballos">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {horseRidingLocalized.map((activity, index) => (
-                <Card key={index} className="overflow-hidden hover:shadow-lg transition-shadow">
-                  <div className="aspect-video relative">
-                    <Image
-                      src={activity.image || "/placeholder.svg"}
-                      alt={activity.name}
-                      fill
-                      className="object-cover"
-                    />
-                    <div className="absolute top-4 left-4">
-                      <div className="bg-white/90 backdrop-blur-sm rounded-full p-2 text-2xl">{activity.emoji}</div>
-                    </div>
-                    <div className="absolute top-4 right-4">
-                      <Badge className="bg-yellow-500 text-blue-900 font-bold text-lg px-3 py-1">{activity.price}</Badge>
-                    </div>
-                  </div>
-
-                  <CardHeader>
-                    <CardTitle className="text-2xl text-gray-900">{activity.name}</CardTitle>
-                    <CardDescription>{activity.description}</CardDescription>
-                  </CardHeader>
-
-                  <CardContent>
-                    {/* Details */}
-                    <div className="grid grid-cols-2 gap-4 mb-4">
-                      <div className="flex items-center space-x-2">
-                        <Clock className="h-4 w-4 text-gray-500" />
-                        <span className="text-sm text-gray-700">{activity.duration}</span>
+                      <div className="mt-4 flex flex-wrap gap-1.5">
+                        <span className="inline-flex items-center gap-1.5 rounded-full border border-slate-200 bg-slate-50 px-2.5 py-1 text-[11px] font-semibold text-slate-600 dark:border-white/10 dark:bg-white/5 dark:text-slate-300">
+                          <Clock className="h-3.5 w-3.5 text-yellow-500" />
+                          {activity.duration}
+                        </span>
+                        <span className="inline-flex items-center gap-1.5 rounded-full border border-slate-200 bg-slate-50 px-2.5 py-1 text-[11px] font-semibold text-slate-600 dark:border-white/10 dark:bg-white/5 dark:text-slate-300">
+                          <Users className="h-3.5 w-3.5 text-yellow-500" />
+                          {activity.capacity}
+                        </span>
                       </div>
-                      <div className="flex items-center space-x-2">
-                        <Users className="h-4 w-4 text-gray-500" />
-                        <span className="text-sm text-gray-700">{activity.capacity}</span>
+
+                      <div className="mt-4">
+                        <h4 className="text-[11px] font-bold uppercase tracking-[0.16em] text-slate-500 dark:text-slate-400">
+                          {t('tours.whatIncludes')}
+                        </h4>
+                        <div className="mt-2 flex flex-wrap gap-1.5">
+                          {activity.highlights.map((highlight: string, highlightIndex: number) => (
+                            <span
+                              key={highlightIndex}
+                              className="rounded-full border border-slate-200 bg-slate-50 px-2.5 py-1 text-[11px] font-semibold text-slate-600 dark:border-white/10 dark:bg-white/5 dark:text-slate-300"
+                            >
+                              {highlight}
+                            </span>
+                          ))}
+                        </div>
                       </div>
+
+                      <Button
+                        className="mt-5 h-12 w-full rounded-full bg-blue-900 font-bold text-white hover:bg-blue-800 dark:bg-yellow-400 dark:text-blue-950 dark:hover:bg-yellow-300"
+                        onClick={() => handleReservation(activity.name, activity.price)}
+                      >
+                        <Calendar className="mr-2 h-4 w-4" />
+                        {t('tours.reserveRide')}
+                      </Button>
                     </div>
-
-                    {/* Highlights */}
-                    <div className="mb-4">
-                      <h4 className="font-semibold text-gray-900 mb-2">{t('tours.whatIncludes')}</h4>
-                      <ul className="space-y-1">
-                        {activity.highlights.map((highlight: string, highlightIndex: number) => (
-                          <li key={highlightIndex} className="text-sm text-gray-600 flex items-center">
-                            <span className="w-1.5 h-1.5 bg-yellow-500 rounded-full mr-2"></span>
-                            {highlight}
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-
-                    <Button 
-                      className="w-full bg-blue-600 hover:bg-blue-700"
-                      onClick={() => handleReservation(activity.name, activity.price)}
-                    >
-                      <Calendar className="h-4 w-4 mr-2" />
-                      {t('tours.reserveRide')}
-                    </Button>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
-          </TabsContent>
-        </Tabs>
-
-        {/* Información General */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-12">
-          {/* Precios y Descuentos */}
-          <Card className="bg-green-50 border-green-200">
-            <CardHeader>
-              <div className="flex items-center space-x-2">
-                <Euro className="h-5 w-5 text-green-600" />
-                <CardTitle className="text-green-900">{t('tours.specialPrices.title')}</CardTitle>
+                  </article>
+                ))}
               </div>
-            </CardHeader>
-            <CardContent>
-              <ul className="space-y-2 text-green-800">
-                <li>
-                  • {t('tours.specialPrices.childrenFree')}
-                </li>
-                <li>
-                  • {t('tours.specialPrices.childrenDiscount')}
-                </li>
-                <li>• {t('tours.specialPrices.familyGroups')}</li>
-                <li>• {t('tours.specialPrices.earlyBooking')}</li>
-              </ul>
-            </CardContent>
-          </Card>
-
-          {/* Idiomas */}
-          <Card className="bg-blue-50 border-blue-200">
-            <CardHeader>
-              <div className="flex items-center space-x-2">
-                <Users className="h-5 w-5 text-blue-600" />
-                <CardTitle className="text-blue-900">{t('tours.languages.title')}</CardTitle>
-              </div>
-            </CardHeader>
-            <CardContent>
-              <div className="grid grid-cols-2 gap-2">
-                <div className="flex items-center space-x-2">
-                  <span className="text-lg">🇪🇸</span>
-                  <span className="text-blue-800">{t('tours.languages.spanish')}</span>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <span className="text-lg">🇬🇧</span>
-                  <span className="text-blue-800">{t('tours.languages.english')}</span>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <span className="text-lg">🇫🇷</span>
-                  <span className="text-blue-800">{t('tours.languages.french')}</span>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <span className="text-lg">🇩🇪</span>
-                  <span className="text-blue-800">{t('tours.languages.german')}</span>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <span className="text-lg">🇮🇹</span>
-                  <span className="text-blue-800">{t('tours.languages.italian')}</span>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
+            </TabsContent>
+          </Tabs>
         </div>
+      </section>
 
-        {/* Info Section */}
-        <Card className="mt-8 bg-yellow-50 border-yellow-200">
-          <CardHeader>
-            <div className="flex items-center space-x-2">
-              <Info className="h-5 w-5 text-yellow-600" />
-              <CardTitle className="text-yellow-900">{t('tours.importantInfo.title')}</CardTitle>
+      {/* Información General */}
+      <section className="border-t border-slate-200/70 bg-white/60 py-14 backdrop-blur-sm dark:border-white/5 dark:bg-white/[0.02] md:py-20">
+        <div className="container mx-auto px-4">
+          <SectionHeading eyebrow={text.infoEyebrow} title={text.infoTitle} subtitle={text.infoSubtitle} />
+
+          <div className="mt-10 grid grid-cols-1 gap-5 lg:grid-cols-2">
+            {/* Precios y Descuentos */}
+            <article className="rounded-[2rem] border border-slate-200 bg-white p-5 shadow-sm transition hover:-translate-y-1 hover:shadow-xl dark:border-white/10 dark:bg-slate-900/70 sm:p-6">
+              <div className="flex items-center gap-3">
+                <span className="flex h-11 w-11 items-center justify-center rounded-full bg-emerald-500/15 text-emerald-600 dark:text-emerald-300">
+                  <Euro className="h-5 w-5" />
+                </span>
+                <h3 className="text-xl font-black tracking-tight">{t('tours.specialPrices.title')}</h3>
+              </div>
+              <ul className="mt-5 space-y-3">
+                {[
+                  t('tours.specialPrices.childrenFree'),
+                  t('tours.specialPrices.childrenDiscount'),
+                  t('tours.specialPrices.familyGroups'),
+                  t('tours.specialPrices.earlyBooking'),
+                ].map((item, index) => (
+                  <li key={index} className="flex items-start gap-2.5 text-sm font-medium text-slate-600 dark:text-slate-300">
+                    <Check className="mt-0.5 h-4 w-4 shrink-0 text-emerald-500" />
+                    <span>{item}</span>
+                  </li>
+                ))}
+              </ul>
+            </article>
+
+            {/* Idiomas */}
+            <article className="rounded-[2rem] border border-slate-200 bg-white p-5 shadow-sm transition hover:-translate-y-1 hover:shadow-xl dark:border-white/10 dark:bg-slate-900/70 sm:p-6">
+              <div className="flex items-center gap-3">
+                <span className="flex h-11 w-11 items-center justify-center rounded-full bg-blue-500/15 text-blue-600 dark:text-blue-300">
+                  <Users className="h-5 w-5" />
+                </span>
+                <h3 className="text-xl font-black tracking-tight">{t('tours.languages.title')}</h3>
+              </div>
+              <div className="mt-5 grid grid-cols-1 gap-2 sm:grid-cols-2">
+                {[
+                  { flag: "🇪🇸", label: t('tours.languages.spanish') },
+                  { flag: "🇬🇧", label: t('tours.languages.english') },
+                  { flag: "🇫🇷", label: t('tours.languages.french') },
+                  { flag: "🇩🇪", label: t('tours.languages.german') },
+                  { flag: "🇮🇹", label: t('tours.languages.italian') },
+                ].map((lang, index) => (
+                  <div
+                    key={index}
+                    className="flex items-center gap-2 rounded-full border border-slate-200 bg-slate-50 px-3 py-2 text-sm font-semibold text-slate-700 dark:border-white/10 dark:bg-white/5 dark:text-slate-200"
+                  >
+                    <span className="text-base">{lang.flag}</span>
+                    <span>{lang.label}</span>
+                  </div>
+                ))}
+              </div>
+            </article>
+          </div>
+
+          {/* Info Section */}
+          <article className="mt-5 rounded-[2rem] border border-yellow-300/60 bg-white p-5 shadow-sm dark:border-yellow-400/20 dark:bg-slate-900/70 sm:p-6">
+            <div className="flex items-center gap-3">
+              <span className="flex h-11 w-11 items-center justify-center rounded-full bg-yellow-400/20 text-yellow-600 dark:text-yellow-300">
+                <Info className="h-5 w-5" />
+              </span>
+              <h3 className="text-xl font-black tracking-tight">{t('tours.importantInfo.title')}</h3>
             </div>
-          </CardHeader>
-          <CardContent>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+            <div className="mt-6 grid grid-cols-1 gap-6 md:grid-cols-2">
               <div>
-                <h4 className="font-semibold text-yellow-900 mb-3">{t('tours.importantInfo.includesTitle')}</h4>
-                <ul className="space-y-2 text-yellow-800">
-                  <li>• {t('tours.importantInfo.includes.transport')}</li>
-                  <li>• {t('tours.importantInfo.includes.guide')}</li>
-                  <li>• {t('tours.importantInfo.includes.insurance')}</li>
-                  <li>• {t('tours.importantInfo.includes.tickets')}</li>
-                  <li>• {t('tours.importantInfo.includes.assistance')}</li>
+                <h4 className="flex items-center gap-2 text-sm font-bold uppercase tracking-[0.14em] text-slate-500 dark:text-slate-400">
+                  <ShieldCheck className="h-4 w-4 text-yellow-500" />
+                  {t('tours.importantInfo.includesTitle')}
+                </h4>
+                <ul className="mt-3 space-y-2.5">
+                  {[
+                    t('tours.importantInfo.includes.transport'),
+                    t('tours.importantInfo.includes.guide'),
+                    t('tours.importantInfo.includes.insurance'),
+                    t('tours.importantInfo.includes.tickets'),
+                    t('tours.importantInfo.includes.assistance'),
+                  ].map((item, index) => (
+                    <li key={index} className="flex items-start gap-2.5 text-sm font-medium text-slate-600 dark:text-slate-300">
+                      <Check className="mt-0.5 h-4 w-4 shrink-0 text-yellow-500" />
+                      <span>{item}</span>
+                    </li>
+                  ))}
                 </ul>
               </div>
               <div>
-                <h4 className="font-semibold text-yellow-900 mb-3">{t('tours.importantInfo.recommendationsTitle')}</h4>
-                <ul className="space-y-2 text-yellow-800">
-                  <li>• {t('tours.importantInfo.recommendations.shoes')}</li>
-                  <li>• {t('tours.importantInfo.recommendations.sun')}</li>
-                  <li>• {t('tours.importantInfo.recommendations.camera')}</li>
-                  <li>• {t('tours.importantInfo.recommendations.docs')}</li>
-                  <li>• {t('tours.importantInfo.recommendations.booking')}</li>
+                <h4 className="flex items-center gap-2 text-sm font-bold uppercase tracking-[0.14em] text-slate-500 dark:text-slate-400">
+                  <Star className="h-4 w-4 text-yellow-500" />
+                  {t('tours.importantInfo.recommendationsTitle')}
+                </h4>
+                <ul className="mt-3 space-y-2.5">
+                  {[
+                    t('tours.importantInfo.recommendations.shoes'),
+                    t('tours.importantInfo.recommendations.sun'),
+                    t('tours.importantInfo.recommendations.camera'),
+                    t('tours.importantInfo.recommendations.docs'),
+                    t('tours.importantInfo.recommendations.booking'),
+                  ].map((item, index) => (
+                    <li key={index} className="flex items-start gap-2.5 text-sm font-medium text-slate-600 dark:text-slate-300">
+                      <Check className="mt-0.5 h-4 w-4 shrink-0 text-yellow-500" />
+                      <span>{item}</span>
+                    </li>
+                  ))}
                 </ul>
               </div>
             </div>
-          </CardContent>
-        </Card>
-      </div>
+          </article>
+        </div>
+      </section>
 
       {/* Footer */}
-      <footer className="bg-gradient-to-r from-yellow-400 to-yellow-500 text-black py-8">
-        <div className="container mx-auto px-4">
-          <div className="flex flex-col md:flex-row justify-between items-center">
-            <div className="flex items-center space-x-3 mb-4 md:mb-0">
-               <div className="flex items-center space-x-3">
-                 <Image src="/icon/iconf.png" alt="Free Air Street Logo" width={60} height={60} className="rounded" />
-                 <div>
-                   <h3 className="font-bold birthstone-regular">Free Air Street</h3>
-                   <p className="text-sm text-gray-700">Rent & Tours</p>
-                 </div>
-               </div>
-               
-               {/* Instagram Link */}
-               <a
-                 href="https://www.instagram.com/freeairstreet?igsh=d25kaDRkM3QwNGJ6"
-                 target="_blank"
-                 rel="noopener noreferrer"
-                 className="flex items-center space-x-2 bg-gradient-to-r from-purple-500 via-pink-500 to-orange-500 text-white px-4 py-2 rounded-lg hover:shadow-lg transition-all duration-300 transform hover:scale-105"
-               >
-                 <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
-                   <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.40s-.644-1.44-1.439-1.44z"/>
-                 </svg>
-                 <span className="font-semibold">freeairstreet</span>
-               </a>
-               
-               {/* WhatsApp Link */}
-               <a
-                 href="https://wa.me/34655707412"
-                 target="_blank"
-                 rel="noopener noreferrer"
-                 className="flex items-center justify-center px-4 py-2 bg-green-500 hover:bg-green-600 text-white rounded-lg hover:shadow-lg transition-all duration-300 transform hover:scale-105"
-               >
-                 <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
-                   <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893A11.821 11.821 0 0020.885 3.488"/>
-                 </svg>
-               </a>
-             </div>
+      <SiteFooter
+        tagline={text.footerTagline}
+        rights={text.footerRights}
+        contactLabel={t('header.contact')}
+        backHomeLabel={text.backHome}
+      />
 
-            <div className="text-center md:text-right">
-              <p className="text-gray-700">© 2025 Free Air Street. Todos los derechos reservados.</p>
-            </div>
-          </div>
-        </div>
-      </footer>
-      
       {/* QR Modal */}
       {isQrModalOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-gradient-to-br from-white via-blue-50 to-yellow-50 rounded-lg p-8 max-w-md w-full mx-4 relative">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/60 p-4 backdrop-blur-sm">
+          <div className="relative w-full max-w-md rounded-[2rem] border border-slate-200 bg-white p-6 shadow-2xl dark:border-white/10 dark:bg-slate-900 sm:p-8">
             <button
               onClick={() => setIsQrModalOpen(false)}
-              className="absolute top-4 right-4 text-gray-500 hover:text-gray-700 text-2xl font-bold"
+              className="absolute right-4 top-4 flex h-12 w-12 items-center justify-center rounded-full text-2xl font-bold text-slate-500 transition hover:bg-slate-100 hover:text-slate-700 dark:text-slate-400 dark:hover:bg-white/10"
+              aria-label="Close"
             >
               ×
             </button>
-            
+
             <div className="text-center">
-              <h3 className="text-2xl font-bold text-orange-600 mb-4">Rent a Quad</h3>
-              
+              <h3 className="mb-4 text-2xl font-black text-orange-600">Rent a Quad</h3>
+
               <div className="mb-6">
                 <Image
                   src="/rentwuad.png"
@@ -886,8 +1038,8 @@ export default function ToursPage() {
                   className="mx-auto"
                 />
               </div>
-              
-              <div className="bg-white p-4 rounded-lg shadow-lg mb-6">
+
+              <div className="mb-6 rounded-3xl bg-white p-4 shadow-lg">
                 <Image
                   src="/rentqr.png"
                   alt="Rent a Quad QR Code"
@@ -896,10 +1048,10 @@ export default function ToursPage() {
                   className="mx-auto"
                 />
               </div>
-              
+
               <Button
                 onClick={() => window.open('https://quadaventuracostadelsol.com/actividades-de-aventura', '_blank')}
-                className="w-full bg-orange-600 hover:bg-orange-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors"
+                className="h-12 w-full rounded-full bg-orange-600 px-6 font-semibold text-white transition-colors hover:bg-orange-700"
               >
                 Acceder a Quad Aventura
               </Button>

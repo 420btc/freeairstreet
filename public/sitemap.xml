@@ -25,6 +25,14 @@
     <xhtml:link rel="alternate" hreflang="en" href="https://www.freeairstreet.com/tours?lang=en" />
   </url>
   <url>
+    <loc>https://www.freeairstreet.com/rutas</loc>
+    <lastmod>2025-01-01</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="es" href="https://www.freeairstreet.com/rutas" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.freeairstreet.com/rutas?lang=en" />
+  </url>
+  <url>
     <loc>https://www.freeairstreet.com/contacto</loc>
     <lastmod>2025-01-01</lastmod>
     <changefreq>monthly</changefreq>

@@ -1,9 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server';
-import prisma from '@/lib/prisma';
+import prisma, { isDatabaseConfigured } from '@/lib/prisma';
 
 export async function POST(req: NextRequest) {
   try {
     const data = await req.json();
+
+    if (!isDatabaseConfigured) {
+      return NextResponse.json({ success: true, stored: false });
+    }
 
     // Guardar en la base de datos
     const reservation = await (prisma as any).reservation.create({
@@ -23,12 +27,10 @@ export async function POST(req: NextRequest) {
       },
     });
 
-    return NextResponse.json({ success: true, reservation });
+    return NextResponse.json({ success: true, stored: true, reservation });
   } catch (error) {
     console.error('Error saving reservation to database:', error);
-    return NextResponse.json(
-      { success: false, error: 'Error al guardar la reserva en la base de datos' },
-      { status: 500 }
-    );
+    // El email sigue siendo la vía principal de reserva
+    return NextResponse.json({ success: true, stored: false });
   }
 }

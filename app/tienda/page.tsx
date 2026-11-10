@@ -3,20 +3,50 @@
 import { useState } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
-import { Menu, X, Phone, Mail, MapPin, QrCode, Clock, Users, Car, Bike, Zap, ArrowLeft } from 'lucide-react'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import {
+  ArrowLeft,
+  ArrowRight,
+  Bike,
+  Car,
+  Check,
+  MapPin,
+  Menu,
+  MessageCircle,
+  QrCode,
+  ShieldCheck,
+  Sparkles,
+  Wrench,
+  X,
+  Zap,
+} from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { Badge } from '@/components/ui/badge'
 import { useLanguage } from '@/contexts/LanguageContext'
 import { LanguageToggle } from '@/components/LanguageToggle'
 import { ThemeToggle } from '@/components/ThemeToggle'
 import { RepairQuoteModal } from '@/components/RepairQuoteModal'
+import { PageHero } from '@/components/site/PageHero'
+import { SectionHeading } from '@/components/site/SectionHeading'
+import { SiteFooter } from '@/components/site/SiteFooter'
 
+const HERO_IMAGE = '/reparacion.jpg'
 
 const translations = {
   es: {
     title: 'Tienda y Servicios',
     subtitle: 'Productos y servicios de reparación para todos tus vehículos',
+    heroBadge: 'Tienda y taller · La Colina, Torremolinos',
+    heroCtaPrimary: 'Ver servicios',
+    heroCtaSecondary: 'Hablar por WhatsApp',
+    statServices: '4 servicios',
+    statServicesLabel: 'scooter, bici, moto y fat bike',
+    statChecks: '16 revisiones',
+    statChecksLabel: 'según tu vehículo',
+    statShop: 'La Colina',
+    statShopLabel: 'tienda física en Torremolinos',
+    statQuote: 'Presupuesto',
+    statQuoteLabel: 'te lo enviamos por email',
+    repairEyebrow: 'Taller propio',
+    storeEyebrow: 'Próximamente',
     store: {
       title: 'Tienda',
       subtitle: 'Productos y accesorios para tus aventuras',
@@ -47,11 +77,25 @@ const translations = {
         services: ['Ajuste suspensión', 'Cambio neumáticos especiales', 'Mantenimiento transmisión', 'Revisión completa']
       }
     },
-    contact: 'Contactar para presupuesto'
+    contact: 'Contactar para presupuesto',
+    backHome: 'Volver al inicio'
   },
   en: {
     title: 'Store & Services',
     subtitle: 'Products and repair services for all your vehicles',
+    heroBadge: 'Shop & workshop · La Colina, Torremolinos',
+    heroCtaPrimary: 'View services',
+    heroCtaSecondary: 'Chat on WhatsApp',
+    statServices: '4 services',
+    statServicesLabel: 'scooter, bike, moto and fat bike',
+    statChecks: '16 checks',
+    statChecksLabel: 'depending on your vehicle',
+    statShop: 'La Colina',
+    statShopLabel: 'physical shop in Torremolinos',
+    statQuote: 'Quote',
+    statQuoteLabel: 'sent to you by email',
+    repairEyebrow: 'In-house workshop',
+    storeEyebrow: 'Coming soon',
     store: {
       title: 'Store',
       subtitle: 'Products and accessories for your adventures',
@@ -82,7 +126,8 @@ const translations = {
         services: ['Suspension adjustment', 'Special tire replacement', 'Transmission maintenance', 'Complete inspection']
       }
     },
-    contact: 'Contact for quote'
+    contact: 'Contact for quote',
+    backHome: 'Back to home'
   }
 }
 
@@ -127,8 +172,16 @@ export default function TiendaPage() {
     }
   ]
 
+  const scrollTo = (id: string) => {
+    document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+  }
+
+  const titleWords = currentTranslations.title.split(' ')
+  const titleHighlight = titleWords.pop()
+  const titleStart = titleWords.join(' ')
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-yellow-50">
+    <div className="min-h-screen overflow-x-hidden bg-[#f5f6f8] text-slate-900 dark:bg-[#070d18] dark:text-slate-100">
       {/* Header */}
       <header className="bg-gradient-to-r from-yellow-400 to-yellow-500 shadow-lg sticky top-0 z-50">
         <div className="container mx-auto px-4">
@@ -150,12 +203,15 @@ export default function TiendaPage() {
             </Link>
 
             {/* Desktop Navigation - Centered */}
-            <nav className="hidden md:flex space-x-8 flex-1 justify-center">
+            <nav className="hidden md:flex space-x-4 lg:space-x-8 flex-1 justify-center">
               <Link href="/alquiler" className="text-blue-900 hover:text-blue-700 navbar-desktop-link font-medium transition-colors">
                 {t('header.rental')}
               </Link>
               <Link href="/tours" className="text-blue-900 hover:text-blue-700 navbar-desktop-link font-medium transition-colors">
                 {t('header.tours')}
+              </Link>
+              <Link href="/rutas" className="text-blue-900 hover:text-blue-700 navbar-desktop-link font-medium transition-colors">
+                {t('header.routes')}
               </Link>
               <Link href="/tienda" className="text-blue-900 hover:text-blue-700 navbar-desktop-link font-medium transition-colors border-b-2 border-blue-900">
                 {t('header.shop')}
@@ -213,26 +269,33 @@ export default function TiendaPage() {
                   <span className="animate-typewriter" style={{ animationDelay: '0.2s' }}>{t('header.tours')}</span>
                 </Link>
                 <Link 
-                  href="/tienda" 
+                  href="/rutas" 
                   className="text-blue-900 hover:text-blue-700 navbar-mobile-text font-medium animate-fadeInUp"
                   style={{ animationDelay: '0.3s' }}
                 >
-                  <span className="animate-typewriter" style={{ animationDelay: '0.3s' }}>{t('header.shop')}</span>
+                  <span className="animate-typewriter" style={{ animationDelay: '0.3s' }}>{t('header.routes')}</span>
+                </Link>
+                <Link 
+                  href="/tienda" 
+                  className="text-blue-900 hover:text-blue-700 navbar-mobile-text font-medium animate-fadeInUp border-l-4 border-blue-900 pl-2"
+                  style={{ animationDelay: '0.4s' }}
+                >
+                  <span className="animate-typewriter" style={{ animationDelay: '0.4s' }}>{t('header.shop')}</span>
                 </Link>
                 <Link 
                   href="/contacto" 
                   className="text-blue-900 hover:text-blue-700 navbar-mobile-text font-medium animate-fadeInUp"
-                  style={{ animationDelay: '0.4s' }}
+                  style={{ animationDelay: '0.5s' }}
                 >
-                  <span className="animate-typewriter" style={{ animationDelay: '0.4s' }}>{t('header.contact')}</span>
+                  <span className="animate-typewriter" style={{ animationDelay: '0.5s' }}>{t('header.contact')}</span>
                 </Link>
                 <button 
                   onClick={() => setIsQrModalOpen(true)}
                   className="text-left text-blue-900 hover:text-blue-700 navbar-mobile-text font-medium animate-fadeInUp flex items-center space-x-2"
-                  style={{ animationDelay: '0.5s' }}
+                  style={{ animationDelay: '0.6s' }}
                 >
                   <QrCode className="h-5 w-5" />
-                  <span className="animate-typewriter" style={{ animationDelay: '0.5s' }}>Rent a Quad</span>
+                  <span className="animate-typewriter" style={{ animationDelay: '0.6s' }}>Rent a Quad</span>
                 </button>
               </nav>
             </div>
@@ -240,149 +303,174 @@ export default function TiendaPage() {
         </div>
       </header>
 
+      {/* Hero */}
+      <PageHero
+        badge={
+          <>
+            <Wrench className="h-4 w-4" />
+            {currentTranslations.heroBadge}
+          </>
+        }
+        title={
+          <>
+            {titleStart}{' '}
+            <span className="relative inline-block text-yellow-300">
+              {titleHighlight}
+              <svg className="absolute -bottom-2 left-0 w-full" viewBox="0 0 300 14" fill="none" aria-hidden="true">
+                <path d="M3 10C70 3 160 2 297 7" stroke="#facc15" strokeWidth="5" strokeLinecap="round" opacity="0.55" />
+              </svg>
+            </span>
+          </>
+        }
+        subtitle={currentTranslations.subtitle}
+        image={HERO_IMAGE}
+        imageAlt={currentTranslations.title}
+        actions={
+          <>
+            <Button
+              onClick={() => scrollTo('servicios')}
+              className="h-14 rounded-full bg-yellow-400 px-8 text-base font-bold text-blue-950 shadow-xl shadow-yellow-400/20 transition hover:-translate-y-0.5 hover:bg-yellow-300"
+            >
+              <Wrench className="mr-2 h-5 w-5" />
+              {currentTranslations.heroCtaPrimary}
+              <ArrowRight className="ml-2 h-5 w-5" />
+            </Button>
+            <a
+              href="https://wa.me/34655707412"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex h-14 items-center justify-center gap-2 rounded-full border border-white/25 bg-white/5 px-8 text-base font-semibold text-white backdrop-blur-md transition hover:bg-white/15"
+            >
+              <MessageCircle className="h-5 w-5" />
+              {currentTranslations.heroCtaSecondary}
+            </a>
+          </>
+        }
+        stats={[
+          { icon: <Wrench className="h-5 w-5" />, value: currentTranslations.statServices, label: currentTranslations.statServicesLabel },
+          { icon: <ShieldCheck className="h-5 w-5" />, value: currentTranslations.statChecks, label: currentTranslations.statChecksLabel },
+          { icon: <MapPin className="h-5 w-5" />, value: currentTranslations.statShop, label: currentTranslations.statShopLabel },
+          { icon: <Sparkles className="h-5 w-5" />, value: currentTranslations.statQuote, label: currentTranslations.statQuoteLabel },
+        ]}
+      />
+
       {/* Main Content */}
-      <section className="py-16">
-        <div className="container mx-auto px-4">
-          {/* Título y Subtítulo */}
-          <div className="text-center mb-12">
-            <h1 className="text-4xl md:text-5xl font-bold text-black mb-4">
-              {currentTranslations.title}
-            </h1>
-            <p className="text-lg md:text-xl text-gray-700 max-w-3xl mx-auto">
-              {currentTranslations.subtitle}
-            </p>
+      <section id="servicios" className="container mx-auto scroll-mt-24 px-4 py-14 md:py-20">
+        {/* Tabs */}
+        <div className="mb-10 flex justify-center md:mb-14">
+          <div className="inline-flex w-full max-w-md gap-2 rounded-full border border-slate-200 bg-white p-1.5 shadow-sm dark:border-white/10 dark:bg-slate-900/70">
+            <button
+              onClick={() => setActiveTab('repair')}
+              className={`flex min-h-12 flex-1 basis-0 items-center justify-center gap-2 rounded-full px-3 py-2 text-center text-xs font-bold leading-tight transition-all sm:px-4 sm:text-sm ${
+                activeTab === 'repair'
+                  ? 'bg-yellow-400 text-blue-950 shadow-lg shadow-yellow-400/30'
+                  : 'text-slate-600 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-white/10'
+              }`}
+            >
+              <span>🔧 {currentTranslations.repair.title}</span>
+            </button>
+            <button
+              onClick={() => setActiveTab('store')}
+              className={`flex min-h-12 flex-1 basis-0 items-center justify-center gap-2 rounded-full px-3 py-2 text-center text-xs font-bold leading-tight transition-all sm:px-4 sm:text-sm ${
+                activeTab === 'store'
+                  ? 'bg-blue-900 text-white shadow-lg shadow-blue-900/25 dark:bg-yellow-400 dark:text-blue-950'
+                  : 'text-slate-600 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-white/10'
+              }`}
+            >
+              <span>🏪 {currentTranslations.store.title}</span>
+            </button>
           </div>
+        </div>
 
-          {/* Tabs */}
-          <div className="mb-8">
-            <div className="flex justify-center space-x-4">
-              <button
-                onClick={() => setActiveTab('repair')}
-                className={`flex items-center space-x-2 px-6 py-3 rounded-lg font-semibold transition-all ${
-                  activeTab === 'repair'
-                    ? 'bg-yellow-500 text-white shadow-lg'
-                    : 'bg-transparent text-gray-700 hover:bg-gray-100'
-                }`}
-              >
-                <span>🔧 {currentTranslations.repair.title}</span>
-              </button>
-              <button
-                onClick={() => setActiveTab('store')}
-                className={`flex items-center space-x-2 px-6 py-3 rounded-lg font-semibold transition-all ${
-                  activeTab === 'store'
-                    ? 'bg-blue-600 text-white shadow-lg'
-                    : 'bg-transparent text-gray-700 hover:bg-gray-100'
-                }`}
-              >
-                <span>🏪 {currentTranslations.store.title}</span>
-              </button>
+        {/* Store */}
+        {activeTab === 'store' && (
+          <div>
+            <SectionHeading
+              eyebrow={currentTranslations.storeEyebrow}
+              title={currentTranslations.store.title}
+              subtitle={currentTranslations.store.subtitle}
+            />
+
+            <div className="mx-auto mt-10 max-w-2xl">
+              <div className="overflow-hidden rounded-[2rem] border border-slate-200 bg-white p-8 text-center shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl dark:border-white/10 dark:bg-slate-900/70 sm:p-12">
+                <div className="mx-auto flex h-24 w-24 items-center justify-center rounded-full bg-blue-900 text-4xl shadow-lg shadow-blue-900/20 dark:bg-yellow-400">
+                  <span aria-hidden="true">🏪</span>
+                </div>
+                <h3 className="mt-6 text-2xl font-black tracking-tight text-slate-900 dark:text-white sm:text-3xl">
+                  {currentTranslations.store.comingSoon}
+                </h3>
+                <p className="mx-auto mt-3 max-w-xl text-sm leading-relaxed text-slate-600 dark:text-slate-400 sm:text-base">
+                  {currentTranslations.store.preparingMessage || 'Estamos preparando una selección especial de productos y accesorios para ti.'}
+                </p>
+              </div>
             </div>
           </div>
+        )}
 
-          {/* Content Sections */}
-          {activeTab === 'store' && (
-            <div className="text-center">
-              <div className="max-w-2xl mx-auto">
-                <h2 className="text-4xl font-bold text-gray-900 mb-6">
-                  {currentTranslations.store.title}
-                </h2>
-                <p className="text-xl text-gray-600 mb-8">
-                  {currentTranslations.store.subtitle}
-                </p>
-                <Card className="p-12 bg-gradient-to-br from-yellow-400 to-yellow-500">
-                  <CardContent className="text-center">
-                    <div className="w-24 h-24 mx-auto mb-6 bg-blue-600 rounded-full flex items-center justify-center">
-                      <span className="text-4xl text-white">🏪</span>
-                    </div>
-                    <h3 className="text-2xl font-bold text-blue-900 mb-4">
-                      {currentTranslations.store.comingSoon}
+        {/* Repair */}
+        {activeTab === 'repair' && (
+          <div>
+            <SectionHeading
+              eyebrow={currentTranslations.repairEyebrow}
+              title={currentTranslations.repair.title}
+              subtitle={currentTranslations.repair.subtitle}
+            />
+
+            <div className="mt-10 grid grid-cols-1 gap-6 md:mt-14 md:grid-cols-2">
+              {repairServices.map((service) => (
+                <article
+                  key={service.id}
+                  className="group flex flex-col overflow-hidden rounded-[2rem] border border-slate-200 bg-white shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl dark:border-white/10 dark:bg-slate-900/70"
+                >
+                  <div className="relative aspect-[16/10] overflow-hidden bg-gradient-to-br from-blue-950 via-blue-900 to-slate-800">
+                    <Image
+                      src={service.image}
+                      alt={service.data.title}
+                      fill
+                      sizes="(min-width: 768px) 50vw, 100vw"
+                      className="object-cover transition duration-700 group-hover:scale-105"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-slate-950/10 to-transparent" />
+                    <span className="absolute left-4 top-4 flex h-12 w-12 items-center justify-center rounded-full border border-white/20 bg-white/10 text-yellow-300 backdrop-blur-md">
+                      {service.icon}
+                    </span>
+                  </div>
+
+                  <div className="flex flex-1 flex-col p-5 sm:p-6">
+                    <h3 className="text-xl font-black leading-tight tracking-tight text-slate-900 dark:text-white sm:text-2xl">
+                      {service.data.title}
                     </h3>
-                    <p className="text-blue-800">
-                      {currentTranslations.store.preparingMessage || 'Estamos preparando una selección especial de productos y accesorios para ti.'}
+                    <p className="mt-2 text-sm leading-relaxed text-slate-600 dark:text-slate-400">
+                      {service.data.description}
                     </p>
-                  </CardContent>
-                </Card>
-              </div>
-            </div>
-          )}
 
-          {activeTab === 'repair' && (
-            <div>
-              <div className="text-center mb-12">
-                <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-6">
-                  {currentTranslations.repair.title}
-                </h2>
-                <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-                  {currentTranslations.repair.subtitle}
-                </p>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                {repairServices.map((service, index) => (
-                  <Card 
-                    key={service.id} 
-                    className={`overflow-hidden hover:shadow-xl transition-all duration-300 border-2 ${
-                      index % 2 === 0 
-                        ? 'border-blue-200 bg-gradient-to-br from-blue-50 to-blue-100' 
-                        : 'border-yellow-200 bg-gradient-to-br from-yellow-50 to-yellow-100'
-                    }`}
-                  >
-                    <div className="aspect-video relative">
-                      <Image
-                        src={service.image}
-                        alt={service.data.title}
-                        fill
-                        className="object-cover"
-                      />
-                      <div className={`absolute top-4 right-4 p-2 rounded-full ${
-                        index % 2 === 0 ? 'bg-blue-600' : 'bg-yellow-500'
-                      } text-white`}>
-                        {service.icon}
-                      </div>
+                    <div className="mt-4 flex flex-wrap gap-2">
+                      {service.data.services.map((serviceItem, serviceIndex) => (
+                        <span
+                          key={serviceIndex}
+                          className="inline-flex items-center gap-1.5 rounded-full border border-slate-200 bg-slate-50 px-3 py-1.5 text-xs font-semibold text-slate-700 dark:border-white/10 dark:bg-white/5 dark:text-slate-300"
+                        >
+                          <Check className="h-3 w-3 text-yellow-500" strokeWidth={3} />
+                          {serviceItem}
+                        </span>
+                      ))}
                     </div>
-                    <CardHeader>
-                      <CardTitle className={`text-xl ${
-                        index % 2 === 0 ? 'text-blue-800' : 'text-yellow-800'
-                      }`}>
-                        {service.data.title}
-                      </CardTitle>
-                      <CardDescription className="text-gray-600">
-                        {service.data.description}
-                      </CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="space-y-2 mb-6">
-                        {service.data.services.map((serviceItem, serviceIndex) => (
-                          <Badge 
-                            key={serviceIndex} 
-                            variant="secondary" 
-                            className={`mr-2 mb-2 ${
-                              index % 2 === 0 
-                                ? 'bg-blue-100 text-blue-800 hover:bg-blue-200' 
-                                : 'bg-yellow-100 text-yellow-800 hover:bg-yellow-200'
-                            }`}
-                          >
-                            {serviceItem}
-                          </Badge>
-                        ))}
-                      </div>
-                      <Button 
+
+                    <div className="mt-auto pt-6">
+                      <Button
                         onClick={() => handleRepairQuoteRequest(service.id, service.data.title)}
-                        className={`w-full ${
-                          index % 2 === 0 
-                            ? 'bg-blue-600 hover:bg-blue-700' 
-                            : 'bg-yellow-500 hover:bg-yellow-600'
-                        } text-white`}
+                        className="h-12 w-full rounded-full bg-blue-900 font-bold text-white shadow-lg shadow-blue-900/20 transition hover:bg-blue-800 dark:bg-yellow-400 dark:text-blue-950 dark:hover:bg-yellow-300"
                       >
                         {currentTranslations.contact}
+                        <ArrowRight className="ml-2 h-4 w-4" />
                       </Button>
-                    </CardContent>
-                  </Card>
-                ))}
-              </div>
+                    </div>
+                  </div>
+                </article>
+              ))}
             </div>
-          )}
-        </div>
+          </div>
+        )}
       </section>
 
       {/* QR Modal */}
@@ -439,50 +527,11 @@ export default function TiendaPage() {
       />
 
       {/* Footer */}
-      <footer className="bg-gradient-to-r from-yellow-400 to-yellow-500 text-black py-8">
-        <div className="container mx-auto px-4">
-          <div className="flex flex-col md:flex-row justify-between items-center">
-            <div className="flex items-center space-x-3 mb-4 md:mb-0">
-               <div className="flex items-center space-x-3">
-                 <Image src="/icon/iconf.png" alt="Free Air Street Logo" width={60} height={60} className="rounded" />
-                 <div>
-                   <h3 className="font-bold birthstone-regular">Free Air Street</h3>
-                   <p className="text-sm text-gray-700">Rent & Tours</p>
-                 </div>
-               </div>
-               
-               {/* Instagram Link */}
-               <a
-                 href="https://www.instagram.com/freeairstreet?igsh=d25kaDRkM3QwNGJ6"
-                 target="_blank"
-                 rel="noopener noreferrer"
-                 className="flex items-center space-x-2 bg-gradient-to-r from-purple-500 via-pink-500 to-orange-500 text-white px-4 py-2 rounded-lg hover:shadow-lg transition-all duration-300 transform hover:scale-105"
-               >
-                 <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
-                   <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
-                 </svg>
-                 <span className="font-semibold">freeairstreet</span>
-               </a>
-               
-               {/* WhatsApp Link */}
-               <a
-                 href="https://wa.me/34655707412"
-                 target="_blank"
-                 rel="noopener noreferrer"
-                 className="flex items-center justify-center px-4 py-2 bg-green-500 hover:bg-green-600 text-white rounded-lg hover:shadow-lg transition-all duration-300 transform hover:scale-105"
-               >
-                 <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
-                   <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893A11.821 11.821 0 0020.885 3.488"/>
-                 </svg>
-               </a>
-             </div>
-
-            <div className="text-center md:text-right">
-              <p className="text-gray-700">© 2025 Free Air Street. Todos los derechos reservados.</p>
-            </div>
-          </div>
-        </div>
-      </footer>
+      <SiteFooter
+        tagline="Rent & Tours"
+        contactLabel={t('header.contact')}
+        backHomeLabel={currentTranslations.backHome}
+      />
     </div>
   )
 }
