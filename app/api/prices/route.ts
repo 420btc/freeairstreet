@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import prisma, { isDatabaseConfigured } from '@/lib/prisma'
 import { invalidatePriceCache } from '@/lib/price-cache'
+import { apiErrorResponse, isDatabaseUnavailable } from '@/lib/api-error'
 
 // GET all prices
 export async function GET() {
@@ -19,8 +20,11 @@ export async function GET() {
     return NextResponse.json(priceMap)
   } catch (error) {
     console.error('Error fetching prices:', error)
-    // La web usa sus precios por defecto si la base de datos no responde
-    return NextResponse.json({})
+    if (isDatabaseUnavailable(error)) {
+      // Caso esperado: la web usará sus precios por defecto
+      return NextResponse.json({})
+    }
+    return NextResponse.json({ error: 'Failed to fetch prices' }, { status: 500 })
   }
 }
 
@@ -48,6 +52,9 @@ export async function POST(request: Request) {
     return NextResponse.json({ success: true, data: updatedPrice })
   } catch (error) {
     console.error('Error updating price:', error)
-    return NextResponse.json({ success: true, persisted: false })
+    if (isDatabaseUnavailable(error)) {
+      return NextResponse.json({ success: true, persisted: false, warning: 'database_unavailable' })
+    }
+    return apiErrorResponse(error, 'Failed to update price')
   }
 }

@@ -1,5 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
 import prisma, { isDatabaseConfigured } from '@/lib/prisma';
+import {
+  apiErrorResponse,
+  databaseUnavailableResponse,
+  isDatabaseUnavailable,
+} from '@/lib/api-error';
 
 export async function POST(req: NextRequest) {
   try {
@@ -10,7 +15,7 @@ export async function POST(req: NextRequest) {
     }
 
     if (!isDatabaseConfigured) {
-      return NextResponse.json({ success: true, stored: false });
+      return NextResponse.json({ success: true, stored: false, skipped: true });
     }
 
     await prisma.chatMessageFeedback.create({
@@ -24,6 +29,9 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ success: true, stored: true });
   } catch (error) {
     console.error('Error saving feedback:', error);
-    return NextResponse.json({ success: true, stored: false });
+    if (isDatabaseUnavailable(error)) {
+      return databaseUnavailableResponse();
+    }
+    return apiErrorResponse(error, 'Failed to save feedback');
   }
 }

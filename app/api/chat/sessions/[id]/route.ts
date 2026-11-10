@@ -1,10 +1,16 @@
 import { NextRequest, NextResponse } from 'next/server';
-import prisma from '@/lib/prisma';
+import prisma, { isDatabaseConfigured } from '@/lib/prisma';
+import { isDatabaseUnavailable } from '@/lib/api-error';
 
 export async function GET(
   _req: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  // Sin base de datos el historial simplemente no existe: el chat arranca vacío.
+  if (!isDatabaseConfigured) {
+    return NextResponse.json({ messages: [] });
+  }
+
   try {
     const { id } = await params;
 
@@ -31,6 +37,12 @@ export async function GET(
     return NextResponse.json({ messages });
   } catch (error) {
     console.error('Error fetching session:', error);
-    return NextResponse.json({ messages: [] });
+    if (isDatabaseUnavailable(error)) {
+      return NextResponse.json({ messages: [] });
+    }
+    return NextResponse.json(
+      { messages: [], error: 'No se pudo cargar la conversación' },
+      { status: 500 }
+    );
   }
 }
