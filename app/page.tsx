@@ -203,17 +203,27 @@ export default function HomePage() {
           essential: true
         });
 
-        // Add markers immediately so they are ready when we arrive
-        // Create custom marker element
-        const markerElement = document.createElement('div');
-        markerElement.innerHTML = '🛴';
-        markerElement.style.fontSize = '24px'; // Más grande
-        markerElement.style.backgroundColor = '#fbbf24';
-        markerElement.style.borderRadius = '50%';
-        markerElement.style.padding = '8px';
-        markerElement.style.border = '2px solid #f59e0b';
-        markerElement.style.boxShadow = '0 4px 6px rgba(0,0,0,0.3)';
-        markerElement.style.zIndex = '10';
+        // Marcador minimalista con icono de tienda (SVG en lugar de emoji)
+        const createStoreMarker = (options: {
+          size: number;
+          iconSize: number;
+          borderColor: string;
+          color: string;
+          shadow: string;
+        }) => {
+          const el = document.createElement('div');
+          el.style.cssText = `display:flex;align-items:center;justify-content:center;width:${options.size}px;height:${options.size}px;border-radius:9999px;background:#ffffff;border:1.5px solid ${options.borderColor};color:${options.color};box-shadow:${options.shadow};cursor:pointer;`;
+          el.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="${options.iconSize}" height="${options.iconSize}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3.6 9h16.8L18.6 4H5.4L3.6 9Z"/><path d="M4.8 9v10a1 1 0 0 0 1 1h12.4a1 1 0 0 0 1-1V9"/><path d="M10 20v-5.4h4V20"/></svg>`;
+          return el;
+        };
+
+        const markerElement = createStoreMarker({
+          size: 44,
+          iconSize: 20,
+          borderColor: '#fbbf24',
+          color: '#0f172a',
+          shadow: '0 8px 20px rgba(15,23,42,0.25)',
+        });
         // markerElement.className = 'animate-bounce'; // Eliminado para evitar que flote
 
         // Create popup for main store
@@ -254,19 +264,18 @@ export default function HomePage() {
           });
         }
         
-        // Add second store marker (red scooter)
-          const secondMarkerElement = document.createElement('div');
-          secondMarkerElement.innerHTML = '🛴';
-          secondMarkerElement.style.fontSize = '18px';
-          secondMarkerElement.style.backgroundColor = '#ef4444';
-          secondMarkerElement.style.borderRadius = '50%';
-          secondMarkerElement.style.padding = '6px';
-          secondMarkerElement.style.border = '2px solid #dc2626';
-          secondMarkerElement.style.boxShadow = '0 2px 4px rgba(0,0,0,0.3)';
+        // Second store marker (mismo estilo, más pequeño y discreto)
+          const secondMarkerElement = createStoreMarker({
+            size: 32,
+            iconSize: 14,
+            borderColor: 'rgba(15,23,42,0.15)',
+            color: '#475569',
+            shadow: '0 4px 12px rgba(15,23,42,0.18)',
+          });
 
           // Create popup for second store
           const secondStorePopup = new mapboxgl.Popup({
-            offset: 25,
+            offset: 18,
             closeButton: false,
             closeOnClick: false
           }).setHTML(`
@@ -761,33 +770,24 @@ export default function HomePage() {
             <SectionHeading title={t('services.title')} subtitle={t('services.subtitle')} />
           </div>
 
-          {/* Desktop (md+) layout: keep existing structure and include Store card */}
-          <div className="hidden md:grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {/* First row: 2 cards */}
-            {services.slice(0, 2).map(renderServiceCard)}
+          {/* Desktop (md+) layout: 6 tarjetas en cuadrícula centrada */}
+          <div className="hidden md:grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+            {services.map(renderServiceCard)}
 
-            {/* Second row: Repair Service (2 cols) */}
-            <div className="lg:col-span-2">{renderServiceCard(services[4])}</div>
-
-            {/* Second row: Car and Motos cards */}
-            {services.slice(2, 4).map(renderServiceCard)}
-
-            {/* Store Card (desktop only visible due to parent) */}
-            <div className="lg:col-span-2">
-              <Link
-                href="/tienda?tab=store"
-                className="group flex h-full flex-col rounded-[2rem] border border-slate-200 bg-white p-6 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl dark:border-white/10 dark:bg-slate-900/70"
-              >
-                <span className="mb-5 flex h-14 w-14 items-center justify-center rounded-2xl bg-yellow-400 text-blue-950 transition group-hover:bg-yellow-300">
-                  <Store className="h-10 w-10" />
-                </span>
-                <h3 className="text-xl font-black leading-tight text-slate-900 dark:text-white">{t('services.store')}</h3>
-                <p className="mt-2 flex-1 text-sm leading-relaxed text-slate-600 dark:text-slate-400">{t('services.storeDescription')}</p>
-                <span className="mt-4 inline-flex items-center gap-1 text-sm font-semibold text-blue-900 transition-all group-hover:gap-2 dark:text-yellow-300">
-                  {t('common.seeMore')}
-                </span>
-              </Link>
-            </div>
+            {/* Store Card */}
+            <Link
+              href="/tienda?tab=store"
+              className="group flex h-full flex-col rounded-[2rem] border border-slate-200 bg-white p-6 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl dark:border-white/10 dark:bg-slate-900/70"
+            >
+              <span className="mb-5 flex h-14 w-14 items-center justify-center rounded-2xl bg-yellow-400 text-blue-950 transition group-hover:bg-yellow-300">
+                <Store className="h-10 w-10" />
+              </span>
+              <h3 className="text-xl font-black leading-tight text-slate-900 dark:text-white">{t('services.store')}</h3>
+              <p className="mt-2 flex-1 text-sm leading-relaxed text-slate-600 dark:text-slate-400">{t('services.storeDescription')}</p>
+              <span className="mt-4 inline-flex items-center gap-1 text-sm font-semibold text-blue-900 transition-all group-hover:gap-2 dark:text-yellow-300">
+                {t('common.seeMore')}
+              </span>
+            </Link>
           </div>
 
           {/* Mobile (sm) layout: custom order without Store card */}

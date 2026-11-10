@@ -90,15 +90,10 @@ export default function ContactoPage() {
       zoom: 17
     })
 
-    // Add custom marker
+    // Add custom marker (icono minimalista de tienda)
     const markerElement = document.createElement('div')
-    markerElement.innerHTML = '🛴'
-    markerElement.style.fontSize = '12px'
-    markerElement.style.backgroundColor = '#fbbf24'
-    markerElement.style.borderRadius = '50%'
-    markerElement.style.padding = '4px'
-    markerElement.style.border = '1px solid #f59e0b'
-    markerElement.style.boxShadow = '0 1px 4px rgba(0,0,0,0.3)'
+    markerElement.style.cssText = 'display:flex;align-items:center;justify-content:center;width:38px;height:38px;border-radius:9999px;background:#ffffff;border:1.5px solid #fbbf24;color:#0f172a;box-shadow:0 6px 16px rgba(15,23,42,0.22);'
+    markerElement.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3.6 9h16.8L18.6 4H5.4L3.6 9Z"/><path d="M4.8 9v10a1 1 0 0 0 1 1h12.4a1 1 0 0 0 1-1V9"/><path d="M10 20v-5.4h4V20"/></svg>'
 
     new mapboxgl.Marker(markerElement)
       .setLngLat([-4.489167162077166, 36.63222134109576])

@@ -8,7 +8,8 @@ import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Checkbox } from '@/components/ui/checkbox'
-import { ArrowLeft, Calendar, MapPin, Clock, User, Mail, Phone, CheckCircle, Bike, Zap, Mountain, Car, CarFront } from 'lucide-react'
+import { ArrowLeft, Calendar, MapPin, Clock, User, Mail, Phone, CheckCircle } from 'lucide-react'
+import { CityBikeIcon, ScooterIcon, EBikeIcon, FatBikeIcon, MotorcycleIcon, QuadIcon, CarIcon } from '@/components/VehicleIcons'
 import { useLanguage } from '@/contexts/LanguageContext'
 import { usePricing } from '@/contexts/PricingContext'
 import { sendReservationEmail, type ReservationFormData } from '@/lib/emailjs'
@@ -67,8 +68,8 @@ const QuickRentalSection: React.FC = () => {
     {
       id: 'bicycles',
       name: t('quickRental.vehicles.bicycle') as string,
-      icon: <Bike className="w-20 h-20 text-yellow-500" />,
-      mobileIcon: <Bike className="w-12 h-12 text-yellow-500" />,
+      icon: <CityBikeIcon className="w-20 h-20 text-yellow-500" />,
+      mobileIcon: <CityBikeIcon className="w-12 h-12 text-yellow-500" />,
       image: '/urban-bicycle.png',
       priceFrom: `${t('quickRental.priceFrom') as string} ${getPrice('city-bike-1h', '4,50€')}`,
       prices: [
@@ -82,8 +83,8 @@ const QuickRentalSection: React.FC = () => {
     {
       id: 'scooters',
       name: t('quickRental.vehicles.scooter') as string,
-      icon: <Zap className="w-20 h-20 text-yellow-500" />,
-      mobileIcon: <Zap className="w-12 h-12 text-yellow-500" />,
+      icon: <ScooterIcon className="w-20 h-20 text-yellow-500" />,
+      mobileIcon: <ScooterIcon className="w-12 h-12 text-yellow-500" />,
       image: '/patinelectrico.jpg',
       priceFrom: `${t('quickRental.priceFrom') as string} 10€`,
       prices: [
@@ -94,8 +95,8 @@ const QuickRentalSection: React.FC = () => {
     {
       id: 'electric-bikes',
       name: t('quickRental.vehicles.electricBike') as string,
-      icon: <Zap className="w-20 h-20 text-yellow-500" />,
-      mobileIcon: <Zap className="w-12 h-12 text-yellow-500" />,
+      icon: <EBikeIcon className="w-20 h-20 text-yellow-500" />,
+      mobileIcon: <EBikeIcon className="w-12 h-12 text-yellow-500" />,
       image: '/modern-electric-bike.png',
       priceFrom: `${t('quickRental.priceFrom') as string} ${getPrice('electric-bike-1h', '10€')}`,
       prices: [
@@ -109,8 +110,8 @@ const QuickRentalSection: React.FC = () => {
     {
       id: 'fat-bikes',
       name: t('quickRental.vehicles.fatBike') as string,
-      icon: <Mountain className="w-20 h-20 text-yellow-500" />,
-      mobileIcon: <Mountain className="w-12 h-12 text-yellow-500" />,
+      icon: <FatBikeIcon className="w-20 h-20 text-yellow-500" />,
+      mobileIcon: <FatBikeIcon className="w-12 h-12 text-yellow-500" />,
       image: '/fat-bike-electric-wide-tires.png',
       priceFrom: `${t('quickRental.priceFrom') as string} ${getPrice('fat-bike-1h', '10€')}`,
       prices: [
@@ -124,8 +125,8 @@ const QuickRentalSection: React.FC = () => {
     {
       id: 'motorcycles',
       name: t('quickRental.vehicles.motorcycle') as string,
-      icon: <Bike className="w-20 h-20 text-yellow-500" />,
-      mobileIcon: <Bike className="w-12 h-12 text-yellow-500" />,
+      icon: <MotorcycleIcon className="w-20 h-20 text-yellow-500" />,
+      mobileIcon: <MotorcycleIcon className="w-12 h-12 text-yellow-500" />,
       image: '/motos/motobike.jpeg',
       priceFrom: `${t('quickRental.priceFrom') as string} 15€`,
       prices: [
@@ -140,8 +141,8 @@ const QuickRentalSection: React.FC = () => {
     {
       id: 'quads',
       name: t('quickRental.vehicles.quad') as string,
-      icon: <CarFront className="w-20 h-20 text-yellow-500" />,
-      mobileIcon: <CarFront className="w-12 h-12 text-yellow-500" />,
+      icon: <QuadIcon className="w-20 h-20 text-yellow-500" />,
+      mobileIcon: <QuadIcon className="w-12 h-12 text-yellow-500" />,
       image: '/quad.jpeg',
       priceFrom: `${t('quickRental.priceFrom') as string} 30€`,
       prices: [
@@ -152,8 +153,8 @@ const QuickRentalSection: React.FC = () => {
     {
       id: 'cars',
       name: t('quickRental.vehicles.car') as string,
-      icon: <Car className="w-20 h-20 text-yellow-500" />,
-      mobileIcon: <Car className="w-12 h-12 text-yellow-500" />,
+      icon: <CarIcon className="w-20 h-20 text-yellow-500" />,
+      mobileIcon: <CarIcon className="w-12 h-12 text-yellow-500" />,
       image: '/coches/toyotaaygo.png',
       priceFrom: `${t('quickRental.priceFrom') as string} 54€`,
       prices: [

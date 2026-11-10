@@ -6,6 +6,8 @@ import {
   Bike,
   Car,
   Check,
+  ChevronLeft,
+  ChevronRight,
   Clock,
   Info,
   MapPin,
@@ -31,6 +33,61 @@ import { ReservationModal } from '../../components/ReservationModal'
 import { useLanguage } from '../../contexts/LanguageContext'
 import { useInventory } from '../../contexts/InventoryContext'
 import { usePricing } from '../../contexts/PricingContext'
+
+function VehicleImageCarousel({ images, alt }: { images: string[]; alt: string }) {
+  const [current, setCurrent] = useState(0)
+  const total = images.length
+  const hasMultiple = total > 1
+
+  const goTo = (direction: number) => {
+    setCurrent((prev) => (prev + direction + total) % total)
+  }
+
+  return (
+    <>
+      <Image
+        key={images[current]}
+        src={images[current] || "/placeholder.svg"}
+        alt={alt}
+        fill
+        className="animate-in object-cover fade-in duration-700 group-hover:scale-105"
+      />
+      {hasMultiple && (
+        <>
+          <button
+            type="button"
+            onClick={() => goTo(-1)}
+            aria-label="Imagen anterior"
+            className="absolute left-3 top-1/2 z-10 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-white/85 text-slate-900 shadow-lg backdrop-blur transition hover:bg-white active:scale-95"
+          >
+            <ChevronLeft className="h-5 w-5" />
+          </button>
+          <button
+            type="button"
+            onClick={() => goTo(1)}
+            aria-label="Imagen siguiente"
+            className="absolute right-3 top-1/2 z-10 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-white/85 text-slate-900 shadow-lg backdrop-blur transition hover:bg-white active:scale-95"
+          >
+            <ChevronRight className="h-5 w-5" />
+          </button>
+          <div className="absolute left-4 top-4 z-10 flex items-center gap-1.5 rounded-full bg-slate-950/40 px-2.5 py-1.5 backdrop-blur">
+            {images.map((image, index) => (
+              <button
+                key={`${image}-${index}`}
+                type="button"
+                onClick={() => setCurrent(index)}
+                aria-label={`Ver imagen ${index + 1}`}
+                className={`h-1.5 rounded-full transition-all ${
+                  index === current ? "w-4 bg-yellow-400" : "w-1.5 bg-white/70 hover:bg-white"
+                }`}
+              />
+            ))}
+          </div>
+        </>
+      )}
+    </>
+  )
+}
 
 export default function AlquilerPage() {
   const { t, language } = useLanguage()
@@ -118,7 +175,7 @@ export default function AlquilerPage() {
       id: "city-bike",
       name: t('rental.vehicles.cityBike.name'),
       description: t('rental.vehicles.cityBike.description'),
-      image: "/urban-bicycle.png",
+      images: ["/urban-bicycle.png"],
       prices: [
         { duration: "1h", price: getPrice("city-bike-1h", "4,50€") },
         { duration: "2h", price: getPrice("city-bike-2h", "6€") },
@@ -132,7 +189,7 @@ export default function AlquilerPage() {
       id: "mountain-bike",
       name: t('rental.vehicles.mountainBike.name'),
       description: t('rental.vehicles.mountainBike.description'),
-      image: "/mountain-bike-trail.png",
+      images: ["/mountain-bike-trail.png"],
       prices: [
         { duration: "1h", price: getPrice("mountain-bike-1h", "8€") },
         { duration: "2h", price: getPrice("mountain-bike-2h", "9€") },
@@ -146,7 +203,7 @@ export default function AlquilerPage() {
       id: "electric-bike",
       name: t('rental.vehicles.electricBike.name'),
       description: t('rental.vehicles.electricBike.description'),
-      image: "/modern-electric-bike.png",
+      images: ["/bicinuevas.jpeg", "/modern-electric-bike.png"],
       prices: [
         { duration: "1h", price: getPrice('electric-bike-1h', "10€") },
         { duration: "2h", price: getPrice('electric-bike-2h', "18€") },
@@ -160,7 +217,7 @@ export default function AlquilerPage() {
       id: "fat-bike",
       name: t('rental.vehicles.fatBike.name'),
       description: t('rental.vehicles.fatBike.description'),
-      image: "/fat-bike-electric-wide-tires.png",
+      images: ["/fat-bike-electric-wide-tires.png"],
       prices: [
         { duration: "1h", price: getPrice('fat-bike-1h', "10€") },
         { duration: "2h", price: getPrice('fat-bike-2h', "18€") },
@@ -1021,7 +1078,7 @@ export default function AlquilerPage() {
               {bicycles.map((bike) => (
                 <article key={bike.id} className={cardClass}>
                   <div className={mediaClass}>
-                    <Image src={bike.image || "/placeholder.svg"} alt={bike.name as string} fill className="object-cover transition duration-700 group-hover:scale-105" />
+                    <VehicleImageCarousel images={bike.images} alt={bike.name as string} />
                     <div className={overlayClass} />
 
                     <div className="absolute right-4 top-4">
