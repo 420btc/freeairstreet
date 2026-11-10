@@ -313,16 +313,16 @@ const QuickRentalSection: React.FC = () => {
 
   if (isSubmitted) {
     return (
-      <section className="py-16 bg-gradient-to-br from-blue-50 to-white">
+      <section className="py-16 bg-gradient-to-br from-blue-50 to-white dark:from-[#0b1524] dark:to-[#070d18]">
         <div className="container mx-auto px-4">
           <div className="max-w-2xl mx-auto text-center">
-            <Card className="border-green-200 bg-green-50">
+            <Card className="border-green-200 bg-green-50 dark:border-green-500/30 dark:bg-green-500/10">
               <CardContent className="p-8">
-                <CheckCircle className="h-16 w-16 text-green-600 mx-auto mb-4" />
-                <h3 className="text-2xl font-bold text-green-800 mb-2">
+                <CheckCircle className="h-16 w-16 text-green-600 dark:text-green-400 mx-auto mb-4" />
+                <h3 className="text-2xl font-bold text-green-800 dark:text-green-300 mb-2">
                   {t('quickRental.form.successTitle')}
                 </h3>
-                <p className="text-green-700 mb-6">
+                <p className="text-green-700 dark:text-green-300 mb-6">
                   {t('quickRental.form.successText')}
                 </p>
                 <Button
@@ -335,7 +335,7 @@ const QuickRentalSection: React.FC = () => {
                     setShowMobileForm(false)
                     setShowDesktopForm(false)
                   }}
-                  className="bg-blue-600 hover:bg-blue-700"
+                  className="bg-blue-800 hover:bg-blue-700 dark:bg-yellow-400 dark:text-blue-950 dark:hover:bg-yellow-300"
                 >
                   {t('quickRental.form.makeAnother')}
                 </Button>
@@ -348,7 +348,7 @@ const QuickRentalSection: React.FC = () => {
   }
 
   return (
-    <section className="py-16 bg-gradient-to-br from-blue-50 to-white">
+    <section className="py-16 bg-gradient-to-br from-blue-50 to-white dark:from-[#0b1524] dark:to-[#070d18]">
       <div className="container mx-auto px-4">
         <div className="text-center mb-12">
           <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
@@ -371,7 +371,7 @@ const QuickRentalSection: React.FC = () => {
                           key={vehicle.id}
                           type="button"
                           onClick={() => handleVehicleSelection(vehicle.id)}
-                          className="group relative px-12 py-10 rounded-xl border-2 transition-all duration-300 hover:scale-105 hover:shadow-xl border-gray-200 hover:border-blue-300 shadow-md min-h-[220px] w-full"
+                          className="group relative px-12 py-10 rounded-xl border-2 transition-all duration-300 hover:scale-105 hover:shadow-xl border-slate-200 bg-white hover:border-blue-300 shadow-md dark:border-white/10 dark:bg-slate-900/60 dark:hover:border-yellow-400/40 min-h-[220px] w-full"
                           style={{
                             boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)'
                           }}
@@ -398,7 +398,7 @@ const QuickRentalSection: React.FC = () => {
                           key={vehicle.id}
                           type="button"
                           onClick={() => handleVehicleSelection(vehicle.id)}
-                          className="group relative p-8 rounded-xl border-2 transition-all duration-300 hover:scale-105 hover:shadow-xl border-gray-200 hover:border-blue-300 shadow-md"
+                          className="group relative p-8 rounded-xl border-2 transition-all duration-300 hover:scale-105 hover:shadow-xl border-slate-200 bg-white hover:border-blue-300 shadow-md dark:border-white/10 dark:bg-slate-900/60 dark:hover:border-yellow-400/40"
                           style={{
                             boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)'
                           }}
@@ -425,7 +425,7 @@ const QuickRentalSection: React.FC = () => {
                           key={vehicle.id}
                           type="button"
                           onClick={() => handleVehicleSelection(vehicle.id)}
-                          className="group relative p-6 rounded-xl border-2 transition-all duration-300 hover:scale-105 hover:shadow-xl border-gray-200 hover:border-blue-300 shadow-md"
+                          className="group relative p-6 rounded-xl border-2 transition-all duration-300 hover:scale-105 hover:shadow-xl border-slate-200 bg-white hover:border-blue-300 shadow-md dark:border-white/10 dark:bg-slate-900/60 dark:hover:border-yellow-400/40"
                           style={{
                             boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)'
                           }}
@@ -453,7 +453,7 @@ const QuickRentalSection: React.FC = () => {
                             key={vehicle.id}
                             type="button"
                             onClick={() => handleVehicleSelection(vehicle.id)}
-                            className="group relative p-6 rounded-xl border-2 transition-all duration-300 hover:scale-105 hover:shadow-lg border-gray-200 hover:border-blue-300 shadow-md hover:shadow-xl w-40"
+                            className="group relative p-6 rounded-xl border-2 transition-all duration-300 hover:scale-105 hover:shadow-lg border-slate-200 bg-white hover:border-blue-300 shadow-md dark:border-white/10 dark:bg-slate-900/60 dark:hover:border-yellow-400/40 hover:shadow-xl w-40"
                             style={{
                               boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)'
                             }}
@@ -481,7 +481,7 @@ const QuickRentalSection: React.FC = () => {
                     <div className="mb-6">
                       <button
                         onClick={handleBackToVehicles}
-                        className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium text-sm transition-colors"
+                        className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-700 dark:bg-white/10 dark:text-slate-300 dark:hover:bg-white/15 font-medium text-sm transition-colors"
                       >
                         <ArrowLeft className="w-4 h-4" />
                         {t('quickRental.form.backToVehicles')}
@@ -492,7 +492,7 @@ const QuickRentalSection: React.FC = () => {
                     </div>
                     
                     {/* Vehículo seleccionado */}
-                    <div className="bg-blue-50 p-4 rounded-lg border border-blue-200 mb-6">
+                    <div className="bg-blue-50 dark:bg-white/5 p-4 rounded-lg border border-blue-200 dark:border-white/10 mb-6">
                       <div className="flex items-center justify-center gap-3">
                         <span className="text-2xl">{selectedVehicleData.icon}</span>
                         <div>
@@ -510,8 +510,8 @@ const QuickRentalSection: React.FC = () => {
                           onClick={() => handlePriceSelection(priceOption.duration, priceOption.price)}
                           className={`p-4 rounded-xl border-2 transition-all duration-200 hover:scale-105 ${
                             priceOption.featured
-                              ? 'border-blue-500 bg-blue-50 shadow-lg'
-                              : 'border-gray-200 hover:border-blue-300 hover:bg-gray-50'
+                              ? 'border-blue-500 bg-blue-50 shadow-lg dark:border-yellow-400/70 dark:bg-yellow-400/10'
+                              : 'border-slate-200 hover:border-blue-300 hover:bg-gray-50 dark:border-white/10 dark:hover:border-yellow-400/40 dark:hover:bg-white/5'
                           }`}
                         >
                           <div className="flex justify-between items-center">
@@ -534,7 +534,7 @@ const QuickRentalSection: React.FC = () => {
                        <button
                          type="button"
                          onClick={handleBackToPrices}
-                         className="text-gray-500 hover:text-gray-700 flex items-center gap-2"
+                         className="text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200 flex items-center gap-2"
                        >
                          ← {t('quickRental.form.backToPrices')}
                        </button>
@@ -545,7 +545,7 @@ const QuickRentalSection: React.FC = () => {
                      </div>
 
                      {/* Resumen de selección - móvil */}
-                     <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">
+                     <div className="bg-blue-50 dark:bg-white/5 p-4 rounded-lg border border-blue-200 dark:border-white/10">
                        <div className="text-center">
                          <div className="flex items-center justify-center gap-3 mb-2">
                            <span className="text-2xl">{selectedVehicleData.icon}</span>
@@ -724,15 +724,15 @@ const QuickRentalSection: React.FC = () => {
 
                       {/* Error message móvil */}
                       {submitError && (
-                        <div className="bg-red-50 border border-red-200 rounded-lg p-3">
-                          <p className="text-red-700 text-sm">{submitError}</p>
+                        <div className="bg-red-50 dark:bg-red-500/10 border border-red-200 dark:border-red-500/30 rounded-lg p-3">
+                          <p className="text-red-700 dark:text-red-300 text-sm">{submitError}</p>
                         </div>
                       )}
 
                       {/* Botón enviar móvil */}
                       <Button
                         type="submit"
-                        className="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 text-lg font-semibold"
+                        className="w-full bg-blue-800 hover:bg-blue-700 dark:bg-yellow-400 dark:text-blue-950 dark:hover:bg-yellow-300 text-white py-3 text-lg font-semibold"
                         disabled={isSubmitting}
                       >
                         {isSubmitting ? t('quickRental.form.submitting') : t('quickRental.form.submit')}
@@ -752,7 +752,7 @@ const QuickRentalSection: React.FC = () => {
                           key={vehicle.id}
                           type="button"
                           onClick={() => handleVehicleSelection(vehicle.id)}
-                          className="group relative p-6 rounded-xl border-2 transition-all duration-300 hover:scale-105 hover:shadow-xl border-gray-200 hover:border-blue-300 shadow-md"
+                          className="group relative p-6 rounded-xl border-2 transition-all duration-300 hover:scale-105 hover:shadow-xl border-slate-200 bg-white hover:border-blue-300 shadow-md dark:border-white/10 dark:bg-slate-900/60 dark:hover:border-yellow-400/40"
                           style={{
                             boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)'
                           }}
@@ -777,7 +777,7 @@ const QuickRentalSection: React.FC = () => {
                     <div className="flex items-center justify-between mb-8">
                       <button
                         onClick={handleBackToVehicles}
-                        className="text-gray-500 hover:text-gray-700 flex items-center gap-2 text-lg"
+                        className="text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200 flex items-center gap-2 text-lg"
                       >
                         ← Volver a Vehículos
                       </button>
@@ -788,7 +788,7 @@ const QuickRentalSection: React.FC = () => {
                     </div>
                     
                     {/* Vehículo seleccionado - desktop */}
-                    <div className="bg-blue-50 p-6 rounded-lg border border-blue-200 mb-8">
+                    <div className="bg-blue-50 dark:bg-white/5 p-6 rounded-lg border border-blue-200 dark:border-white/10 mb-8">
                       <div className="flex items-center justify-center gap-4">
                         <span className="text-4xl">{selectedVehicleData.icon}</span>
                         <div className="text-center">
@@ -806,8 +806,8 @@ const QuickRentalSection: React.FC = () => {
                           onClick={() => handlePriceSelection(priceOption.duration, priceOption.price)}
                           className={`p-6 rounded-xl border-2 transition-all duration-200 hover:scale-105 ${
                             priceOption.featured
-                              ? 'border-blue-500 bg-blue-50 shadow-lg ring-2 ring-blue-200'
-                              : 'border-gray-200 hover:border-blue-300 hover:bg-gray-50 shadow-md hover:shadow-xl'
+                              ? 'border-blue-500 bg-blue-50 shadow-lg ring-2 ring-blue-200 dark:border-yellow-400/70 dark:bg-yellow-400/10 dark:ring-yellow-400/30'
+                              : 'border-slate-200 hover:border-blue-300 hover:bg-gray-50 shadow-md hover:shadow-xl dark:border-white/10 dark:hover:border-yellow-400/40 dark:hover:bg-white/5'
                           }`}
                           style={{
                             boxShadow: priceOption.featured 
@@ -833,7 +833,7 @@ const QuickRentalSection: React.FC = () => {
                        <button
                          type="button"
                          onClick={handleBackToPrices}
-                         className="text-gray-500 hover:text-gray-700 flex items-center gap-2 text-lg"
+                         className="text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200 flex items-center gap-2 text-lg"
                        >
                          ← {t('quickRental.form.backToPrices')}
                        </button>
@@ -844,7 +844,7 @@ const QuickRentalSection: React.FC = () => {
                      </div>
 
                      {/* Resumen de selección - desktop */}
-                     <div className="bg-blue-50 p-6 rounded-lg border border-blue-200">
+                     <div className="bg-blue-50 dark:bg-white/5 p-6 rounded-lg border border-blue-200 dark:border-white/10">
                        <div className="flex items-center justify-center gap-4">
                          <span className="text-3xl">{selectedVehicleData.icon}</span>
                          <div className="text-center">
@@ -1045,8 +1045,8 @@ const QuickRentalSection: React.FC = () => {
 
                       {/* Error message */}
                       {submitError && (
-                        <div className="bg-red-50 border border-red-200 rounded-lg p-3">
-                          <p className="text-red-700 text-sm">{submitError}</p>
+                        <div className="bg-red-50 dark:bg-red-500/10 border border-red-200 dark:border-red-500/30 rounded-lg p-3">
+                          <p className="text-red-700 dark:text-red-300 text-sm">{submitError}</p>
                         </div>
                       )}
 
@@ -1054,7 +1054,7 @@ const QuickRentalSection: React.FC = () => {
                       <div className="flex flex-col sm:flex-row gap-3 pt-4">
                   <Button
                     type="submit"
-                    className="flex-1 bg-blue-600 hover:bg-blue-700 text-white py-3 text-lg font-semibold"
+                    className="flex-1 bg-blue-800 hover:bg-blue-700 dark:bg-yellow-400 dark:text-blue-950 dark:hover:bg-yellow-300 text-white py-3 text-lg font-semibold"
                     disabled={isSubmitting}
                   >
                     {isSubmitting ? t('quickRental.form.submitting') : t('quickRental.form.submit')}
@@ -1063,7 +1063,7 @@ const QuickRentalSection: React.FC = () => {
                     <Button
                       type="button"
                       variant="outline"
-                      className="w-full border-blue-600 text-blue-600 hover:bg-blue-50 py-3"
+                      className="w-full border-blue-700 text-blue-700 hover:bg-blue-50 dark:border-yellow-300 dark:text-yellow-300 dark:hover:bg-white/5 py-3"
                     >
                       {t('quickRental.form.seeAllPrices')}
                     </Button>

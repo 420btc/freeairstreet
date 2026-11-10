@@ -507,7 +507,7 @@ export default function RoutesComponent() {
               <Card 
                 key={route.id} 
                 className={`cursor-pointer transition-all duration-200 hover:shadow-lg hover:scale-105 ${
-                  selectedRoute?.id === route.id ? 'ring-2 ring-blue-500 bg-blue-50' : ''
+                  selectedRoute?.id === route.id ? 'ring-2 ring-blue-500 bg-blue-50 dark:ring-yellow-400/60 dark:bg-yellow-400/10' : ''
                 }`}
                 onClick={() => setSelectedRoute(route)}
               >
@@ -547,13 +547,13 @@ export default function RoutesComponent() {
                     
                     {/* Mostrar enlace de Strava si es una ruta de Strava */}
                     {route.type === 'strava' && route.stravaUrl && (
-                      <div className="flex items-center justify-between p-2 bg-orange-50 rounded-md border border-orange-200">
-                        <span className="text-sm text-orange-700 font-medium">Ruta de Strava</span>
+                      <div className="flex items-center justify-between p-2 bg-orange-50 dark:bg-orange-500/10 rounded-md border border-orange-200 dark:border-orange-500/30">
+                        <span className="text-sm text-orange-700 dark:text-orange-300 font-medium">Ruta de Strava</span>
                         <a 
                           href={route.stravaUrl} 
                           target="_blank" 
                           rel="noopener noreferrer"
-                          className="flex items-center text-orange-600 hover:text-orange-800 text-sm"
+                          className="flex items-center text-orange-600 hover:text-orange-800 dark:text-orange-300 dark:hover:text-orange-200 text-sm"
                         >
                           Ver en Strava
                           <ExternalLink className="h-3 w-3 ml-1" />
@@ -574,7 +574,7 @@ export default function RoutesComponent() {
           </div>
 
           {selectedRoute && (
-            <div className="mt-8 p-6 bg-blue-50 rounded-lg border">
+            <div className="mt-8 p-6 bg-blue-50 dark:bg-white/5 rounded-lg border dark:border-white/10">
               <div className="flex items-center justify-between mb-4">
                 <h4 className="text-xl font-bold text-gray-900">Ruta Activa: {selectedRoute.name}</h4>
                 <div className="flex items-center gap-2">
@@ -583,7 +583,7 @@ export default function RoutesComponent() {
                       href={selectedRoute.stravaUrl} 
                       target="_blank" 
                       rel="noopener noreferrer"
-                      className="flex items-center text-orange-600 hover:text-orange-800 text-sm"
+                      className="flex items-center text-orange-600 hover:text-orange-800 dark:text-orange-300 dark:hover:text-orange-200 text-sm"
                     >
                       <ExternalLink className="h-4 w-4 mr-1" />
                       Strava
